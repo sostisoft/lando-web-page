@@ -9,20 +9,18 @@ const { lang } = Astro.props;
 
 const team = [
   {
-    initials: 'JP',
-    name: 'Javier Pontón',
-    role: t(lang, 'team.javier.role'),
-    experience: t(lang, 'team.javier.experience'),
-    desc: t(lang, 'team.javier.desc'),
+    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>`,
+    role: t(lang, 'team.role1'),
+    experience: t(lang, 'team.experience1'),
+    desc: t(lang, 'team.desc1'),
     skills: ['Java', 'Kotlin', 'Spring Boot', 'Microservices', 'DDD', 'AWS', 'GCP', 'Docker', 'Kubernetes'],
     color: '#6c5ce7',
   },
   {
-    initials: 'TS',
-    name: 'Tibor Strausz',
-    role: t(lang, 'team.tibor.role'),
-    experience: t(lang, 'team.tibor.experience'),
-    desc: t(lang, 'team.tibor.desc'),
+    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`,
+    role: t(lang, 'team.role2'),
+    experience: t(lang, 'team.experience2'),
+    desc: t(lang, 'team.desc2'),
     skills: ['Java', 'Spring Boot', 'TypeScript', 'React', 'Angular', 'AWS', 'Docker', 'Scrum'],
     color: '#00cec9',
   },
@@ -41,12 +39,9 @@ const team = [
       {team.map((member, i) => (
         <div class="team-card animate-on-scroll" style={`--member-color: ${member.color}; animation-delay: ${i * 0.15}s`}>
           <div class="team-card-top">
-            <div class="team-avatar" style={`background: linear-gradient(135deg, ${member.color}, ${member.color}88)`}>
-              <span>{member.initials}</span>
-            </div>
+            <div class="team-icon" set:html={member.icon} />
             <div class="team-info">
-              <h3 class="team-name">{member.name}</h3>
-              <p class="team-role">{member.role}</p>
+              <h3 class="team-role-title">{member.role}</h3>
               <span class="team-experience">{member.experience}</span>
             </div>
           </div>
@@ -127,21 +122,17 @@ const team = [
     margin-bottom: var(--space-lg);
   }
 
-  .team-avatar {
+  .team-icon {
     flex-shrink: 0;
-    width: 64px;
-    height: 64px;
-    border-radius: var(--radius-lg);
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  .team-avatar span {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: white;
-    letter-spacing: 0.05em;
+    background: color-mix(in srgb, var(--member-color) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--member-color) 20%, transparent);
+    color: var(--member-color);
   }
 
   .team-info {
@@ -150,16 +141,10 @@ const team = [
     gap: 2px;
   }
 
-  .team-name {
-    font-size: 1.2rem;
+  .team-role-title {
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--color-text);
-  }
-
-  .team-role {
-    font-size: 0.9rem;
-    color: var(--color-accent-light);
-    font-weight: 500;
   }
 
   .team-experience {
