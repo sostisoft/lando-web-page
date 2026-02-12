@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="250 50 180 140" role="img" aria-label="LANDO icon">
   <style>
-    .a{stroke:#00B3FF; fill:none; stroke-linecap:round; stroke-linejoin:round}
+    .a{stroke:#6c5ce7; fill:none; stroke-linecap:round; stroke-linejoin:round}
   </style>
   <!-- A (Wi-Fi) -->
   <path class="a" d="M270 170h120" stroke-width="18"/>

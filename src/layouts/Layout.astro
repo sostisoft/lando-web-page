@@ -29,6 +29,12 @@ const { title, description, lang } = Astro.props;
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
+    <!-- Umami Analytics (self-hosted, privacy-friendly, no cookies) -->
+    <script
+      defer
+      src="http://217.154.190.107:3000/script.js"
+      data-website-id="REPLACE_WITH_UMAMI_WEBSITE_ID"
+    ></script>
   </head>
   <body>
     <Nav lang={lang} />

@@ -131,6 +131,21 @@ export const translations = {
     'estimator.result.restart': 'Volver a calcular',
     'estimator.back': 'Atrás',
 
+    // Team
+    'team.tagline': 'Nuestro equipo',
+    'team.title': 'Ingenieros con experiencia real',
+    'team.subtitle': 'Profesionales senior que han liderado proyectos en las empresas tecnológicas más exigentes de Europa.',
+    'team.role1': 'Senior Software Engineer',
+    'team.experience1': 'Java · Kotlin · Cloud · Microservicios',
+    'team.desc1': 'Especializado en arquitecturas de microservicios y Domain-Driven Design. Proyectos de alta escala en retail, banca y real estate.',
+    'team.role2': 'Solution Architect & Tech Lead',
+    'team.experience2': '+25 años · Java Full-Stack · DevOps',
+    'team.desc2': 'Arquitecto de software con más de 25 años de experiencia liderando equipos y diseñando sistemas para telecomunicaciones, logística y fintech a nivel europeo.',
+
+    // Clients
+    'clients.tagline': 'Clientes que confían en nosotros',
+    'clients.title': 'Empresas con las que hemos trabajado',
+
     // Cookie Banner
     'cookies.banner.title': 'Usamos cookies',
     'cookies.banner.desc': 'Utilizamos cookies propias y de terceros para mejorar tu experiencia en nuestro sitio web. ',
@@ -275,6 +290,21 @@ export const translations = {
     'estimator.result.cta': 'Request exact quote',
     'estimator.result.restart': 'Recalculate',
     'estimator.back': 'Back',
+
+    // Team
+    'team.tagline': 'Our team',
+    'team.title': 'Engineers with real-world experience',
+    'team.subtitle': 'Senior professionals who have led projects at Europe\'s most demanding tech companies.',
+    'team.role1': 'Senior Software Engineer',
+    'team.experience1': 'Java · Kotlin · Cloud · Microservices',
+    'team.desc1': 'Specialized in microservices architectures and Domain-Driven Design. Large-scale projects in retail, banking, and real estate.',
+    'team.role2': 'Solution Architect & Tech Lead',
+    'team.experience2': '+25 years · Java Full-Stack · DevOps',
+    'team.desc2': 'Software architect with over 25 years of experience leading teams and designing systems for telecommunications, logistics, and fintech across Europe.',
+
+    // Clients
+    'clients.tagline': 'Trusted by',
+    'clients.title': 'Companies we\'ve worked with',
 
     // Cookie Banner
     'cookies.banner.title': 'We use cookies',

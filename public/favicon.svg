@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
   <rect width="32" height="32" rx="8" fill="#0B1220"/>
   <g transform="translate(-250 -50) scale(0.165)">
-    <style>.a{stroke:#00B3FF; fill:none; stroke-linecap:round; stroke-linejoin:round}</style>
+    <style>.a{stroke:#6c5ce7; fill:none; stroke-linecap:round; stroke-linejoin:round}</style>
     <path class="a" d="M270 170h120" stroke-width="18"/>
     <path class="a" d="M290 170L330 70" stroke-width="18"/>
     <path class="a" d="M370 70L410 170" stroke-width="18"/>

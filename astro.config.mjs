@@ -1,8 +1,8 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://sostisoft.github.io',
-  base: '/lando-web-page',
+  site: 'http://217.154.190.107',
+  base: '/',
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],
