@@ -98,7 +98,7 @@ const altLang = lang === 'es' ? 'en' : 'es';
   .nav-logo {
     display: flex;
     align-items: center;
-    z-index: 1001;
+    z-index: 10001;
   }
 
   .logo-full {
@@ -175,7 +175,7 @@ const altLang = lang === 'es' ? 'en' : 'es';
     display: none;
     flex-direction: column;
     gap: 5px;
-    z-index: 1001;
+    z-index: 10001;
   }
 
   .nav-toggle span {
@@ -195,19 +195,20 @@ const altLang = lang === 'es' ? 'en' : 'es';
     .nav-links {
       position: fixed;
       inset: 0;
-      z-index: 999;
+      z-index: 10000;
+      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: var(--space-2xl);
-      background: var(--color-bg);
-      opacity: 0;
+      background: #06060b;
+      transform: translateX(100%);
       visibility: hidden;
-      transition: all var(--transition-base);
+      transition: transform var(--transition-base), visibility var(--transition-base);
     }
 
     .nav-links.open {
-      opacity: 1;
+      transform: translateX(0);
       visibility: visible;
     }
 
