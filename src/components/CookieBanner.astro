@@ -1,0 +1,157 @@
+---
+import { t, type Lang, getLocalizedPath } from '../i18n/translations';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<div class="cookie-banner" id="cookie-banner" data-lang={lang} style="display:none;">
+  <div class="cookie-content">
+    <div class="cookie-text">
+      <p class="cookie-title">{t(lang, 'cookies.banner.title')}</p>
+      <p class="cookie-desc">
+        {t(lang, 'cookies.banner.desc')}
+        <a href={getLocalizedPath(lang, '/legal/cookies')}>{t(lang, 'cookies.banner.more')}</a>
+      </p>
+    </div>
+    <div class="cookie-actions">
+      <button class="cookie-btn cookie-btn-accept" id="cookie-accept">{t(lang, 'cookies.banner.accept')}</button>
+      <button class="cookie-btn cookie-btn-reject" id="cookie-reject">{t(lang, 'cookies.banner.reject')}</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    padding: var(--space-lg);
+    animation: slideUp 0.5s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .cookie-content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xl);
+    padding: var(--space-lg) var(--space-xl);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .cookie-text {
+    flex: 1;
+  }
+
+  .cookie-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: var(--space-xs);
+    color: var(--color-text);
+  }
+
+  .cookie-desc {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .cookie-desc a {
+    color: var(--color-accent-light);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .cookie-actions {
+    display: flex;
+    gap: var(--space-sm);
+    flex-shrink: 0;
+  }
+
+  .cookie-btn {
+    padding: 0.6rem 1.25rem;
+    border-radius: var(--radius-full);
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: none;
+  }
+
+  .cookie-btn-accept {
+    background: var(--color-accent-gradient);
+    color: white;
+  }
+
+  .cookie-btn-accept:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px var(--color-accent-glow);
+  }
+
+  .cookie-btn-reject {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+  }
+
+  .cookie-btn-reject:hover {
+    border-color: var(--color-text-secondary);
+    color: var(--color-text);
+  }
+
+  @media (max-width: 768px) {
+    .cookie-content {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .cookie-actions {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  const banner = document.getElementById('cookie-banner');
+  if (banner) {
+    const consent = localStorage.getItem('cookie-consent');
+    if (!consent) {
+      banner.style.display = 'block';
+    }
+
+    document.getElementById('cookie-accept')?.addEventListener('click', () => {
+      localStorage.setItem('cookie-consent', 'accepted');
+      banner.style.display = 'none';
+    });
+
+    document.getElementById('cookie-reject')?.addEventListener('click', () => {
+      localStorage.setItem('cookie-consent', 'rejected');
+      banner.style.display = 'none';
+    });
+  }
+</script>
