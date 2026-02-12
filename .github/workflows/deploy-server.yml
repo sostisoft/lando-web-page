@@ -62,7 +62,7 @@ jobs:
         timeout-minutes: 10
         run: |
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
-            'cd /opt/lando && echo "==> Pulling images..." && docker compose pull --ignore-buildable 2>&1 && echo "==> Pull complete"'
+            'cd /opt/lando && echo "==> Pulling images..." && docker compose pull umami db certbot 2>&1 && echo "==> Pull complete"'
 
       - name: Start services
         run: |
