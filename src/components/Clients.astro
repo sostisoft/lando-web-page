@@ -8,17 +8,17 @@ interface Props {
 const { lang } = Astro.props;
 
 const clients = [
-  { name: 'KPN', sector: 'Telecom' },
-  { name: 'Inditex', sector: 'Retail' },
-  { name: 'Mercadona', sector: 'Retail' },
-  { name: 'Openbank', sector: 'Fintech' },
-  { name: 'MyInvestor', sector: 'Fintech' },
-  { name: 'NTT Data', sector: 'IT Consulting' },
-  { name: 'Kroger', sector: 'Retail' },
-  { name: 'Idealista', sector: 'PropTech' },
-  { name: 'Brinks', sector: 'Security' },
-  { name: 'Qbuzz', sector: 'Transport' },
-  { name: 'Empathy.co', sector: 'Search AI' },
+  { name: 'KPN', sector: 'Telecom', desc: t(lang, 'clients.desc.kpn') },
+  { name: 'Inditex', sector: 'Retail', desc: t(lang, 'clients.desc.inditex') },
+  { name: 'Mercadona', sector: 'Retail', desc: t(lang, 'clients.desc.mercadona') },
+  { name: 'Openbank', sector: 'Fintech', desc: t(lang, 'clients.desc.openbank') },
+  { name: 'MyInvestor', sector: 'Fintech', desc: t(lang, 'clients.desc.myinvestor') },
+  { name: 'NTT Data', sector: 'IT Consulting', desc: t(lang, 'clients.desc.nttdata') },
+  { name: 'Kroger', sector: 'Retail', desc: t(lang, 'clients.desc.kroger') },
+  { name: 'Idealista', sector: 'PropTech', desc: t(lang, 'clients.desc.idealista') },
+  { name: 'Brinks', sector: 'Security', desc: t(lang, 'clients.desc.brinks') },
+  { name: 'Qbuzz', sector: 'Transport', desc: t(lang, 'clients.desc.qbuzz') },
+  { name: 'Empathy.co', sector: 'Search AI', desc: t(lang, 'clients.desc.empathy') },
 ];
 ---
 
@@ -34,6 +34,7 @@ const clients = [
         <div class="client-card animate-on-scroll" style={`animation-delay: ${i * 0.06}s`}>
           <span class="client-name">{client.name}</span>
           <span class="client-sector">{client.sector}</span>
+          <span class="client-desc">{client.desc}</span>
         </div>
       ))}
     </div>
@@ -111,6 +112,14 @@ const clients = [
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.1em;
+  }
+
+  .client-desc {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+    line-height: 1.5;
+    margin-top: var(--space-xs);
   }
 
   @media (max-width: 768px) {
