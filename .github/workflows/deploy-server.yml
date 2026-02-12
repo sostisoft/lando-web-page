@@ -66,15 +66,30 @@ jobs:
 
       - name: Stop old containers and free ports
         run: |
-          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
-            'cd /opt/lando && echo "==> Stopping old containers..." && docker compose down --timeout 30 && echo "==> Stopped"
-             echo "==> Checking ports 80/443..."
-             ss -tlnp "sport = :80 or sport = :443" || true
-             for cid in $(docker ps -q --filter "publish=80" --filter "publish=443" 2>/dev/null); do
-               echo "==> Killing container $cid holding port 80/443"
-               docker rm -f "$cid"
-             done
-             echo "==> Ports clear"'
+          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} 'bash -s' <<'REMOTE'
+            set -e
+            cd /opt/lando
+
+            echo "==> Stopping compose services..."
+            docker compose down --timeout 30
+            docker rm -f lando-web 2>/dev/null || true
+
+            echo "==> Diagnosing ports 80/443..."
+            ss -tlnp 'sport = :80 or sport = :443' || true
+
+            echo "==> Killing anything on port 80/443..."
+            fuser -k 80/tcp 2>/dev/null || true
+            fuser -k 443/tcp 2>/dev/null || true
+            sleep 2
+
+            echo "==> Verifying ports are free..."
+            if ss -tlnp 'sport = :80' | grep -q ':80'; then
+              echo "WARNING: port 80 still in use"
+              ss -tlnp 'sport = :80'
+            else
+              echo "==> Ports clear"
+            fi
+          REMOTE
 
       - name: Start services
         run: |
