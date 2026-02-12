@@ -19,7 +19,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            --build-arg ASTRO_SITE=https://lando.consulting \
+            --build-arg ASTRO_SITE=http://217.154.190.107 \
             --build-arg ASTRO_BASE=/ \
             -t lando-web:latest .
 
