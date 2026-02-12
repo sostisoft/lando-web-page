@@ -1,0 +1,130 @@
+---
+import { type Lang } from '../i18n/translations';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const ctaText = lang === 'es' ? 'Calcula tu presupuesto' : 'Get your estimate';
+const contactText = lang === 'es' ? 'Contactar' : 'Contact us';
+---
+
+<!-- Floating CTA button (appears on scroll) -->
+<div class="floating-cta" id="floating-cta">
+  <a href="#estimator" class="floating-btn floating-btn-primary">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+    <span>{ctaText}</span>
+  </a>
+  <a href="#contact" class="floating-btn floating-btn-secondary">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>{contactText}</span>
+  </a>
+</div>
+
+<style>
+  .floating-cta {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 900;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .floating-cta.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .floating-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all var(--transition-base);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  .floating-btn-primary {
+    background: var(--color-accent-gradient);
+    color: white;
+  }
+
+  .floating-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(124, 108, 240, 0.4);
+  }
+
+  .floating-btn-secondary {
+    background: rgba(18, 18, 30, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--color-border-hover);
+    color: var(--color-text);
+  }
+
+  .floating-btn-secondary:hover {
+    border-color: var(--color-accent-light);
+    color: var(--color-accent-light);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 640px) {
+    .floating-cta {
+      bottom: 1rem;
+      right: 1rem;
+      left: 1rem;
+      flex-direction: row;
+    }
+
+    .floating-btn {
+      flex: 1;
+      justify-content: center;
+      padding: 0.7rem 1rem;
+      font-size: 0.8rem;
+    }
+  }
+</style>
+
+<script>
+  const floatingCta = document.getElementById('floating-cta');
+  if (floatingCta) {
+    let lastScrollY = 0;
+    const heroHeight = window.innerHeight;
+
+    function checkScroll() {
+      const scrollY = window.scrollY;
+      const isInEstimator = isElementInView('estimator');
+      const isInContact = isElementInView('contact');
+
+      if (scrollY > heroHeight * 0.8 && !isInEstimator && !isInContact) {
+        floatingCta.classList.add('visible');
+      } else {
+        floatingCta.classList.remove('visible');
+      }
+      lastScrollY = scrollY;
+    }
+
+    function isElementInView(id: string): boolean {
+      const el = document.getElementById(id);
+      if (!el) return false;
+      const rect = el.getBoundingClientRect();
+      return rect.top < window.innerHeight && rect.bottom > 0;
+    }
+
+    window.addEventListener('scroll', checkScroll, { passive: true });
+    checkScroll();
+  }
+</script>

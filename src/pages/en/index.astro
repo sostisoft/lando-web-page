@@ -8,6 +8,7 @@ import Clients from '../../components/Clients.astro';
 import Testimonials from '../../components/Testimonials.astro';
 import CTA from '../../components/CTA.astro';
 import BudgetEstimator from '../../components/BudgetEstimator.astro';
+import InlineCTA from '../../components/InlineCTA.astro';
 
 const lang = 'en' as const;
 ---
@@ -19,9 +20,11 @@ const lang = 'en' as const;
 >
   <Hero lang={lang} />
   <Services lang={lang} />
+  <InlineCTA lang={lang} variant="estimator" />
   <Method lang={lang} />
   <BudgetEstimator lang={lang} />
   <Clients lang={lang} />
+  <InlineCTA lang={lang} variant="contact" />
   <Testimonials lang={lang} />
   <Team lang={lang} />
   <CTA lang={lang} />

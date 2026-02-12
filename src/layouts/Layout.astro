@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.astro';
+import FloatingCTA from '../components/FloatingCTA.astro';
 import { type Lang } from '../i18n/translations';
 
 interface Props {
@@ -32,8 +33,9 @@ const { title, description, lang } = Astro.props;
     <!-- Umami Analytics (self-hosted, privacy-friendly, no cookies) -->
     <script
       defer
-      src="http://217.154.190.107:3000/script.js"
+      src="/analytics/script.js"
       data-website-id="REPLACE_WITH_UMAMI_WEBSITE_ID"
+      data-domains="lando.consulting"
     ></script>
   </head>
   <body>
@@ -42,6 +44,7 @@ const { title, description, lang } = Astro.props;
       <slot />
     </main>
     <Footer lang={lang} />
+    <FloatingCTA lang={lang} />
     <CookieBanner lang={lang} />
 
     <script>
