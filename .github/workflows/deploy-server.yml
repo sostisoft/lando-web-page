@@ -5,9 +5,13 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  SSH_OPTS: "-i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ServerAliveInterval=15 -o ServerAliveCountMax=20"
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,50 +35,39 @@ jobs:
 
       - name: Create deploy directory on server
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+          ssh $SSH_OPTS \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
             "mkdir -p /opt/lando"
 
-      - name: Copy Docker image to server
+      - name: Copy files to server
         run: |
-          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+          scp $SSH_OPTS \
             /tmp/lando-web.tar.gz \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/lando/lando-web.tar.gz
-
-      - name: Copy docker-compose.yml to server
-        run: |
-          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+          scp $SSH_OPTS \
             docker-compose.yml \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/lando/docker-compose.yml
 
-      - name: Deploy on server
+      - name: Initialize environment
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
-            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'DEPLOY'
+          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            'cd /opt/lando && test -f .env || (echo "POSTGRES_PASSWORD=$(openssl rand -hex 24)" > .env && echo "APP_SECRET=$(openssl rand -hex 32)" >> .env && echo "==> Generated .env")'
 
-          cd /opt/lando
+      - name: Load Docker image
+        run: |
+          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            'cd /opt/lando && echo "==> Loading image..." && docker load < lando-web.tar.gz && rm -f lando-web.tar.gz && echo "==> Image loaded"'
 
-          # Initialize .env with secure passwords if first deploy
-          if [ ! -f .env ]; then
-            echo "POSTGRES_PASSWORD=$(openssl rand -hex 24)" > .env
-            echo "APP_SECRET=$(openssl rand -hex 32)" >> .env
-            echo "==> Generated .env with secure credentials"
-          fi
+      - name: Pull external images
+        timeout-minutes: 10
+        run: |
+          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            'cd /opt/lando && echo "==> Pulling images..." && docker compose pull --ignore-buildable 2>&1 && echo "==> Pull complete"'
 
-          # Load the new Docker image
-          echo "==> Loading Docker image..."
-          docker load < lando-web.tar.gz
-          rm -f lando-web.tar.gz
-
-          # Start/update all services
-          echo "==> Starting services..."
-          docker compose up -d --remove-orphans
-
-          # Show status
-          echo "==> Deployment complete. Container status:"
-          docker compose ps
-
-          DEPLOY
+      - name: Start services
+        run: |
+          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            'cd /opt/lando && echo "==> Starting services..." && docker compose up -d --remove-orphans && echo "==> Done" && docker compose ps'
 
       - name: Cleanup
         if: always()
