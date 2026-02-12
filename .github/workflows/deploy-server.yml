@@ -64,10 +64,17 @@ jobs:
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
             'cd /opt/lando && echo "==> Pulling images..." && docker compose pull umami db certbot 2>&1 && echo "==> Pull complete"'
 
-      - name: Stop old containers
+      - name: Stop old containers and free ports
         run: |
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
-            'cd /opt/lando && echo "==> Stopping old containers..." && docker compose down --timeout 30 && echo "==> Stopped"'
+            'cd /opt/lando && echo "==> Stopping old containers..." && docker compose down --timeout 30 && echo "==> Stopped"
+             echo "==> Checking ports 80/443..."
+             ss -tlnp "sport = :80 or sport = :443" || true
+             for cid in $(docker ps -q --filter "publish=80" --filter "publish=443" 2>/dev/null); do
+               echo "==> Killing container $cid holding port 80/443"
+               docker rm -f "$cid"
+             done
+             echo "==> Ports clear"'
 
       - name: Start services
         run: |
