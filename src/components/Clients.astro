@@ -8,17 +8,17 @@ interface Props {
 const { lang } = Astro.props;
 
 const clients = [
-  { name: 'KPN', sector: 'Telecom', desc: t(lang, 'clients.desc.kpn') },
-  { name: 'Inditex', sector: 'Retail', desc: t(lang, 'clients.desc.inditex') },
-  { name: 'Mercadona', sector: 'Retail', desc: t(lang, 'clients.desc.mercadona') },
-  { name: 'Openbank', sector: 'Fintech', desc: t(lang, 'clients.desc.openbank') },
-  { name: 'MyInvestor', sector: 'Fintech', desc: t(lang, 'clients.desc.myinvestor') },
-  { name: 'NTT Data', sector: 'IT Consulting', desc: t(lang, 'clients.desc.nttdata') },
-  { name: 'Kroger', sector: 'Retail', desc: t(lang, 'clients.desc.kroger') },
-  { name: 'Idealista', sector: 'PropTech', desc: t(lang, 'clients.desc.idealista') },
-  { name: 'Brinks', sector: 'Security', desc: t(lang, 'clients.desc.brinks') },
-  { name: 'Qbuzz', sector: 'Transport', desc: t(lang, 'clients.desc.qbuzz') },
-  { name: 'Empathy.co', sector: 'Search AI', desc: t(lang, 'clients.desc.empathy') },
+  { name: 'KPN', sector: 'Telecom', desc: t(lang, 'clients.desc.kpn'), color: '#00a2e2' },
+  { name: 'Inditex', sector: 'Retail', desc: t(lang, 'clients.desc.inditex'), color: '#1a1a1a' },
+  { name: 'Mercadona', sector: 'Retail', desc: t(lang, 'clients.desc.mercadona'), color: '#00a651' },
+  { name: 'Openbank', sector: 'Fintech', desc: t(lang, 'clients.desc.openbank'), color: '#e74c3c' },
+  { name: 'MyInvestor', sector: 'Fintech', desc: t(lang, 'clients.desc.myinvestor'), color: '#6c5ce7' },
+  { name: 'NTT Data', sector: 'IT Consulting', desc: t(lang, 'clients.desc.nttdata'), color: '#0069b4' },
+  { name: 'Kroger', sector: 'Retail', desc: t(lang, 'clients.desc.kroger'), color: '#e31837' },
+  { name: 'Idealista', sector: 'PropTech', desc: t(lang, 'clients.desc.idealista'), color: '#00e0d0' },
+  { name: 'Brinks', sector: 'Security', desc: t(lang, 'clients.desc.brinks'), color: '#fdcb6e' },
+  { name: 'Qbuzz', sector: 'Transport', desc: t(lang, 'clients.desc.qbuzz'), color: '#f9a825' },
+  { name: 'Empathy.co', sector: 'Search AI', desc: t(lang, 'clients.desc.empathy'), color: '#a89eff' },
 ];
 ---
 
@@ -31,10 +31,12 @@ const clients = [
 
     <div class="clients-grid">
       {clients.map((client, i) => (
-        <div class="client-card animate-on-scroll" style={`animation-delay: ${i * 0.06}s`}>
+        <div class="client-card animate-on-scroll" style={`--client-color: ${client.color}; animation-delay: ${i * 0.06}s`}>
+          <div class="client-logo-text">{client.name.charAt(0)}</div>
           <span class="client-name">{client.name}</span>
           <span class="client-sector">{client.sector}</span>
           <span class="client-desc">{client.desc}</span>
+          <div class="client-glow"></div>
         </div>
       ))}
     </div>
@@ -81,6 +83,7 @@ const clients = [
   }
 
   .client-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -88,30 +91,77 @@ const clients = [
     gap: var(--space-xs);
     padding: var(--space-xl) var(--space-lg);
     background: var(--color-bg-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    transition: all var(--transition-base);
+    border-radius: var(--radius-xl);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
   }
 
   .client-card:hover {
-    border-color: var(--color-border-hover);
+    border-color: color-mix(in srgb, var(--client-color) 30%, transparent);
     background: var(--color-bg-card-hover);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .client-glow {
+    position: absolute;
+    top: -40%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 150px;
+    background: var(--client-color);
+    opacity: 0;
+    border-radius: 50%;
+    filter: blur(60px);
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .client-card:hover .client-glow {
+    opacity: 0.06;
+  }
+
+  .client-logo-text {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--client-color) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--client-color) 25%, transparent);
+    color: var(--client-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+    margin-bottom: var(--space-xs);
+    transition: all var(--transition-base);
+  }
+
+  .client-card:hover .client-logo-text {
+    transform: scale(1.1);
+    background: color-mix(in srgb, var(--client-color) 20%, transparent);
   }
 
   .client-name {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--color-text);
     letter-spacing: 0.02em;
   }
 
   .client-sector {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--color-text-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--client-color);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
+    padding: 0.15rem 0.5rem;
+    background: color-mix(in srgb, var(--client-color) 8%, transparent);
+    border-radius: var(--radius-full);
   }
 
   .client-desc {
@@ -122,7 +172,13 @@ const clients = [
     margin-top: var(--space-xs);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
+    .clients-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
     .clients-grid {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -130,7 +186,7 @@ const clients = [
 
   @media (max-width: 400px) {
     .clients-grid {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: var(--space-md);
     }
   }

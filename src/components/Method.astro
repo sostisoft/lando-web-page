@@ -13,14 +13,16 @@ const pillars = [
     label: t(lang, 'method.exclusive.label'),
     title: t(lang, 'method.exclusive.title'),
     desc: t(lang, 'method.exclusive.desc'),
-    color: '#6c5ce7',
+    color: '#7c6cf0',
+    icon: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
   },
   {
     number: t(lang, 'method.mvp.number'),
     label: t(lang, 'method.mvp.label'),
     title: t(lang, 'method.mvp.title'),
     desc: t(lang, 'method.mvp.desc'),
-    color: '#00cec9',
+    color: '#00e0d0',
+    icon: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
   },
   {
     number: t(lang, 'method.quality.number'),
@@ -28,6 +30,7 @@ const pillars = [
     title: t(lang, 'method.quality.title'),
     desc: t(lang, 'method.quality.desc'),
     color: '#fdcb6e',
+    icon: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`,
   },
 ];
 ---
@@ -42,6 +45,7 @@ const pillars = [
     <div class="pillars">
       {pillars.map((pillar, i) => (
         <div class="pillar animate-on-scroll" style={`--pillar-color: ${pillar.color}; animation-delay: ${i * 0.15}s`}>
+          <div class="pillar-icon" set:html={pillar.icon} />
           <div class="pillar-number-wrap">
             <span class="pillar-number">{pillar.number}</span>
             <span class="pillar-label">{pillar.label}</span>
@@ -51,6 +55,7 @@ const pillars = [
             <p class="pillar-desc">{pillar.desc}</p>
           </div>
           <div class="pillar-glow"></div>
+          <div class="pillar-border-glow"></div>
         </div>
       ))}
     </div>
@@ -100,46 +105,88 @@ const pillars = [
     position: relative;
     padding: var(--space-2xl);
     background: var(--color-bg-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-xl);
     overflow: hidden;
-    transition: all var(--transition-base);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    text-align: center;
   }
 
   .pillar:hover {
     border-color: color-mix(in srgb, var(--pillar-color) 40%, transparent);
-    transform: translateY(-4px);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .pillar-border-glow {
+    position: absolute;
+    inset: -1px;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--pillar-color) 30%, transparent), transparent 50%);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .pillar:hover .pillar-border-glow {
+    opacity: 1;
   }
 
   .pillar-glow {
     position: absolute;
     top: -50%;
     right: -30%;
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
     background: var(--pillar-color);
-    opacity: 0.05;
+    opacity: 0.04;
     border-radius: 50%;
-    filter: blur(60px);
+    filter: blur(80px);
     transition: opacity var(--transition-base);
   }
 
   .pillar:hover .pillar-glow {
-    opacity: 0.1;
+    opacity: 0.12;
+  }
+
+  .pillar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--pillar-color) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--pillar-color) 20%, transparent);
+    color: var(--pillar-color);
+    margin-bottom: var(--space-lg);
+    transition: all var(--transition-base);
+  }
+
+  .pillar:hover .pillar-icon {
+    background: color-mix(in srgb, var(--pillar-color) 15%, transparent);
+    transform: scale(1.1);
+    box-shadow: 0 0 30px color-mix(in srgb, var(--pillar-color) 20%, transparent);
   }
 
   .pillar-number-wrap {
     display: flex;
     align-items: baseline;
+    justify-content: center;
     gap: var(--space-sm);
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-lg);
   }
 
   .pillar-number {
     font-size: 3.5rem;
     font-weight: 800;
     line-height: 1;
-    color: var(--pillar-color);
+    background: linear-gradient(135deg, var(--pillar-color), color-mix(in srgb, var(--pillar-color) 60%, white));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .pillar-label {
