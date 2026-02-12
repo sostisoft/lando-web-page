@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import CookieBanner from '../components/CookieBanner.astro';
 import { type Lang } from '../i18n/translations';
 
 interface Props {
@@ -35,6 +36,7 @@ const { title, description, lang } = Astro.props;
       <slot />
     </main>
     <Footer lang={lang} />
+    <CookieBanner lang={lang} />
 
     <script>
       // Intersection Observer for scroll animations
