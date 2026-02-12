@@ -203,12 +203,16 @@ const { lang } = Astro.props;
               <span class="detail-value" id="result-duration"></span>
             </div>
           </div>
+          <div class="result-comments">
+            <label for="estimator-comments">{t(lang, 'estimator.result.comments')}</label>
+            <textarea id="estimator-comments" rows="3" placeholder={t(lang, 'estimator.result.comments.placeholder')}></textarea>
+          </div>
           <p class="result-disclaimer">{t(lang, 'estimator.result.disclaimer')}</p>
           <div class="result-actions">
-            <a href="#contact" class="btn-primary">
+            <button class="btn-primary" id="estimator-to-form" type="button">
               {t(lang, 'estimator.result.cta')}
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8H12.5M12.5 8L8.5 4M12.5 8L8.5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
+            </button>
             <button class="btn-secondary btn-restart" id="restart-estimator">
               {t(lang, 'estimator.result.restart')}
             </button>
@@ -568,6 +572,43 @@ const { lang } = Astro.props;
     flex-wrap: wrap;
   }
 
+  .result-comments {
+    text-align: left;
+    max-width: 400px;
+    margin: 0 auto var(--space-xl);
+  }
+
+  .result-comments label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xs);
+  }
+
+  .result-comments textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    resize: vertical;
+    outline: none;
+    transition: border-color var(--transition-fast);
+  }
+
+  .result-comments textarea::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .result-comments textarea:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-glow);
+  }
+
   .btn-restart {
     font-size: 0.9rem;
     padding: 0.75rem 1.5rem;
@@ -731,12 +772,40 @@ const { lang } = Astro.props;
       }
     });
 
+    // Send to contact form
+    document.getElementById('estimator-to-form')?.addEventListener('click', () => {
+      const l = labels[lang] || labels.es;
+      const comments = (document.getElementById('estimator-comments') as HTMLTextAreaElement)?.value || '';
+      const rangeText = document.getElementById('result-range')?.textContent || '';
+      const durationText = document.getElementById('result-duration')?.textContent || '';
+      const featuresText = selectedFeatures.length > 0
+        ? selectedFeatures.map(f => l[f]).join(', ')
+        : l.none;
+
+      const estimateData = {
+        projectType: l[selections.projectType] || selections.projectType,
+        complexity: l[selections.complexity] || selections.complexity,
+        features: featuresText,
+        timeline: l[selections.timeline] || selections.timeline,
+        budgetRange: rangeText,
+        duration: durationText,
+        comments: comments,
+      };
+
+      // Dispatch custom event for the contact form to pick up
+      window.dispatchEvent(new CustomEvent('estimator-complete', { detail: estimateData }));
+
+      // Scroll to contact
+      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+    });
+
     // Restart
     document.getElementById('restart-estimator')?.addEventListener('click', () => {
       Object.keys(selections).forEach(k => delete selections[k]);
       selectedFeatures = [];
       app.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
       app.querySelectorAll('input[name="feature"]').forEach(el => ((el as HTMLInputElement).checked = false));
+      (document.getElementById('estimator-comments') as HTMLTextAreaElement).value = '';
       showStep(0);
     });
   }

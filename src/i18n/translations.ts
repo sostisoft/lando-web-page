@@ -75,6 +75,7 @@ export const translations = {
     'form.message': 'Mensaje',
     'form.message.placeholder': 'Cuéntanos sobre tu proyecto...',
     'form.submit': 'Enviar mensaje',
+    'form.budget.title': 'Resumen del presupuesto estimado',
 
     // Budget Estimator
     'estimator.tagline': 'Presupuesto inteligente',
@@ -124,6 +125,8 @@ export const translations = {
     'estimator.result.timeline': 'Plazo',
     'estimator.result.duration': 'Duración estimada',
     'estimator.result.disclaimer': '* Este es un rango orientativo. El presupuesto final se ajusta tras una consulta personalizada.',
+    'estimator.result.comments': 'Comentarios adicionales',
+    'estimator.result.comments.placeholder': 'Describe brevemente qué necesitas, detalles especiales...',
     'estimator.result.cta': 'Solicitar presupuesto exacto',
     'estimator.result.restart': 'Volver a calcular',
     'estimator.back': 'Atrás',
@@ -217,6 +220,7 @@ export const translations = {
     'form.message': 'Message',
     'form.message.placeholder': 'Tell us about your project...',
     'form.submit': 'Send message',
+    'form.budget.title': 'Estimated budget summary',
 
     // Budget Estimator
     'estimator.tagline': 'Smart budgeting',
@@ -266,6 +270,8 @@ export const translations = {
     'estimator.result.timeline': 'Timeline',
     'estimator.result.duration': 'Estimated duration',
     'estimator.result.disclaimer': '* This is an indicative range. The final budget is adjusted after a personalized consultation.',
+    'estimator.result.comments': 'Additional comments',
+    'estimator.result.comments.placeholder': 'Briefly describe what you need, any special details...',
     'estimator.result.cta': 'Request exact quote',
     'estimator.result.restart': 'Recalculate',
     'estimator.back': 'Back',

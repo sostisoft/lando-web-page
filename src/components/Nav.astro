@@ -56,15 +56,14 @@ const altLang = lang === 'es' ? 'en' : 'es';
     height: var(--nav-height);
     display: flex;
     align-items: center;
-    background: rgba(10, 10, 15, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: #0a0a0f;
     border-bottom: 1px solid var(--color-border);
     transition: all var(--transition-base);
   }
 
   .nav.scrolled {
-    background: rgba(10, 10, 15, 0.95);
+    background: #0a0a0f;
+    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
   }
 
   .nav-inner {
