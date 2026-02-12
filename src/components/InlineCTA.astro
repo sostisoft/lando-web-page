@@ -1,0 +1,105 @@
+---
+import { type Lang } from '../i18n/translations';
+
+interface Props {
+  lang: Lang;
+  variant?: 'estimator' | 'contact';
+}
+
+const { lang, variant = 'estimator' } = Astro.props;
+
+const isEstimator = variant === 'estimator';
+const href = isEstimator ? '#estimator' : '#contact';
+const text = isEstimator
+  ? (lang === 'es' ? 'Calcula tu presupuesto en 1 minuto' : 'Get your estimate in 1 minute')
+  : (lang === 'es' ? 'Hablemos de tu proyecto' : "Let's talk about your project");
+const subtext = isEstimator
+  ? (lang === 'es' ? 'Sin compromiso ni registro' : 'No obligation, no signup')
+  : (lang === 'es' ? 'Respuesta en menos de 24h' : 'Response within 24h');
+const btnText = isEstimator
+  ? (lang === 'es' ? 'Calcular presupuesto' : 'Calculate budget')
+  : (lang === 'es' ? 'Contactar ahora' : 'Contact now');
+---
+
+<div class="inline-cta animate-on-scroll">
+  <div class="inline-cta-content">
+    <div class="inline-cta-text">
+      <span class="inline-cta-title">{text}</span>
+      <span class="inline-cta-sub">{subtext}</span>
+    </div>
+    <a href={href} class="btn-primary inline-cta-btn">
+      {btnText}
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3.5 8H12.5M12.5 8L8.5 4M12.5 8L8.5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+</div>
+
+<style>
+  .inline-cta {
+    padding: var(--space-2xl) 0;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
+  }
+
+  .inline-cta-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xl);
+    padding: var(--space-xl) var(--space-2xl);
+    background: rgba(124, 108, 240, 0.06);
+    border: 1px solid rgba(124, 108, 240, 0.15);
+    border-radius: var(--radius-xl);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .inline-cta-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(124, 108, 240, 0.4), transparent);
+  }
+
+  .inline-cta-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .inline-cta-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .inline-cta-sub {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .inline-cta-btn {
+    white-space: nowrap;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 640px) {
+    .inline-cta-content {
+      flex-direction: column;
+      text-align: center;
+      padding: var(--space-xl) var(--space-lg);
+    }
+
+    .inline-cta-text {
+      align-items: center;
+    }
+  }
+</style>

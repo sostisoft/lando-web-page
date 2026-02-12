@@ -40,6 +40,7 @@ const altLang = lang === 'es' ? 'en' : 'es';
       <a href="#testimonials" class="nav-link">{t(lang, 'nav.testimonials')}</a>
       <a href="#contact" class="nav-link">{t(lang, 'nav.contact')}</a>
       <a href={getLocalizedPath(altLang, '/')} class="nav-lang">{t(lang, 'nav.lang')}</a>
+      <a href="#estimator" class="nav-cta">{lang === 'es' ? 'Presupuesto' : 'Get Quote'}</a>
     </div>
 
     <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
@@ -60,14 +61,32 @@ const altLang = lang === 'es' ? 'en' : 'es';
     height: var(--nav-height);
     display: flex;
     align-items: center;
-    background: #0a0a0f;
+    background: rgba(6, 6, 11, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--color-border);
     transition: all var(--transition-base);
   }
 
   .nav.scrolled {
-    background: #0a0a0f;
-    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
+    background: rgba(6, 6, 11, 0.95);
+    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .nav-cta {
+    padding: 0.5rem 1.25rem;
+    background: var(--color-accent-gradient);
+    color: white !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    transition: all var(--transition-base);
+    box-shadow: 0 2px 10px rgba(124, 108, 240, 0.25);
+  }
+
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(124, 108, 240, 0.4);
   }
 
   .nav-inner {

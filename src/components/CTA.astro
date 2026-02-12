@@ -10,15 +10,51 @@ const { lang } = Astro.props;
 
 <section class="cta-section" id="contact">
   <div class="container">
-    <div class="cta-card animate-on-scroll">
-      <div class="cta-bg">
-        <div class="cta-orb cta-orb-1"></div>
-        <div class="cta-orb cta-orb-2"></div>
-      </div>
-      <div class="cta-content">
+    <div class="cta-layout">
+      <!-- Left: Info -->
+      <div class="cta-info animate-on-scroll">
+        <p class="section-tagline">{lang === 'es' ? 'Contacto' : 'Contact'}</p>
         <h2 class="cta-title">{t(lang, 'cta.title')}</h2>
         <p class="cta-desc">{t(lang, 'cta.desc')}</p>
 
+        <div class="cta-features">
+          <div class="cta-feature">
+            <div class="cta-feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div>
+              <span class="cta-feature-title">{lang === 'es' ? 'Respuesta rapida' : 'Quick response'}</span>
+              <span class="cta-feature-desc">{lang === 'es' ? 'Te respondemos en menos de 24h' : 'We respond within 24h'}</span>
+            </div>
+          </div>
+          <div class="cta-feature">
+            <div class="cta-feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <span class="cta-feature-title">{lang === 'es' ? 'Sin compromiso' : 'No obligation'}</span>
+              <span class="cta-feature-desc">{lang === 'es' ? 'Consulta gratuita inicial' : 'Free initial consultation'}</span>
+            </div>
+          </div>
+          <div class="cta-feature">
+            <div class="cta-feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div>
+              <span class="cta-feature-title">{lang === 'es' ? 'Presupuesto preciso' : 'Precise estimate'}</span>
+              <span class="cta-feature-desc">{lang === 'es' ? 'Usa nuestro estimador online' : 'Use our online estimator'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-email-direct">
+          <span>{lang === 'es' ? 'O escribenos directamente:' : 'Or email us directly:'}</span>
+          <a href="mailto:info@lando.consulting" class="cta-email-link">info@lando.consulting</a>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div class="cta-form-wrap animate-on-scroll">
         <!-- Budget summary (hidden, shown when coming from estimator) -->
         <div class="budget-summary" id="budget-summary" style="display:none;">
           <div class="budget-summary-header">
@@ -51,19 +87,21 @@ const { lang } = Astro.props;
               <input type="email" id="contact-email" name="email" required placeholder={t(lang, 'form.email.placeholder')} />
             </div>
           </div>
-          <div class="form-group">
-            <label for="contact-company">{t(lang, 'form.company')}</label>
-            <input type="text" id="contact-company" name="company" placeholder={t(lang, 'form.company.placeholder')} />
-          </div>
-          <div class="form-group">
-            <label for="contact-service">{t(lang, 'form.service')}</label>
-            <select id="contact-service" name="service">
-              <option value="">{t(lang, 'form.service.placeholder')}</option>
-              <option value="consulting">{t(lang, 'services.consulting.title')}</option>
-              <option value="web">{t(lang, 'services.web.title')}</option>
-              <option value="ai">{t(lang, 'services.ai.title')}</option>
-              <option value="mvp">{t(lang, 'services.mvp.title')}</option>
-            </select>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="contact-company">{t(lang, 'form.company')}</label>
+              <input type="text" id="contact-company" name="company" placeholder={t(lang, 'form.company.placeholder')} />
+            </div>
+            <div class="form-group">
+              <label for="contact-service">{t(lang, 'form.service')}</label>
+              <select id="contact-service" name="service">
+                <option value="">{t(lang, 'form.service.placeholder')}</option>
+                <option value="consulting">{t(lang, 'services.consulting.title')}</option>
+                <option value="web">{t(lang, 'services.web.title')}</option>
+                <option value="ai">{t(lang, 'services.ai.title')}</option>
+                <option value="mvp">{t(lang, 'services.mvp.title')}</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
             <label for="contact-message">{t(lang, 'form.message')}</label>
@@ -78,7 +116,7 @@ const { lang } = Astro.props;
           <input type="hidden" name="budget_duration" id="hidden-duration" />
           <input type="hidden" name="budget_comments" id="hidden-comments" />
 
-          <button type="submit" class="btn-primary btn-lg btn-submit">
+          <button type="submit" class="btn-primary btn-submit">
             <span class="btn-text">{t(lang, 'form.submit')}</span>
             <span class="btn-loading" style="display:none;">
               <svg class="spinner" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -101,51 +139,32 @@ const { lang } = Astro.props;
 <style>
   .cta-section {
     padding: var(--space-5xl) 0;
-  }
-
-  .cta-card {
     position: relative;
-    padding: var(--space-4xl) var(--space-2xl);
-    border-radius: var(--radius-xl);
-    border: 1px solid var(--color-border);
-    background: var(--color-bg-card);
     overflow: hidden;
-    text-align: center;
   }
 
-  .cta-bg {
+  .cta-section::before {
+    content: '';
     position: absolute;
-    inset: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(124, 108, 240, 0.06) 0%, transparent 70%);
     pointer-events: none;
   }
 
-  .cta-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
+  .cta-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: var(--space-4xl);
+    align-items: start;
   }
 
-  .cta-orb-1 {
-    width: 300px;
-    height: 300px;
-    top: -30%;
-    left: -10%;
-    background: rgba(108, 92, 231, 0.15);
-  }
-
-  .cta-orb-2 {
-    width: 250px;
-    height: 250px;
-    bottom: -30%;
-    right: -10%;
-    background: rgba(0, 206, 201, 0.1);
-  }
-
-  .cta-content {
-    position: relative;
-    z-index: 1;
-    max-width: 600px;
-    margin: 0 auto;
+  .cta-info {
+    position: sticky;
+    top: calc(var(--nav-height) + var(--space-2xl));
   }
 
   .cta-title {
@@ -163,12 +182,102 @@ const { lang } = Astro.props;
     margin-bottom: var(--space-2xl);
   }
 
+  .cta-features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .cta-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .cta-feature-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: rgba(124, 108, 240, 0.1);
+    border: 1px solid rgba(124, 108, 240, 0.2);
+    color: var(--color-accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cta-feature-title {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    margin-bottom: 2px;
+  }
+
+  .cta-feature-desc {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .cta-email-direct {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: var(--space-lg);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .cta-email-direct span {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .cta-email-link {
+    font-size: 1.1rem;
+    font-weight: 700;
+    background: var(--color-accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: opacity var(--transition-fast);
+  }
+
+  .cta-email-link:hover {
+    opacity: 0.8;
+  }
+
+  /* Form Wrap */
+  .cta-form-wrap {
+    padding: var(--space-2xl);
+    background: var(--color-bg-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-form-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-accent-gradient);
+  }
+
   /* Budget Summary */
   .budget-summary {
     margin-bottom: var(--space-xl);
-    border: 1px solid rgba(108, 92, 231, 0.3);
+    border: 1px solid rgba(124, 108, 240, 0.3);
     border-radius: var(--radius-lg);
-    background: rgba(108, 92, 231, 0.08);
+    background: rgba(124, 108, 240, 0.08);
     overflow: hidden;
     text-align: left;
     animation: fadeInUp 0.4s ease-out;
@@ -179,7 +288,7 @@ const { lang } = Astro.props;
     align-items: center;
     gap: var(--space-sm);
     padding: 0.75rem 1rem;
-    background: rgba(108, 92, 231, 0.12);
+    background: rgba(124, 108, 240, 0.12);
     color: var(--color-accent-light);
     font-weight: 600;
     font-size: 0.85rem;
@@ -268,14 +377,14 @@ const { lang } = Astro.props;
   .form-group input,
   .form-group select,
   .form-group textarea {
-    padding: 0.75rem 1rem;
-    background: var(--color-bg);
+    padding: 0.85rem 1rem;
+    background: rgba(6, 6, 11, 0.6);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     color: var(--color-text);
     font-family: var(--font-sans);
     font-size: 0.95rem;
-    transition: border-color var(--transition-fast);
+    transition: all var(--transition-fast);
     outline: none;
   }
 
@@ -288,7 +397,7 @@ const { lang } = Astro.props;
   .form-group select:focus,
   .form-group textarea:focus {
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px var(--color-accent-glow);
+    box-shadow: 0 0 0 3px var(--color-accent-glow), 0 0 20px rgba(124, 108, 240, 0.1);
   }
 
   .form-group select {
@@ -311,10 +420,11 @@ const { lang } = Astro.props;
   }
 
   .btn-submit {
-    align-self: center;
+    align-self: stretch;
     padding: 1rem 2.5rem;
     font-size: 1.05rem;
     margin-top: var(--space-sm);
+    justify-content: center;
   }
 
   .btn-submit .spinner {
@@ -339,18 +449,25 @@ const { lang } = Astro.props;
     color: #e74c3c;
   }
 
-  .btn-lg {
-    padding: 1rem 2.5rem;
-    font-size: 1.05rem;
-  }
-
   .cta-note {
     margin-top: var(--space-lg);
     font-size: 0.85rem;
     color: var(--color-text-muted);
+    text-align: center;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
+    .cta-layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xl);
+    }
+
+    .cta-info {
+      position: static;
+    }
+  }
+
+  @media (max-width: 600px) {
     .form-row {
       grid-template-columns: 1fr;
     }
@@ -395,9 +512,9 @@ const { lang } = Astro.props;
       // Pre-select service based on project type
       const serviceMap: Record<string, string> = {
         'Web / App Web': 'web', 'Web / Web App': 'web',
-        'App Móvil': 'mvp', 'Mobile App': 'mvp',
+        'App Movil': 'mvp', 'Mobile App': 'mvp',
         'Inteligencia Artificial': 'ai', 'Artificial Intelligence': 'ai',
-        'Consultoría': 'consulting', 'Consulting': 'consulting',
+        'Consultoria': 'consulting', 'Consulting': 'consulting',
       };
       const serviceVal = serviceMap[d.projectType];
       if (serviceVal) {
@@ -441,7 +558,7 @@ const { lang } = Astro.props;
 
         if (response.ok) {
           status.textContent = lang === 'es'
-            ? 'Mensaje enviado con éxito. Te responderemos en menos de 24h.'
+            ? 'Mensaje enviado con exito. Te responderemos en menos de 24h.'
             : 'Message sent successfully. We\'ll respond within 24h.';
           status.className = 'form-status success';
           form.reset();
@@ -451,8 +568,8 @@ const { lang } = Astro.props;
         }
       } catch {
         status.textContent = lang === 'es'
-          ? 'Error al enviar. Inténtalo de nuevo o escríbenos a hello@lando.com'
-          : 'Error sending. Try again or email us at hello@lando.com';
+          ? 'Error al enviar. Intentalo de nuevo o escribenos a info@lando.consulting'
+          : 'Error sending. Try again or email us at info@lando.consulting';
         status.className = 'form-status error';
       } finally {
         btnText.style.display = '';

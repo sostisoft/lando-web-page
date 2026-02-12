@@ -11,21 +11,24 @@ const { lang } = Astro.props;
 <section class="hero">
   <div class="hero-bg">
     <div class="hero-gradient"></div>
+    <div class="hero-gradient-2"></div>
     <div class="hero-grid"></div>
     <div class="hero-orb hero-orb-1"></div>
     <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+    <div class="hero-particles" id="hero-particles"></div>
   </div>
 
   <div class="container hero-content">
     <div class="hero-badge animate-on-scroll">
       <span class="badge-dot"></span>
-      {t(lang, 'hero.tagline')}
+      <span class="badge-text">{t(lang, 'hero.tagline')}</span>
     </div>
 
     <h1 class="hero-title animate-on-scroll">
       {t(lang, 'hero.title.line1')}<br />
       {t(lang, 'hero.title.line2')}<br />
-      <span class="text-gradient">{t(lang, 'hero.title.highlight')}</span>
+      <span class="text-gradient hero-highlight">{t(lang, 'hero.title.highlight')}</span>
     </h1>
 
     <p class="hero-description animate-on-scroll">
@@ -33,9 +36,9 @@ const { lang } = Astro.props;
     </p>
 
     <div class="hero-actions animate-on-scroll">
-      <a href="#contact" class="btn-primary">
+      <a href="#estimator" class="btn-primary btn-hero">
         {t(lang, 'hero.cta')}
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
           <path d="M3.5 8H12.5M12.5 8L8.5 4M12.5 8L8.5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
@@ -46,19 +49,36 @@ const { lang } = Astro.props;
 
     <div class="hero-stats animate-on-scroll">
       <div class="stat">
-        <span class="stat-number">3</span>
-        <span class="stat-label">{lang === 'es' ? 'Clientes máx.' : 'Max clients'}</span>
+        <span class="stat-number" data-count="3">3</span>
+        <span class="stat-label">{lang === 'es' ? 'Clientes max.' : 'Max clients'}</span>
       </div>
       <div class="stat-divider"></div>
       <div class="stat">
-        <span class="stat-number">3</span>
+        <span class="stat-number" data-count="3">3</span>
         <span class="stat-label">{lang === 'es' ? 'Semanas MVP' : 'Weeks MVP'}</span>
       </div>
       <div class="stat-divider"></div>
       <div class="stat">
-        <span class="stat-number">100%</span>
-        <span class="stat-label">{lang === 'es' ? 'Dedicación' : 'Dedication'}</span>
+        <span class="stat-number" data-count="100">100%</span>
+        <span class="stat-label">{lang === 'es' ? 'Dedicacion' : 'Dedication'}</span>
       </div>
+    </div>
+
+    <div class="hero-trusted animate-on-scroll">
+      <span class="trusted-label">{lang === 'es' ? 'Confian en nosotros:' : 'Trusted by:'}</span>
+      <div class="trusted-logos">
+        <span>KPN</span>
+        <span>Inditex</span>
+        <span>Openbank</span>
+        <span>Idealista</span>
+        <span>Empathy.co</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll-indicator">
+    <div class="scroll-mouse">
+      <div class="scroll-wheel"></div>
     </div>
   </div>
 </section>
@@ -81,71 +101,95 @@ const { lang } = Astro.props;
 
   .hero-gradient {
     position: absolute;
-    top: -40%;
+    top: -50%;
     left: 50%;
     transform: translateX(-50%);
-    width: 120%;
-    height: 80%;
-    background: radial-gradient(ellipse at center, var(--color-accent-glow) 0%, transparent 60%);
-    opacity: 0.4;
+    width: 140%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, rgba(124, 108, 240, 0.2) 0%, rgba(124, 108, 240, 0.05) 40%, transparent 70%);
+  }
+
+  .hero-gradient-2 {
+    position: absolute;
+    bottom: -30%;
+    left: 30%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(ellipse at center, rgba(0, 224, 208, 0.08) 0%, transparent 60%);
   }
 
   .hero-grid {
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
-    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+      linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 65%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 65%);
   }
 
   .hero-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
-    animation: float 8s ease-in-out infinite;
+    filter: blur(100px);
+    animation: float 10s ease-in-out infinite;
   }
 
   .hero-orb-1 {
-    width: 400px;
-    height: 400px;
-    top: 20%;
-    right: -10%;
-    background: rgba(108, 92, 231, 0.15);
-    animation-delay: 0s;
+    width: 500px;
+    height: 500px;
+    top: 10%;
+    right: -15%;
+    background: rgba(124, 108, 240, 0.12);
   }
 
   .hero-orb-2 {
-    width: 300px;
-    height: 300px;
-    bottom: 10%;
-    left: -5%;
-    background: rgba(0, 206, 201, 0.1);
-    animation-delay: 4s;
+    width: 350px;
+    height: 350px;
+    bottom: 5%;
+    left: -8%;
+    background: rgba(0, 224, 208, 0.08);
+    animation-delay: 3s;
+  }
+
+  .hero-orb-3 {
+    width: 200px;
+    height: 200px;
+    top: 40%;
+    left: 20%;
+    background: rgba(196, 181, 253, 0.06);
+    animation-delay: 6s;
+    animation-duration: 12s;
+  }
+
+  .hero-particles {
+    position: absolute;
+    inset: 0;
   }
 
   .hero-content {
     position: relative;
     z-index: 1;
     text-align: center;
-    max-width: 800px;
+    max-width: 850px;
     margin: 0 auto;
-    padding: var(--space-4xl) var(--space-lg);
+    padding: var(--space-4xl) var(--space-lg) var(--space-2xl);
   }
 
   .hero-badge {
     display: inline-flex;
     align-items: center;
     gap: var(--space-sm);
-    padding: 0.5rem 1.25rem;
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
+    padding: 0.5rem 1.5rem;
+    background: rgba(18, 18, 30, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(124, 108, 240, 0.2);
     border-radius: var(--radius-full);
     font-size: 0.85rem;
     font-weight: 500;
-    color: var(--color-text-secondary);
+    color: var(--color-accent-light);
     margin-bottom: var(--space-2xl);
     animation: fadeInUp 0.8s ease-out both;
   }
@@ -156,25 +200,36 @@ const { lang } = Astro.props;
     background: var(--color-success);
     border-radius: 50%;
     animation: pulse-glow 2s ease-in-out infinite;
-    box-shadow: 0 0 10px rgba(0, 206, 201, 0.5);
+    box-shadow: 0 0 12px rgba(0, 224, 208, 0.6);
   }
 
   .hero-title {
     font-family: var(--font-display);
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-size: clamp(2.8rem, 6.5vw, 5rem);
     font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
     margin-bottom: var(--space-xl);
     animation: fadeInUp 0.8s ease-out 0.1s both;
   }
 
+  .hero-highlight {
+    position: relative;
+    display: inline-block;
+    background: linear-gradient(135deg, #7c6cf0, #a89eff, #c4b5fd, #a89eff);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeInUp 0.8s ease-out 0.1s both, gradientShift 4s ease-in-out infinite;
+  }
+
   .hero-description {
-    font-size: clamp(1.05rem, 2vw, 1.2rem);
+    font-size: clamp(1.1rem, 2vw, 1.25rem);
     color: var(--color-text-secondary);
-    max-width: 560px;
+    max-width: 580px;
     margin: 0 auto var(--space-2xl);
-    line-height: 1.7;
+    line-height: 1.75;
     animation: fadeInUp 0.8s ease-out 0.2s both;
   }
 
@@ -188,12 +243,24 @@ const { lang } = Astro.props;
     animation: fadeInUp 0.8s ease-out 0.3s both;
   }
 
+  .btn-hero {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+  }
+
   .hero-stats {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-2xl);
     animation: fadeInUp 0.8s ease-out 0.4s both;
+    padding: var(--space-xl) var(--space-2xl);
+    background: rgba(18, 18, 30, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-xl);
+    margin-bottom: var(--space-2xl);
   }
 
   .stat {
@@ -204,15 +271,40 @@ const { lang } = Astro.props;
   }
 
   .stat-number {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 800;
     background: var(--color-accent-gradient);
+    background-size: 200% 100%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    animation: gradientShift 3s ease-in-out infinite;
   }
 
   .stat-label {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, transparent, var(--color-border-hover), transparent);
+  }
+
+  .hero-trusted {
+    animation: fadeInUp 0.8s ease-out 0.5s both;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+  }
+
+  .trusted-label {
     font-size: 0.8rem;
     color: var(--color-text-muted);
     text-transform: uppercase;
@@ -220,19 +312,99 @@ const { lang } = Astro.props;
     font-weight: 500;
   }
 
-  .stat-divider {
-    width: 1px;
-    height: 40px;
-    background: var(--color-border);
+  .trusted-logos {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .trusted-logos span {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.05em;
+    transition: color var(--transition-base);
+  }
+
+  .trusted-logos span:hover {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .hero-scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    animation: fadeIn 1s ease-out 1.5s both;
+  }
+
+  .scroll-mouse {
+    width: 24px;
+    height: 38px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    padding-top: 6px;
+  }
+
+  .scroll-wheel {
+    width: 3px;
+    height: 8px;
+    background: var(--color-accent-light);
+    border-radius: 2px;
+    animation: scrollDown 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollDown {
+    0% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(8px); opacity: 0.3; }
+    100% { transform: translateY(0); opacity: 1; }
   }
 
   @media (max-width: 640px) {
     .hero-stats {
       gap: var(--space-lg);
+      padding: var(--space-lg);
     }
 
     .hero-actions {
       flex-direction: column;
     }
+
+    .hero-trusted {
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .trusted-logos {
+      gap: var(--space-md);
+    }
   }
 </style>
+
+<script>
+  // Floating particles
+  const container = document.getElementById('hero-particles');
+  if (container) {
+    for (let i = 0; i < 30; i++) {
+      const particle = document.createElement('div');
+      const size = Math.random() * 3 + 1;
+      particle.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        background: rgba(168, 158, 255, ${Math.random() * 0.3 + 0.1});
+        border-radius: 50%;
+        left: ${Math.random() * 100}%;
+        top: ${Math.random() * 100}%;
+        animation: float ${Math.random() * 6 + 8}s ease-in-out infinite;
+        animation-delay: ${Math.random() * 5}s;
+      `;
+      container.appendChild(particle);
+    }
+  }
+</script>
