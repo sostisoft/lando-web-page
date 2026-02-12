@@ -1,12 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="8" fill="#0B1220"/>
-  <g transform="translate(-253 -23) scale(0.165)">
-    <style>.a{stroke:#6c5ce7; fill:none; stroke-linecap:round; stroke-linejoin:round}</style>
-    <path class="a" d="M280 170h140" stroke-width="18"/>
-    <path class="a" d="M290 170L330 70" stroke-width="18"/>
-    <path class="a" d="M370 70L410 170" stroke-width="18"/>
-    <path class="a" d="M295 140c30-30 80-30 110 0" stroke-width="14"/>
-    <path class="a" d="M315 150c20-20 50-20 70 0" stroke-width="12"/>
-    <path class="a" d="M335 160c10-10 20-10 30 0" stroke-width="10"/>
+  <rect width="32" height="32" rx="8" fill="#1a1d23"/>
+  <g transform="translate(16, 8)">
+    <circle cx="0" cy="0" r="2" fill="#6c63ff"/>
+    <path d="M-5.5 7 A 7.5 7.5 0 0 0 5.5 7" fill="none" stroke="#6c63ff" stroke-width="2.8" stroke-linecap="round"/>
+    <path d="M-12 15 A 16 16 0 0 0 12 15" fill="none" stroke="#6c63ff" stroke-width="2.8" stroke-linecap="round"/>
   </g>
 </svg>

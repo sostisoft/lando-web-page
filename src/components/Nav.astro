@@ -13,20 +13,24 @@ const altLang = lang === 'es' ? 'en' : 'es';
   <div class="container nav-inner">
     <a href={getLocalizedPath(lang, '/')} class="nav-logo">
       <!-- Full logo (desktop) -->
-      <svg class="logo-full" viewBox="0 0 1040 220" role="img" aria-label="LANDO">
-        <style>.lw{fill:#f0f0f5}.la{stroke:#6c5ce7;fill:none;stroke-linecap:round;stroke-linejoin:round}</style>
-        <path class="lw" d="M80 40h40v130h90v30H80z"/>
-        <path class="la" d="M280 170h140" stroke-width="18"/><path class="la" d="M290 170L330 70" stroke-width="18"/><path class="la" d="M370 70L410 170" stroke-width="18"/>
-        <path class="la" d="M295 140c30-30 80-30 110 0" stroke-width="14"/><path class="la" d="M315 150c20-20 50-20 70 0" stroke-width="12"/><path class="la" d="M335 160c10-10 20-10 30 0" stroke-width="10"/>
-        <path class="lw" d="M470 200V40h35l80 110V40h35v160h-35l-80-110v110z"/>
-        <path class="lw" d="M660 40h70c55 0 90 32 90 80s-35 80-90 80h-70zM700 70v100h30c33 0 55-20 55-50s-22-50-55-50z"/>
-        <path class="lw" d="M840 120c0-50 35-85 85-85s85 35 85 85-35 85-85 85-85-35-85-85zm40 0c0 30 18 52 45 52s45-22 45-52-18-52-45-52-45 22-45 52z"/>
+      <svg class="logo-full" viewBox="0 0 1000 300" role="img" aria-label="LANDO">
+        <text x="100" y="220" font-family="Arial Black, sans-serif" font-weight="900" font-size="180" fill="#e8e8ec" text-anchor="middle">L</text>
+        <g transform="translate(270, 100)">
+          <circle cx="0" cy="0" r="12" fill="#6c63ff"/>
+          <path d="M-35 45 A 48 48 0 0 0 35 45" fill="none" stroke="#6c63ff" stroke-width="18" stroke-linecap="round"/>
+          <path d="M-75 95 A 103 103 0 0 0 75 95" fill="none" stroke="#6c63ff" stroke-width="18" stroke-linecap="round"/>
+        </g>
+        <text x="440" y="220" font-family="Arial Black, sans-serif" font-weight="900" font-size="180" fill="#e8e8ec" text-anchor="middle">N</text>
+        <text x="610" y="220" font-family="Arial Black, sans-serif" font-weight="900" font-size="180" fill="#e8e8ec" text-anchor="middle">D</text>
+        <text x="780" y="220" font-family="Arial Black, sans-serif" font-weight="900" font-size="180" fill="#e8e8ec" text-anchor="middle">O</text>
       </svg>
       <!-- Icon only (mobile) -->
-      <svg class="logo-mobile" viewBox="260 50 180 140" role="img" aria-label="LANDO">
-        <style>.ma{stroke:#6c5ce7;fill:none;stroke-linecap:round;stroke-linejoin:round}</style>
-        <path class="ma" d="M280 170h140" stroke-width="18"/><path class="ma" d="M290 170L330 70" stroke-width="18"/><path class="ma" d="M370 70L410 170" stroke-width="18"/>
-        <path class="ma" d="M295 140c30-30 80-30 110 0" stroke-width="14"/><path class="ma" d="M315 150c20-20 50-20 70 0" stroke-width="12"/><path class="ma" d="M335 160c10-10 20-10 30 0" stroke-width="10"/>
+      <svg class="logo-mobile" viewBox="180 75 180 145" role="img" aria-label="LANDO">
+        <g transform="translate(270, 100)">
+          <circle cx="0" cy="0" r="12" fill="#6c63ff"/>
+          <path d="M-35 45 A 48 48 0 0 0 35 45" fill="none" stroke="#6c63ff" stroke-width="18" stroke-linecap="round"/>
+          <path d="M-75 95 A 103 103 0 0 0 75 95" fill="none" stroke="#6c63ff" stroke-width="18" stroke-linecap="round"/>
+        </g>
       </svg>
     </a>
 
