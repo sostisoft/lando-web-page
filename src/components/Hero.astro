@@ -366,6 +366,14 @@ const { lang } = Astro.props;
   }
 
   @media (max-width: 640px) {
+    .hero {
+      align-items: flex-start;
+    }
+
+    .hero-content {
+      padding-top: var(--space-lg);
+    }
+
     .hero-stats {
       gap: var(--space-lg);
       padding: var(--space-lg);
