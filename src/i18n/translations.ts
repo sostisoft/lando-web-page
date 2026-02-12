@@ -131,6 +131,21 @@ export const translations = {
     'estimator.result.restart': 'Volver a calcular',
     'estimator.back': 'Atrás',
 
+    // Team
+    'team.tagline': 'Nuestro equipo',
+    'team.title': 'Ingenieros con experiencia real',
+    'team.subtitle': 'Profesionales senior que han liderado proyectos en las empresas tecnológicas más exigentes de Europa.',
+    'team.javier.role': 'Senior Software Engineer',
+    'team.javier.experience': 'Java · Kotlin · Cloud · Microservicios',
+    'team.javier.desc': 'Ingeniero de software especializado en arquitecturas de microservicios y Domain-Driven Design. Ha trabajado en proyectos de alta escala en retail, banca y real estate.',
+    'team.tibor.role': 'Solution Architect & Tech Lead',
+    'team.tibor.experience': '+25 años · Java Full-Stack · DevOps',
+    'team.tibor.desc': 'Arquitecto de software con más de 25 años de experiencia. Ha liderado equipos y diseñado sistemas para telecomunicaciones, logística y fintech a nivel europeo.',
+
+    // Clients
+    'clients.tagline': 'Clientes que confían en nosotros',
+    'clients.title': 'Empresas con las que hemos trabajado',
+
     // Cookie Banner
     'cookies.banner.title': 'Usamos cookies',
     'cookies.banner.desc': 'Utilizamos cookies propias y de terceros para mejorar tu experiencia en nuestro sitio web. ',
@@ -275,6 +290,21 @@ export const translations = {
     'estimator.result.cta': 'Request exact quote',
     'estimator.result.restart': 'Recalculate',
     'estimator.back': 'Back',
+
+    // Team
+    'team.tagline': 'Our team',
+    'team.title': 'Engineers with real-world experience',
+    'team.subtitle': 'Senior professionals who have led projects at Europe\'s most demanding tech companies.',
+    'team.javier.role': 'Senior Software Engineer',
+    'team.javier.experience': 'Java · Kotlin · Cloud · Microservices',
+    'team.javier.desc': 'Software engineer specialized in microservices architectures and Domain-Driven Design. Has worked on large-scale projects in retail, banking, and real estate.',
+    'team.tibor.role': 'Solution Architect & Tech Lead',
+    'team.tibor.experience': '+25 years · Java Full-Stack · DevOps',
+    'team.tibor.desc': 'Software architect with over 25 years of experience. Has led teams and designed systems for telecommunications, logistics, and fintech across Europe.',
+
+    // Clients
+    'clients.tagline': 'Trusted by',
+    'clients.title': 'Companies we\'ve worked with',
 
     // Cookie Banner
     'cookies.banner.title': 'We use cookies',

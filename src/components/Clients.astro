@@ -1,0 +1,125 @@
+---
+import { t, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const clients = [
+  { name: 'KPN', sector: 'Telecom' },
+  { name: 'Inditex', sector: 'Retail' },
+  { name: 'Mercadona', sector: 'Retail' },
+  { name: 'Openbank', sector: 'Fintech' },
+  { name: 'Idealista', sector: 'PropTech' },
+  { name: 'Brinks', sector: 'Security' },
+  { name: 'Qbuzz', sector: 'Transport' },
+  { name: 'Empathy.co', sector: 'Search AI' },
+];
+---
+
+<section class="section clients" id="clients">
+  <div class="container">
+    <div class="clients-header animate-on-scroll">
+      <p class="section-tagline">{t(lang, 'clients.tagline')}</p>
+      <h2 class="section-title">{t(lang, 'clients.title')}</h2>
+    </div>
+
+    <div class="clients-grid">
+      {clients.map((client, i) => (
+        <div class="client-card animate-on-scroll" style={`animation-delay: ${i * 0.06}s`}>
+          <span class="client-name">{client.name}</span>
+          <span class="client-sector">{client.sector}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .clients {
+    background: var(--color-bg-alt);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .clients::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+  }
+
+  .clients::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+  }
+
+  .clients-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto var(--space-3xl);
+  }
+
+  .clients-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .client-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-xl) var(--space-lg);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-base);
+  }
+
+  .client-card:hover {
+    border-color: var(--color-border-hover);
+    background: var(--color-bg-card-hover);
+    transform: translateY(-2px);
+  }
+
+  .client-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: 0.02em;
+  }
+
+  .client-sector {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 768px) {
+    .clients-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 400px) {
+    .clients-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
+  }
+</style>

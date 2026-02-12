@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 220" role="img" aria-label="LANDO logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 220" role="img" aria-label="LANDO logo">
   <style>
     .w{fill:#f0f0f5}
-    .a{stroke:#00B3FF; fill:none; stroke-linecap:round; stroke-linejoin:round}
+    .a{stroke:#6c5ce7; fill:none; stroke-linecap:round; stroke-linejoin:round}
   </style>
 
   <!-- L -->
@@ -19,5 +19,5 @@
   <!-- D -->
   <path class="w" d="M660 40h70c55 0 90 32 90 80s-35 80-90 80h-70zM700 70v100h30c33 0 55-20 55-50s-22-50-55-50z"/>
   <!-- O -->
-  <path class="w" d="M840 120c0-50 35-85 85-85s85 35 85 85-35 85-85 85-85-35-85-85zm40 0c0 30 18 52 45 52s45-22 45-52-18-52-45-52-45 22-45 52z" transform="translate(-90 0)"/>
+  <path class="w" d="M840 120c0-50 35-85 85-85s85 35 85 85-35 85-85 85-85-35-85-85zm40 0c0 30 18 52 45 52s45-22 45-52-18-52-45-52-45 22-45 52z"/>
 </svg>
