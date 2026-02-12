@@ -1,0 +1,11 @@
+node_modules
+dist
+.git
+.github
+.astro
+*.md
+.gitignore
+.dockerignore
+deploy/setup-server.sh
+deploy/setup-certbot.sh
+deploy/env.example

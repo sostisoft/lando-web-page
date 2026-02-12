@@ -12,20 +12,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg ASTRO_SITE=https://lando.consulting \
+            --build-arg ASTRO_BASE=/ \
+            -t lando-web:latest .
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build Astro
-        run: npm run build
-        env:
-          ASTRO_SITE: http://217.154.190.107
-          ASTRO_BASE: /
+      - name: Save Docker image
+        run: docker save lando-web:latest | gzip > /tmp/lando-web.tar.gz
 
       - name: Setup SSH key
         run: |
@@ -34,13 +29,55 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
 
-      - name: Deploy via rsync
+      - name: Create deploy directory on server
         run: |
-          rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-            ./dist/ \
-            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/lando-web/html/
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            "mkdir -p /opt/lando"
 
-      - name: Cleanup SSH key
+      - name: Copy Docker image to server
+        run: |
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            /tmp/lando-web.tar.gz \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/lando/lando-web.tar.gz
+
+      - name: Copy docker-compose.yml to server
+        run: |
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            docker-compose.yml \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/lando/docker-compose.yml
+
+      - name: Deploy on server
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'DEPLOY'
+
+          cd /opt/lando
+
+          # Initialize .env with secure passwords if first deploy
+          if [ ! -f .env ]; then
+            echo "POSTGRES_PASSWORD=$(openssl rand -hex 24)" > .env
+            echo "APP_SECRET=$(openssl rand -hex 32)" >> .env
+            echo "==> Generated .env with secure credentials"
+          fi
+
+          # Load the new Docker image
+          echo "==> Loading Docker image..."
+          docker load < lando-web.tar.gz
+          rm -f lando-web.tar.gz
+
+          # Start/update all services
+          echo "==> Starting services..."
+          docker compose up -d --remove-orphans
+
+          # Show status
+          echo "==> Deployment complete. Container status:"
+          docker compose ps
+
+          DEPLOY
+
+      - name: Cleanup
         if: always()
-        run: rm -f ~/.ssh/deploy_key
+        run: |
+          rm -f ~/.ssh/deploy_key
+          rm -f /tmp/lando-web.tar.gz

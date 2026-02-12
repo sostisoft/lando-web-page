@@ -1,0 +1,71 @@
+services:
+  # --- Nginx: serves Astro static site + proxies Umami ---
+  web:
+    image: lando-web:latest
+    container_name: lando-web
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    depends_on:
+      - umami
+    restart: always
+    networks:
+      - lando-net
+
+  # --- Umami: self-hosted analytics ---
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    container_name: lando-umami
+    environment:
+      DATABASE_URL: postgresql://umami:${POSTGRES_PASSWORD}@db:5432/umami
+      DATABASE_TYPE: postgresql
+      APP_SECRET: ${APP_SECRET}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+    networks:
+      - lando-net
+
+  # --- PostgreSQL: Umami database ---
+  db:
+    image: postgres:15-alpine
+    container_name: lando-db
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - umami-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U umami"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+    networks:
+      - lando-net
+
+  # --- Certbot: auto-renew SSL certificates ---
+  # First time: docker compose run certbot certonly --webroot -w /var/www/certbot -d lando.consulting
+  certbot:
+    image: certbot/certbot
+    container_name: lando-certbot
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done'"
+    restart: always
+    networks:
+      - lando-net
+
+networks:
+  lando-net:
+
+volumes:
+  umami-db-data:
+  letsencrypt:
+  certbot-www:
