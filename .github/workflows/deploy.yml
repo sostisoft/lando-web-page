@@ -32,6 +32,9 @@ jobs:
 
       - name: Build Astro
         run: npm run build
+        env:
+          ASTRO_SITE: https://sostisoft.github.io
+          ASTRO_BASE: /lando-web-page/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

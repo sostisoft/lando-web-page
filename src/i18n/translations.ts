@@ -337,7 +337,9 @@ export function t(lang: Lang, key: TranslationKey): string {
 }
 
 export function getLangFromUrl(url: URL): Lang {
-  const [, lang] = url.pathname.split('/');
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const pathname = url.pathname.replace(base, '');
+  const [, lang] = pathname.split('/');
   if (lang in translations) return lang as Lang;
   return defaultLang;
 }
