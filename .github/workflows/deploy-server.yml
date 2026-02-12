@@ -102,6 +102,29 @@ jobs:
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
             'cd /opt/lando && echo "==> Starting services..." && docker compose up -d --remove-orphans && echo "==> Done" && docker compose ps'
 
+      - name: Verify services are healthy
+        run: |
+          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} 'bash -s' <<'REMOTE'
+            cd /opt/lando
+            echo "==> Waiting 15s for services to start..."
+            sleep 15
+
+            echo "==> Container status:"
+            docker compose ps
+
+            echo "==> Checking Umami logs (last 30 lines):"
+            docker compose logs --tail=30 umami
+
+            echo "==> Checking DB logs (last 15 lines):"
+            docker compose logs --tail=15 db
+
+            echo "==> Checking Web/Nginx logs (last 15 lines):"
+            docker compose logs --tail=15 web
+
+            echo "==> Port listeners:"
+            ss -tlnp 'sport = :80 or sport = :443 or sport = :3001' || true
+          REMOTE
+
       - name: Cleanup
         if: always()
         run: |
