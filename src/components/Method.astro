@@ -1,0 +1,169 @@
+---
+import { t, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const pillars = [
+  {
+    number: t(lang, 'method.exclusive.number'),
+    label: t(lang, 'method.exclusive.label'),
+    title: t(lang, 'method.exclusive.title'),
+    desc: t(lang, 'method.exclusive.desc'),
+    color: '#6c5ce7',
+  },
+  {
+    number: t(lang, 'method.mvp.number'),
+    label: t(lang, 'method.mvp.label'),
+    title: t(lang, 'method.mvp.title'),
+    desc: t(lang, 'method.mvp.desc'),
+    color: '#00cec9',
+  },
+  {
+    number: t(lang, 'method.quality.number'),
+    label: t(lang, 'method.quality.label'),
+    title: t(lang, 'method.quality.title'),
+    desc: t(lang, 'method.quality.desc'),
+    color: '#fdcb6e',
+  },
+];
+---
+
+<section class="section method" id="method">
+  <div class="container">
+    <div class="method-header animate-on-scroll">
+      <p class="section-tagline">{t(lang, 'method.tagline')}</p>
+      <h2 class="section-title">{t(lang, 'method.title')}</h2>
+    </div>
+
+    <div class="pillars">
+      {pillars.map((pillar, i) => (
+        <div class="pillar animate-on-scroll" style={`--pillar-color: ${pillar.color}; animation-delay: ${i * 0.15}s`}>
+          <div class="pillar-number-wrap">
+            <span class="pillar-number">{pillar.number}</span>
+            <span class="pillar-label">{pillar.label}</span>
+          </div>
+          <div class="pillar-content">
+            <h3 class="pillar-title">{pillar.title}</h3>
+            <p class="pillar-desc">{pillar.desc}</p>
+          </div>
+          <div class="pillar-glow"></div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .method {
+    background: var(--color-bg-alt);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .method::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+  }
+
+  .method::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+  }
+
+  .method-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto var(--space-3xl);
+  }
+
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-xl);
+  }
+
+  .pillar {
+    position: relative;
+    padding: var(--space-2xl);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all var(--transition-base);
+  }
+
+  .pillar:hover {
+    border-color: color-mix(in srgb, var(--pillar-color) 40%, transparent);
+    transform: translateY(-4px);
+  }
+
+  .pillar-glow {
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 200px;
+    height: 200px;
+    background: var(--pillar-color);
+    opacity: 0.05;
+    border-radius: 50%;
+    filter: blur(60px);
+    transition: opacity var(--transition-base);
+  }
+
+  .pillar:hover .pillar-glow {
+    opacity: 0.1;
+  }
+
+  .pillar-number-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+  }
+
+  .pillar-number {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--pillar-color);
+  }
+
+  .pillar-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  .pillar-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: var(--space-md);
+    color: var(--color-text);
+  }
+
+  .pillar-desc {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 640px) {
+    .pillars {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

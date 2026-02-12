@@ -1,0 +1,137 @@
+---
+import { t, type Lang, getLocalizedPath } from '../i18n/translations';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href={getLocalizedPath(lang, '/')} class="footer-logo">
+          <span class="logo-icon">L</span>
+          <span class="logo-text">Lando</span>
+        </a>
+        <p class="footer-desc">{t(lang, 'footer.description')}</p>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">{t(lang, 'footer.services')}</h4>
+        <ul class="footer-links">
+          <li><a href="#services">{t(lang, 'services.consulting.title')}</a></li>
+          <li><a href="#services">{t(lang, 'services.web.title')}</a></li>
+          <li><a href="#services">{t(lang, 'services.ai.title')}</a></li>
+          <li><a href="#services">{t(lang, 'services.mvp.title')}</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">{t(lang, 'footer.legal')}</h4>
+        <ul class="footer-links">
+          <li><a href={getLocalizedPath(lang, '/legal/privacidad')}>{t(lang, 'footer.privacy')}</a></li>
+          <li><a href={getLocalizedPath(lang, '/legal/cookies')}>{t(lang, 'footer.cookies')}</a></li>
+          <li><a href={getLocalizedPath(lang, '/legal/aviso-legal')}>{t(lang, 'footer.legal.notice')}</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copyright">{t(lang, 'footer.rights')}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-4xl) 0 var(--space-2xl);
+    background: var(--color-bg-alt);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: var(--space-3xl);
+    margin-bottom: var(--space-3xl);
+  }
+
+  .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  .logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--color-accent-gradient);
+    border-radius: var(--radius-md);
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: white;
+  }
+
+  .logo-text {
+    color: var(--color-text);
+  }
+
+  .footer-desc {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    max-width: 300px;
+  }
+
+  .footer-heading {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text);
+    margin-bottom: var(--space-lg);
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .footer-links a {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    transition: color var(--transition-fast);
+  }
+
+  .footer-links a:hover {
+    color: var(--color-accent-light);
+  }
+
+  .footer-bottom {
+    padding-top: var(--space-2xl);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .footer-copyright {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xl);
+    }
+  }
+</style>

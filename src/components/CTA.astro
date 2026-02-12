@@ -1,0 +1,108 @@
+---
+import { t, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<section class="cta-section" id="contact">
+  <div class="container">
+    <div class="cta-card animate-on-scroll">
+      <div class="cta-bg">
+        <div class="cta-orb cta-orb-1"></div>
+        <div class="cta-orb cta-orb-2"></div>
+      </div>
+      <div class="cta-content">
+        <h2 class="cta-title">{t(lang, 'cta.title')}</h2>
+        <p class="cta-desc">{t(lang, 'cta.desc')}</p>
+        <a href="mailto:hello@lando.es" class="btn-primary btn-lg">
+          {t(lang, 'cta.button')}
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3.5 8H12.5M12.5 8L8.5 4M12.5 8L8.5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <p class="cta-note">{t(lang, 'cta.note')}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-section {
+    padding: var(--space-5xl) 0;
+  }
+
+  .cta-card {
+    position: relative;
+    padding: var(--space-4xl) var(--space-2xl);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-card);
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .cta-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .cta-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+  }
+
+  .cta-orb-1 {
+    width: 300px;
+    height: 300px;
+    top: -30%;
+    left: -10%;
+    background: rgba(108, 92, 231, 0.15);
+  }
+
+  .cta-orb-2 {
+    width: 250px;
+    height: 250px;
+    bottom: -30%;
+    right: -10%;
+    background: rgba(0, 206, 201, 0.1);
+  }
+
+  .cta-content {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .cta-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: var(--space-lg);
+    line-height: 1.2;
+  }
+
+  .cta-desc {
+    font-size: 1.05rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .btn-lg {
+    padding: 1rem 2.5rem;
+    font-size: 1.05rem;
+  }
+
+  .cta-note {
+    margin-top: var(--space-lg);
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+</style>

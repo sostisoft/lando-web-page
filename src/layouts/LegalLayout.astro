@@ -1,0 +1,103 @@
+---
+import Layout from './Layout.astro';
+import { t, type Lang, getLocalizedPath } from '../i18n/translations';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+}
+
+const { title, description, lang } = Astro.props;
+---
+
+<Layout title={`${title} — Lando`} description={description} lang={lang}>
+  <section class="legal-page">
+    <div class="container">
+      <a href={getLocalizedPath(lang, '/')} class="legal-back">{t(lang, 'legal.back')}</a>
+      <h1 class="legal-title">{title}</h1>
+      <div class="legal-content">
+        <slot />
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .legal-page {
+    padding-top: calc(var(--nav-height) + var(--space-4xl));
+    padding-bottom: var(--space-5xl);
+    min-height: 100vh;
+  }
+
+  .legal-back {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--color-accent-light);
+    margin-bottom: var(--space-2xl);
+    transition: opacity var(--transition-fast);
+  }
+
+  .legal-back:hover {
+    opacity: 0.8;
+  }
+
+  .legal-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    margin-bottom: var(--space-3xl);
+    line-height: 1.2;
+  }
+
+  .legal-content {
+    max-width: 720px;
+  }
+
+  .legal-content :global(h2) {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-top: var(--space-3xl);
+    margin-bottom: var(--space-lg);
+    color: var(--color-text);
+  }
+
+  .legal-content :global(h3) {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-md);
+    color: var(--color-text);
+  }
+
+  .legal-content :global(p) {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    margin-bottom: var(--space-lg);
+  }
+
+  .legal-content :global(ul) {
+    margin-bottom: var(--space-lg);
+    padding-left: var(--space-xl);
+  }
+
+  .legal-content :global(li) {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    margin-bottom: var(--space-sm);
+    list-style: disc;
+  }
+
+  .legal-content :global(strong) {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .legal-content :global(a) {
+    color: var(--color-accent-light);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+</style>

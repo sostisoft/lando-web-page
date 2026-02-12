@@ -1,0 +1,22 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import Services from '../../components/Services.astro';
+import Method from '../../components/Method.astro';
+import Testimonials from '../../components/Testimonials.astro';
+import CTA from '../../components/CTA.astro';
+
+const lang = 'es' as const;
+---
+
+<Layout
+  title="Lando — Consultoría Tecnológica de Alto Impacto"
+  description="Transformamos ideas en productos digitales extraordinarios. Trabajamos con máximo 3 clientes a la vez para garantizar resultados óptimos. MVP desde 3 semanas."
+  lang={lang}
+>
+  <Hero lang={lang} />
+  <Services lang={lang} />
+  <Method lang={lang} />
+  <Testimonials lang={lang} />
+  <CTA lang={lang} />
+</Layout>
