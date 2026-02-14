@@ -131,16 +131,25 @@ jobs:
             set -e
             cd /opt/lando
 
+            CERT_DIR="/etc/letsencrypt/live/landofirm.com"
+
             # Check if we already have a real Let's Encrypt certificate
             IS_LE=$(docker compose exec -T web sh -c \
-              "openssl x509 -in /etc/letsencrypt/live/landofirm.com/fullchain.pem -issuer -noout 2>/dev/null" \
+              "openssl x509 -in ${CERT_DIR}/fullchain.pem -issuer -noout 2>/dev/null" \
               | grep -c "Let's Encrypt" || true)
 
             if [ "$IS_LE" -gt 0 ]; then
               echo "==> Valid Let's Encrypt certificate found, attempting renewal..."
               docker compose run --rm certbot renew --quiet || true
             else
-              echo "==> No Let's Encrypt certificate found, obtaining new one..."
+              echo "==> No Let's Encrypt certificate (self-signed detected), obtaining real one..."
+
+              # Remove self-signed cert files from the shared volume so certbot
+              # can create its own directory structure with proper symlinks.
+              # Certbot fails if regular files already exist at the target path.
+              docker compose exec -T web sh -c \
+                "rm -rf /etc/letsencrypt/live /etc/letsencrypt/archive /etc/letsencrypt/renewal 2>/dev/null || true"
+
               docker compose run --rm certbot certonly \
                 --webroot \
                 --webroot-path=/var/www/certbot \
@@ -149,6 +158,17 @@ jobs:
                 --agree-tos \
                 --email info@landofirm.com \
                 --no-eff-email
+
+              # If certbot failed, regenerate self-signed so nginx doesn't crash
+              if ! docker compose exec -T web sh -c "test -f ${CERT_DIR}/fullchain.pem"; then
+                echo "==> Certbot failed, regenerating self-signed cert..."
+                docker compose exec -T web sh -c "
+                  mkdir -p ${CERT_DIR} && \
+                  openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+                    -keyout ${CERT_DIR}/privkey.pem \
+                    -out ${CERT_DIR}/fullchain.pem \
+                    -subj '/CN=landofirm.com' 2>/dev/null"
+              fi
             fi
 
             # Reload nginx to pick up new/renewed certificate
