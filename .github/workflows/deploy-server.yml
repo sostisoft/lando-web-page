@@ -291,7 +291,10 @@ jobs:
               docker compose start certbot 2>/dev/null || true
             fi
 
-            # Reload nginx to pick up new/renewed certificate + HSTS if enabled
+            # Ensure web container is running, then reload nginx
+            echo "==> Ensuring web service is up..."
+            docker compose up -d web
+            sleep 3
             docker compose exec -T web nginx -s reload
             echo "==> SSL setup complete"
 
