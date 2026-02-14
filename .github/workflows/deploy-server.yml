@@ -106,18 +106,19 @@ jobs:
 
             echo "==> Stopping any old standalone containers..."
             docker rm -f lando-umami 2>/dev/null || true
+            docker rm -f umami umami-db 2>/dev/null || true
 
-            echo "==> Diagnosing ports 80/443/3001..."
-            ss -tlnp 'sport = :80 or sport = :443 or sport = :3001' || true
+            echo "==> Diagnosing ports 80/443/3000..."
+            ss -tlnp 'sport = :80 or sport = :443 or sport = :3000' || true
 
             echo "==> Killing anything on needed ports..."
             fuser -k 80/tcp 2>/dev/null || true
             fuser -k 443/tcp 2>/dev/null || true
-            fuser -k 3001/tcp 2>/dev/null || true
+            fuser -k 3000/tcp 2>/dev/null || true
             sleep 2
 
             echo "==> Verifying ports are free..."
-            for port in 80 443 3001; do
+            for port in 80 443 3000; do
               if ss -tlnp "sport = :$port" | grep -q ":$port"; then
                 echo "WARNING: port $port still in use"
                 ss -tlnp "sport = :$port"
@@ -151,7 +152,7 @@ jobs:
             docker compose logs --tail=15 web
 
             echo "==> Port listeners:"
-            ss -tlnp 'sport = :80 or sport = :443 or sport = :3001' || true
+            ss -tlnp 'sport = :80 or sport = :443 or sport = :3000' || true
           REMOTE
 
       - name: Setup Let's Encrypt SSL certificate
