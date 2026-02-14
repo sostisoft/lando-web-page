@@ -1,3 +1,5 @@
+import { SITE } from '../config/site';
+
 export const languages = {
   es: 'Español',
   en: 'English',
@@ -180,7 +182,7 @@ export const translations = {
     'footer.privacy': 'Política de Privacidad',
     'footer.cookies': 'Política de Cookies',
     'footer.legal.notice': 'Aviso Legal',
-    'footer.rights': '© 2025 Lando. Todos los derechos reservados.',
+    'footer.rights': `© ${new Date().getFullYear()} ${SITE.name}. Todos los derechos reservados.`,
 
     // Legal pages
     'legal.privacy.title': 'Política de Privacidad',
@@ -360,7 +362,7 @@ export const translations = {
     'footer.privacy': 'Privacy Policy',
     'footer.cookies': 'Cookie Policy',
     'footer.legal.notice': 'Legal Notice',
-    'footer.rights': '© 2025 Lando. All rights reserved.',
+    'footer.rights': `© ${new Date().getFullYear()} ${SITE.name}. All rights reserved.`,
 
     // Legal pages
     'legal.privacy.title': 'Privacy Policy',

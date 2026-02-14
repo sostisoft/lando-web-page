@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-const site = process.env.ASTRO_SITE || 'http://217.154.190.107';
+const site = process.env.ASTRO_SITE || 'https://landofirm.com';
 const base = process.env.ASTRO_BASE || '/';
 
 export default defineConfig({

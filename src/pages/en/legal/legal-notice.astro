@@ -1,5 +1,6 @@
 ---
 import LegalLayout from '../../../layouts/LegalLayout.astro';
+import { SITE } from '../../../config/site';
 ---
 
 <LegalLayout
@@ -16,11 +17,11 @@ import LegalLayout from '../../../layouts/LegalLayout.astro';
     owner are provided:
   </p>
   <ul>
-    <li><strong>Company name:</strong> Lando Consulting S.L.</li>
-    <li><strong>Tax ID (NIF):</strong> B70829700</li>
-    <li><strong>Registered address:</strong> Calle Humanitarias 19 1A, 28025 Madrid, Spain</li>
-    <li><strong>Email:</strong> hello@lando.com</li>
-    <li><strong>Commercial Registry:</strong> Registered at the Commercial Registry of Madrid</li>
+    <li><strong>Company name:</strong> {SITE.company.legalName}</li>
+    <li><strong>Tax ID (NIF):</strong> {SITE.company.taxId}</li>
+    <li><strong>Registered address:</strong> {SITE.company.address}, {SITE.company.country.en}</li>
+    <li><strong>Email:</strong> {SITE.email}</li>
+    <li><strong>Commercial Registry:</strong> Registered at the {SITE.company.registry.en}</li>
   </ul>
 
   <h2>2. Purpose</h2>

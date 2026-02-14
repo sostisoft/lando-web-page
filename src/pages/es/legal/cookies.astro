@@ -1,5 +1,6 @@
 ---
 import LegalLayout from '../../../layouts/LegalLayout.astro';
+import { SITE } from '../../../config/site';
 ---
 
 <LegalLayout
@@ -65,6 +66,6 @@ import LegalLayout from '../../../layouts/LegalLayout.astro';
   <h2>6. Contacto</h2>
   <p>
     Si tiene alguna pregunta sobre nuestra Política de Cookies, puede contactarnos en
-    <strong>hello@lando.com</strong>.
+    <strong>{SITE.email}</strong>.
   </p>
 </LegalLayout>

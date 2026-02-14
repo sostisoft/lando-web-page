@@ -1,5 +1,6 @@
 ---
 import LegalLayout from '../../../layouts/LegalLayout.astro';
+import { SITE } from '../../../config/site';
 ---
 
 <LegalLayout
@@ -16,11 +17,11 @@ import LegalLayout from '../../../layouts/LegalLayout.astro';
     titular del sitio web:
   </p>
   <ul>
-    <li><strong>Denominación social:</strong> Lando Consulting S.L.</li>
-    <li><strong>NIF:</strong> B70829700</li>
-    <li><strong>Domicilio social:</strong> Calle Humanitarias 19 1A, 28025 Madrid, España</li>
-    <li><strong>Email:</strong> hello@lando.com</li>
-    <li><strong>Inscripción registral:</strong> Registro Mercantil de Madrid</li>
+    <li><strong>Denominación social:</strong> {SITE.company.legalName}</li>
+    <li><strong>NIF:</strong> {SITE.company.taxId}</li>
+    <li><strong>Domicilio social:</strong> {SITE.company.address}, {SITE.company.country.es}</li>
+    <li><strong>Email:</strong> {SITE.email}</li>
+    <li><strong>Inscripción registral:</strong> {SITE.company.registry.es}</li>
   </ul>
 
   <h2>2. Objeto</h2>

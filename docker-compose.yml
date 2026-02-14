@@ -52,7 +52,7 @@ services:
       - lando-net
 
   # --- Certbot: auto-renew SSL certificates ---
-  # First time: docker compose run certbot certonly --webroot -w /var/www/certbot -d lando.consulting
+  # First time: docker compose run certbot certonly --webroot -w /var/www/certbot -d landofirm.com
   certbot:
     image: certbot/certbot
     container_name: lando-certbot

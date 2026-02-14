@@ -10,7 +10,7 @@ RUN npm ci
 
 COPY . .
 
-ARG ASTRO_SITE=https://lando.consulting
+ARG ASTRO_SITE=https://landofirm.com
 ARG ASTRO_BASE=/
 ENV ASTRO_SITE=$ASTRO_SITE
 ENV ASTRO_BASE=$ASTRO_BASE
