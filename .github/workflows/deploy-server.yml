@@ -132,6 +132,25 @@ jobs:
 
             CERT_DIR="/etc/letsencrypt/live/landofirm.com"
 
+            # --- Diagnostics: verify prerequisites for certbot ---
+            echo "==> [DIAG] DNS resolution for landofirm.com:"
+            getent hosts landofirm.com || echo "DNS resolution FAILED"
+
+            echo "==> [DIAG] Server's public IP:"
+            curl -s --max-time 5 https://ifconfig.me || echo "Could not determine public IP"
+            echo ""
+
+            echo "==> [DIAG] Testing port 80 from localhost:"
+            curl -sI --max-time 5 http://localhost/.well-known/acme-challenge/test 2>&1 | head -5 || echo "Port 80 not responding"
+
+            echo "==> [DIAG] Checking if something else is on port 80/443:"
+            ss -tlnp 'sport = :80 or sport = :443' 2>/dev/null || true
+
+            echo "==> [DIAG] Current cert issuer:"
+            docker compose exec -T web sh -c \
+              "openssl x509 -in ${CERT_DIR}/fullchain.pem -issuer -noout 2>/dev/null" || echo "No cert found"
+            echo "---"
+
             # Check if we already have a real Let's Encrypt certificate
             IS_LE=$(docker compose exec -T web sh -c \
               "openssl x509 -in ${CERT_DIR}/fullchain.pem -issuer -noout 2>/dev/null" \
@@ -149,12 +168,23 @@ jobs:
               sleep 2
 
               # Remove self-signed cert files and any stale certbot state
-              # so certbot can create its own directory structure with symlinks.
               echo "==> Cleaning self-signed cert and stale certbot state..."
               docker compose exec -T web sh -c \
                 "rm -rf /etc/letsencrypt/live /etc/letsencrypt/archive /etc/letsencrypt/renewal /etc/letsencrypt/.certbot.lock 2>/dev/null; echo done"
 
-              # Run certbot with verbose output so we can see failures in Actions logs
+              # Write a test file to verify the ACME webroot is working
+              echo "==> [DIAG] Testing ACME webroot..."
+              docker compose exec -T web sh -c \
+                "mkdir -p /var/www/certbot/.well-known/acme-challenge && echo ok > /var/www/certbot/.well-known/acme-challenge/selftest"
+              WEBROOT_TEST=$(curl -s --max-time 5 http://localhost/.well-known/acme-challenge/selftest 2>/dev/null)
+              if [ "$WEBROOT_TEST" = "ok" ]; then
+                echo "==> [DIAG] ACME webroot is working correctly"
+              else
+                echo "==> [DIAG] WARNING: ACME webroot test FAILED (got: '${WEBROOT_TEST}')"
+              fi
+              docker compose exec -T web sh -c "rm -f /var/www/certbot/.well-known/acme-challenge/selftest" 2>/dev/null
+
+              # Run certbot with verbose output
               echo "==> Running certbot certonly..."
               if docker compose run --rm certbot certonly \
                 --webroot \
@@ -164,10 +194,11 @@ jobs:
                 --agree-tos \
                 --email info@landofirm.com \
                 --no-eff-email \
-                -v; then
+                -v 2>&1; then
                 echo "==> Certbot succeeded!"
               else
-                echo "==> Certbot FAILED (exit code $?)"
+                CERTBOT_EXIT=$?
+                echo "==> Certbot FAILED (exit code ${CERTBOT_EXIT})"
                 echo "==> Regenerating self-signed cert so nginx doesn't crash..."
                 docker compose exec -T web sh -c "
                   mkdir -p ${CERT_DIR} && \
