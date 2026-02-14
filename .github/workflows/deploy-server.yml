@@ -128,7 +128,6 @@ jobs:
       - name: Setup Let's Encrypt SSL certificate
         run: |
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} 'bash -s' <<'REMOTE'
-            set -e
             cd /opt/lando
 
             CERT_DIR="/etc/letsencrypt/live/landofirm.com"
@@ -140,28 +139,36 @@ jobs:
 
             if [ "$IS_LE" -gt 0 ]; then
               echo "==> Valid Let's Encrypt certificate found, attempting renewal..."
-              docker compose run --rm certbot renew --quiet || true
+              docker compose run --rm certbot renew || true
             else
               echo "==> No Let's Encrypt certificate (self-signed detected), obtaining real one..."
 
-              # Remove self-signed cert files from the shared volume so certbot
-              # can create its own directory structure with proper symlinks.
-              # Certbot fails if regular files already exist at the target path.
-              docker compose exec -T web sh -c \
-                "rm -rf /etc/letsencrypt/live /etc/letsencrypt/archive /etc/letsencrypt/renewal 2>/dev/null || true"
+              # Stop the certbot renew loop to release the lock file
+              echo "==> Stopping certbot service to release lock..."
+              docker compose stop certbot 2>/dev/null || true
+              sleep 2
 
-              docker compose run --rm certbot certonly \
+              # Remove self-signed cert files and any stale certbot state
+              # so certbot can create its own directory structure with symlinks.
+              echo "==> Cleaning self-signed cert and stale certbot state..."
+              docker compose exec -T web sh -c \
+                "rm -rf /etc/letsencrypt/live /etc/letsencrypt/archive /etc/letsencrypt/renewal /etc/letsencrypt/.certbot.lock 2>/dev/null; echo done"
+
+              # Run certbot with verbose output so we can see failures in Actions logs
+              echo "==> Running certbot certonly..."
+              if docker compose run --rm certbot certonly \
                 --webroot \
                 --webroot-path=/var/www/certbot \
                 -d landofirm.com \
                 --non-interactive \
                 --agree-tos \
                 --email info@landofirm.com \
-                --no-eff-email
-
-              # If certbot failed, regenerate self-signed so nginx doesn't crash
-              if ! docker compose exec -T web sh -c "test -f ${CERT_DIR}/fullchain.pem"; then
-                echo "==> Certbot failed, regenerating self-signed cert..."
+                --no-eff-email \
+                -v; then
+                echo "==> Certbot succeeded!"
+              else
+                echo "==> Certbot FAILED (exit code $?)"
+                echo "==> Regenerating self-signed cert so nginx doesn't crash..."
                 docker compose exec -T web sh -c "
                   mkdir -p ${CERT_DIR} && \
                   openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
@@ -169,11 +176,20 @@ jobs:
                     -out ${CERT_DIR}/fullchain.pem \
                     -subj '/CN=landofirm.com' 2>/dev/null"
               fi
+
+              # Restart the certbot renew loop
+              echo "==> Restarting certbot service..."
+              docker compose start certbot 2>/dev/null || true
             fi
 
             # Reload nginx to pick up new/renewed certificate
             docker compose exec -T web nginx -s reload
             echo "==> SSL setup complete"
+
+            # Show certificate info for debugging
+            echo "==> Current certificate info:"
+            docker compose exec -T web sh -c \
+              "openssl x509 -in ${CERT_DIR}/fullchain.pem -subject -issuer -dates -noout 2>/dev/null" || echo "Could not read cert"
           REMOTE
 
       - name: Cleanup
