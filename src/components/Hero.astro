@@ -133,8 +133,9 @@ const { lang } = Astro.props;
   .hero-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(100px);
+    filter: blur(80px);
     animation: float 10s ease-in-out infinite;
+    will-change: transform;
   }
 
   .hero-orb-1 {
@@ -183,16 +184,14 @@ const { lang } = Astro.props;
     align-items: center;
     gap: var(--space-sm);
     padding: 0.5rem 1.5rem;
-    background: rgba(18, 18, 30, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(18, 18, 30, 0.8);
     border: 1px solid rgba(37, 99, 235, 0.2);
     border-radius: var(--radius-full);
     font-size: 0.85rem;
     font-weight: 500;
     color: var(--color-accent-light);
     margin-bottom: var(--space-2xl);
-    animation: fadeInUp 0.8s ease-out both;
+    animation: fadeInUp 0.5s ease-out both;
   }
 
   .badge-dot {
@@ -211,7 +210,7 @@ const { lang } = Astro.props;
     line-height: 1.05;
     letter-spacing: -0.03em;
     margin-bottom: var(--space-xl);
-    animation: fadeInUp 0.8s ease-out 0.1s both;
+    animation: fadeInUp 0.5s ease-out both;
   }
 
   .hero-highlight {
@@ -222,7 +221,7 @@ const { lang } = Astro.props;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: fadeInUp 0.8s ease-out 0.1s both, gradientShift 4s ease-in-out infinite;
+    animation: fadeInUp 0.5s ease-out both, gradientShift 4s ease-in-out infinite;
   }
 
   .hero-description {
@@ -231,7 +230,7 @@ const { lang } = Astro.props;
     max-width: 580px;
     margin: 0 auto var(--space-2xl);
     line-height: 1.75;
-    animation: fadeInUp 0.8s ease-out 0.2s both;
+    animation: fadeInUp 0.5s ease-out 0.05s both;
   }
 
   .hero-actions {
@@ -241,7 +240,7 @@ const { lang } = Astro.props;
     gap: var(--space-lg);
     flex-wrap: wrap;
     margin-bottom: var(--space-4xl);
-    animation: fadeInUp 0.8s ease-out 0.3s both;
+    animation: fadeInUp 0.5s ease-out 0.1s both;
   }
 
   .btn-hero {
@@ -254,11 +253,9 @@ const { lang } = Astro.props;
     align-items: center;
     justify-content: center;
     gap: var(--space-2xl);
-    animation: fadeInUp 0.8s ease-out 0.4s both;
+    animation: fadeInUp 0.5s ease-out 0.15s both;
     padding: var(--space-xl) var(--space-2xl);
-    background: rgba(18, 18, 30, 0.4);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(18, 18, 30, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-xl);
     margin-bottom: var(--space-2xl);
@@ -297,7 +294,7 @@ const { lang } = Astro.props;
   }
 
   .hero-trusted {
-    animation: fadeInUp 0.8s ease-out 0.5s both;
+    animation: fadeInUp 0.5s ease-out 0.2s both;
     display: flex;
     align-items: center;
     justify-content: center;
