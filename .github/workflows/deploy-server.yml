@@ -64,6 +64,36 @@ jobs:
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
             'cd /opt/lando && echo "==> Pulling images..." && docker compose pull umami db certbot 2>&1 && echo "==> Pull complete"'
 
+      - name: Disable Plesk services
+        run: |
+          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} 'bash -s' <<'REMOTE'
+            echo "==> Checking for Plesk services..."
+
+            # List of Plesk services that conflict with Docker on ports 80/443
+            PLESK_SERVICES="nginx httpd sw-engine sw-cp-server psa"
+
+            for svc in $PLESK_SERVICES; do
+              if systemctl list-unit-files "${svc}.service" 2>/dev/null | grep -q "$svc"; then
+                echo "  Found ${svc}.service — stopping and disabling..."
+                systemctl stop "$svc" 2>/dev/null || true
+                systemctl disable "$svc" 2>/dev/null || true
+                systemctl mask "$svc" 2>/dev/null || true
+              fi
+            done
+
+            # Also disable Plesk-related timers and sockets
+            for unit in sw-engine.socket plesk-task-manager.service plesk-web-socket.service; do
+              if systemctl list-unit-files "$unit" 2>/dev/null | grep -q "${unit%%.*}"; then
+                echo "  Found ${unit} — stopping and disabling..."
+                systemctl stop "$unit" 2>/dev/null || true
+                systemctl disable "$unit" 2>/dev/null || true
+                systemctl mask "$unit" 2>/dev/null || true
+              fi
+            done
+
+            echo "==> Plesk services disabled"
+          REMOTE
+
       - name: Stop old containers and free ports
         run: |
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} 'bash -s' <<'REMOTE'
