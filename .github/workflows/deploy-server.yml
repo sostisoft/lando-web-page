@@ -212,7 +212,7 @@ jobs:
 
             if [ "$IS_LE" -gt 0 ]; then
               echo "==> Valid Let's Encrypt certificate found, attempting renewal..."
-              docker compose run --rm certbot renew || true
+              docker compose run --rm --entrypoint "certbot" certbot renew || true
             else
               echo "==> No Let's Encrypt certificate, obtaining real one..."
 
@@ -251,7 +251,7 @@ jobs:
 
               # Run certbot
               echo "==> Running certbot certonly..."
-              if docker compose run --rm certbot certonly \
+              if docker compose run --rm --entrypoint "certbot" certbot certonly \
                 --webroot \
                 --webroot-path=/var/www/certbot \
                 $CERTBOT_DOMAINS \
@@ -260,6 +260,7 @@ jobs:
                 --agree-tos \
                 --email info@landofirm.com \
                 --no-eff-email \
+                --force-renewal \
                 -v 2>&1; then
                 echo "==> Certbot succeeded! Enabling HSTS..."
 
