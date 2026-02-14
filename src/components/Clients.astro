@@ -1,5 +1,5 @@
 ---
-import { t, type Lang } from '../i18n/translations';
+import { type Lang } from '../i18n/translations';
 
 interface Props {
   lang: Lang;
@@ -7,36 +7,33 @@ interface Props {
 
 const { lang } = Astro.props;
 
-const clients = [
-  { name: 'KPN', sector: 'Telecom', desc: t(lang, 'clients.desc.kpn'), color: '#00a2e2' },
-  { name: 'Inditex', sector: 'Retail', desc: t(lang, 'clients.desc.inditex'), color: '#1a1a1a' },
-  { name: 'Mercadona', sector: 'Retail', desc: t(lang, 'clients.desc.mercadona'), color: '#00a651' },
-  { name: 'Openbank', sector: 'Fintech', desc: t(lang, 'clients.desc.openbank'), color: '#e74c3c' },
-  { name: 'MyInvestor', sector: 'Fintech', desc: t(lang, 'clients.desc.myinvestor'), color: '#6c5ce7' },
-  { name: 'NTT Data', sector: 'IT Consulting', desc: t(lang, 'clients.desc.nttdata'), color: '#0069b4' },
-  { name: 'Kroger', sector: 'Retail', desc: t(lang, 'clients.desc.kroger'), color: '#e31837' },
-  { name: 'Idealista', sector: 'PropTech', desc: t(lang, 'clients.desc.idealista'), color: '#00e0d0' },
-  { name: 'Brinks', sector: 'Security', desc: t(lang, 'clients.desc.brinks'), color: '#fdcb6e' },
-  { name: 'Qbuzz', sector: 'Transport', desc: t(lang, 'clients.desc.qbuzz'), color: '#f9a825' },
-  { name: 'Empathy.co', sector: 'Search AI', desc: t(lang, 'clients.desc.empathy'), color: '#60A5FA' },
+const results = [
+  { metric: '0', metricLabel: 'downtime', sector: 'Telecom', region: lang === 'es' ? 'Europa' : 'Europe', desc: lang === 'es' ? 'Migración de plataforma legacy a microservicios' : 'Legacy platform migration to microservices', color: '#00a2e2' },
+  { metric: '5x', metricLabel: lang === 'es' ? 'más transacciones' : 'more transactions', sector: 'Fintech', region: lang === 'es' ? 'España' : 'Spain', desc: lang === 'es' ? 'Arquitectura de banca digital y APIs de pagos' : 'Digital banking architecture and payment APIs', color: '#e74c3c' },
+  { metric: '+300%', metricLabel: lang === 'es' ? 'rendimiento' : 'performance', sector: 'Retail', region: lang === 'es' ? 'Internacional' : 'International', desc: lang === 'es' ? 'Optimización de e-commerce y logística omnicanal' : 'E-commerce and omnichannel logistics optimization', color: '#00a651' },
+  { metric: '+35%', metricLabel: 'engagement', sector: 'PropTech', region: lang === 'es' ? 'España' : 'Spain', desc: lang === 'es' ? 'Motor de búsqueda y sistema de recomendaciones' : 'Search engine and recommendation system', color: '#00e0d0' },
+  { metric: '3', metricLabel: lang === 'es' ? 'semanas' : 'weeks', sector: 'Search AI', region: lang === 'es' ? 'España' : 'Spain', desc: lang === 'es' ? 'Integración de NLP en motor de búsqueda' : 'NLP integration in search engine', color: '#60A5FA' },
+  { metric: '99.9%', metricLabel: 'uptime', sector: lang === 'es' ? 'Seguridad' : 'Security', region: lang === 'es' ? 'Internacional' : 'International', desc: lang === 'es' ? 'Plataforma de monitorización en tiempo real' : 'Real-time monitoring platform', color: '#fdcb6e' },
+  { metric: '-40%', metricLabel: lang === 'es' ? 'costes ops.' : 'ops. costs', sector: lang === 'es' ? 'Transporte' : 'Transport', region: lang === 'es' ? 'Holanda' : 'Netherlands', desc: lang === 'es' ? 'Ticketing digital y planificación de rutas' : 'Digital ticketing and route planning', color: '#f9a825' },
+  { metric: '<8', metricLabel: lang === 'es' ? 'sem. a producción' : 'weeks to prod', sector: lang === 'es' ? 'Inversión' : 'Investment', region: lang === 'es' ? 'España' : 'Spain', desc: lang === 'es' ? 'Plataforma de inversión automatizada desde cero' : 'Automated investment platform from scratch', color: '#6c5ce7' },
 ];
 ---
 
-<section class="section clients" id="clients">
+<section class="section results" id="clients">
   <div class="container">
-    <div class="clients-header animate-on-scroll">
-      <p class="section-tagline">{t(lang, 'clients.tagline')}</p>
-      <h2 class="section-title">{t(lang, 'clients.title')}</h2>
+    <div class="results-header animate-on-scroll">
+      <p class="section-tagline">{lang === 'es' ? 'Resultados reales' : 'Real results'}</p>
+      <h2 class="section-title">{lang === 'es' ? 'Proyectos que hablan por sí solos' : 'Projects that speak for themselves'}</h2>
     </div>
 
-    <div class="clients-grid">
-      {clients.map((client, i) => (
-        <div class="client-card animate-on-scroll" style={`--client-color: ${client.color}; animation-delay: ${i * 0.06}s`}>
-          <div class="client-logo-text">{client.name.charAt(0)}</div>
-          <span class="client-name">{client.name}</span>
-          <span class="client-sector">{client.sector}</span>
-          <span class="client-desc">{client.desc}</span>
-          <div class="client-glow"></div>
+    <div class="results-grid">
+      {results.map((r, i) => (
+        <div class="result-card animate-on-scroll" style={`--result-color: ${r.color}; animation-delay: ${i * 0.06}s`}>
+          <div class="result-metric">{r.metric}</div>
+          <div class="result-metric-label">{r.metricLabel}</div>
+          <span class="result-sector">{r.sector} · {r.region}</span>
+          <span class="result-desc">{r.desc}</span>
+          <div class="result-glow"></div>
         </div>
       ))}
     </div>
@@ -44,13 +41,13 @@ const clients = [
 </section>
 
 <style>
-  .clients {
+  .results {
     background: var(--color-bg-alt);
     position: relative;
     overflow: hidden;
   }
 
-  .clients::before {
+  .results::before {
     content: '';
     position: absolute;
     top: 0;
@@ -60,7 +57,7 @@ const clients = [
     background: linear-gradient(90deg, transparent, var(--color-border), transparent);
   }
 
-  .clients::after {
+  .results::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -70,19 +67,19 @@ const clients = [
     background: linear-gradient(90deg, transparent, var(--color-border), transparent);
   }
 
-  .clients-header {
+  .results-header {
     text-align: center;
     max-width: 600px;
     margin: 0 auto var(--space-3xl);
   }
 
-  .clients-grid {
+  .results-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: var(--space-lg);
   }
 
-  .client-card {
+  .result-card {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -99,21 +96,21 @@ const clients = [
     overflow: hidden;
   }
 
-  .client-card:hover {
-    border-color: color-mix(in srgb, var(--client-color) 30%, transparent);
+  .result-card:hover {
+    border-color: color-mix(in srgb, var(--result-color) 30%, transparent);
     background: var(--color-bg-card-hover);
     transform: translateY(-4px);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
   }
 
-  .client-glow {
+  .result-glow {
     position: absolute;
     top: -40%;
     left: 50%;
     transform: translateX(-50%);
     width: 150px;
     height: 150px;
-    background: var(--client-color);
+    background: var(--result-color);
     opacity: 0;
     border-radius: 50%;
     filter: blur(60px);
@@ -121,50 +118,43 @@ const clients = [
     pointer-events: none;
   }
 
-  .client-card:hover .client-glow {
+  .result-card:hover .result-glow {
     opacity: 0.06;
   }
 
-  .client-logo-text {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--client-color) 15%, transparent);
-    border: 1px solid color-mix(in srgb, var(--client-color) 25%, transparent);
-    color: var(--client-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .result-metric {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
     font-weight: 800;
-    font-size: 1rem;
-    margin-bottom: var(--space-xs);
-    transition: all var(--transition-base);
+    line-height: 1;
+    background: linear-gradient(135deg, var(--result-color), color-mix(in srgb, var(--result-color) 60%, white));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0;
   }
 
-  .client-card:hover .client-logo-text {
-    transform: scale(1.1);
-    background: color-mix(in srgb, var(--client-color) 20%, transparent);
+  .result-metric-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--result-color);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-sm);
   }
 
-  .client-name {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--color-text);
-    letter-spacing: 0.02em;
-  }
-
-  .client-sector {
+  .result-sector {
     font-size: 0.7rem;
     font-weight: 600;
-    color: var(--client-color);
+    color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.12em;
     padding: 0.15rem 0.5rem;
-    background: color-mix(in srgb, var(--client-color) 8%, transparent);
+    background: rgba(255, 255, 255, 0.04);
     border-radius: var(--radius-full);
   }
 
-  .client-desc {
+  .result-desc {
     font-size: 0.8rem;
     color: var(--color-text-secondary);
     text-align: center;
@@ -173,19 +163,13 @@ const clients = [
   }
 
   @media (max-width: 900px) {
-    .clients-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  @media (max-width: 640px) {
-    .clients-grid {
+    .results-grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   @media (max-width: 400px) {
-    .clients-grid {
+    .results-grid {
       grid-template-columns: 1fr;
       gap: var(--space-md);
     }

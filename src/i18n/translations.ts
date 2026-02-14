@@ -51,10 +51,10 @@ export const translations = {
     'method.mvp.label': 'semanas',
     'method.mvp.title': 'MVP en tiempo récord',
     'method.mvp.desc': 'Tu producto mínimo viable listo desde 3 semanas. Validamos rápido, iteramos con datos reales y escalamos con confianza.',
-    'method.quality.number': '100',
-    'method.quality.label': '% compromiso',
-    'method.quality.title': 'Calidad sin concesiones',
-    'method.quality.desc': 'Código limpio, arquitectura escalable y las mejores prácticas del sector. Tu producto nace preparado para crecer.',
+    'method.quality.number': '90',
+    'method.quality.label': 'días soporte',
+    'method.quality.title': 'Soporte garantizado',
+    'method.quality.desc': 'Cada proyecto incluye 90 días de soporte post-lanzamiento. Bugs, ajustes y consultas resueltas en menos de 24h. Tu producto está respaldado.',
 
     // Testimonials
     'testimonials.tagline': 'Clientes satisfechos',
@@ -154,20 +154,7 @@ export const translations = {
     'team.experience5': '+7 años · AWS · Kubernetes · CI/CD',
     'team.desc5': 'Ingeniero de infraestructura cloud con enfoque en automatización, pipelines CI/CD y observabilidad. Migración y operación de sistemas críticos en producción.',
 
-    // Clients
-    'clients.tagline': 'Clientes que confían en nosotros',
-    'clients.title': 'Empresas con las que hemos trabajado',
-    'clients.desc.kpn': 'Migración de plataforma de telecomunicaciones a microservicios',
-    'clients.desc.inditex': 'Optimización del sistema de e-commerce y logística omnicanal',
-    'clients.desc.mercadona': 'Desarrollo de plataforma de gestión de cadena de suministro',
-    'clients.desc.openbank': 'Arquitectura de banca digital y APIs de pagos',
-    'clients.desc.myinvestor': 'Plataforma de inversión automatizada y robo-advisory',
-    'clients.desc.nttdata': 'Consultoría en transformación digital para clientes enterprise',
-    'clients.desc.kroger': 'Sistema de inventario en tiempo real con integración IoT',
-    'clients.desc.idealista': 'Motor de búsqueda inmobiliaria y sistema de recomendaciones',
-    'clients.desc.brinks': 'Plataforma de monitorización y gestión de seguridad',
-    'clients.desc.qbuzz': 'Sistema de ticketing digital y planificación de rutas',
-    'clients.desc.empathy': 'Motor de búsqueda con IA y procesamiento de lenguaje natural',
+    // Clients/Results (content inlined in Clients.astro)
 
     // Cookie Banner
     'cookies.banner.title': 'Usamos cookies',
@@ -242,10 +229,10 @@ export const translations = {
     'method.mvp.label': 'weeks',
     'method.mvp.title': 'MVP in record time',
     'method.mvp.desc': 'Your minimum viable product ready from 3 weeks. We validate fast, iterate with real data, and scale with confidence.',
-    'method.quality.number': '100',
-    'method.quality.label': '% commitment',
-    'method.quality.title': 'Uncompromising quality',
-    'method.quality.desc': 'Clean code, scalable architecture, and industry best practices. Your product is born ready to grow.',
+    'method.quality.number': '90',
+    'method.quality.label': 'days support',
+    'method.quality.title': 'Guaranteed support',
+    'method.quality.desc': 'Every project includes 90 days of post-launch support. Bugs, adjustments, and queries resolved within 24h. Your product is backed.',
 
     // Testimonials
     'testimonials.tagline': 'Happy clients',
@@ -345,20 +332,7 @@ export const translations = {
     'team.experience5': '+7 years · AWS · Kubernetes · CI/CD',
     'team.desc5': 'Cloud infrastructure engineer focused on automation, CI/CD pipelines, and observability. Migration and operation of critical production systems.',
 
-    // Clients
-    'clients.tagline': 'Trusted by',
-    'clients.title': 'Companies we\'ve worked with',
-    'clients.desc.kpn': 'Telecom platform migration to microservices',
-    'clients.desc.inditex': 'E-commerce optimization and omnichannel logistics',
-    'clients.desc.mercadona': 'Supply chain management platform development',
-    'clients.desc.openbank': 'Digital banking architecture and payment APIs',
-    'clients.desc.myinvestor': 'Automated investment platform and robo-advisory',
-    'clients.desc.nttdata': 'Digital transformation consulting for enterprise clients',
-    'clients.desc.kroger': 'Real-time inventory system with IoT integration',
-    'clients.desc.idealista': 'Real estate search engine and recommendation system',
-    'clients.desc.brinks': 'Security monitoring and management platform',
-    'clients.desc.qbuzz': 'Digital ticketing system and route planning',
-    'clients.desc.empathy': 'AI-powered search engine and NLP processing',
+    // Clients/Results (content inlined in Clients.astro)
 
     // Cookie Banner
     'cookies.banner.title': 'We use cookies',
