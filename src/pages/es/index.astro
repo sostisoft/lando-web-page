@@ -9,13 +9,15 @@ import Testimonials from '../../components/Testimonials.astro';
 import CTA from '../../components/CTA.astro';
 import BudgetEstimator from '../../components/BudgetEstimator.astro';
 import InlineCTA from '../../components/InlineCTA.astro';
+import FAQ from '../../components/FAQ.astro';
 
 const lang = 'es' as const;
 ---
 
 <Layout
-  title="Lando — Consultoría Tecnológica de Alto Impacto"
-  description="Transformamos ideas en productos digitales extraordinarios. Trabajamos con máximo 3 clientes a la vez para garantizar resultados óptimos. MVP desde 3 semanas."
+  title="Lando — Desarrollo de Software y Consultoría Tecnológica | Apps, Web, IA"
+  description="Empresa de desarrollo de software a medida. Creamos aplicaciones web, apps móviles e inteligencia artificial. MVP en 3 semanas. Consultoría técnica con máximo 3 clientes simultáneos."
+  keywords="desarrollo software a medida, empresa desarrollo web España, consultoría tecnológica, desarrollo aplicaciones móviles, inteligencia artificial empresas, MVP startup, desarrollo app, crear página web profesional, transformación digital, software a medida"
   lang={lang}
 >
   <Hero lang={lang} />
@@ -27,5 +29,6 @@ const lang = 'es' as const;
   <InlineCTA lang={lang} variant="contact" />
   <Testimonials lang={lang} />
   <Team lang={lang} />
+  <FAQ lang={lang} />
   <CTA lang={lang} />
 </Layout>

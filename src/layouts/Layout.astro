@@ -10,9 +10,26 @@ interface Props {
   title: string;
   description: string;
   lang: Lang;
+  keywords?: string;
+  ogImage?: string;
+  noindex?: boolean;
 }
 
-const { title, description, lang } = Astro.props;
+const { title, description, lang, keywords, ogImage, noindex = false } = Astro.props;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || '';
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const altLang = lang === 'es' ? 'en' : 'es';
+const currentPath = Astro.url.pathname.replace(/^\/(es|en)/, '');
+const altUrl = new URL(`/${altLang}${currentPath}`, Astro.site).toString();
+const ogImageUrl = ogImage || `${siteUrl}/og-image.png`;
+
+const defaultKeywords: Record<Lang, string> = {
+  es: 'desarrollo software, consultoría tecnológica, desarrollo web, desarrollo aplicaciones, MVP, inteligencia artificial, apps móviles, transformación digital, desarrollo a medida, empresa desarrollo software España',
+  en: 'software development, tech consulting, web development, app development, MVP, artificial intelligence, mobile apps, digital transformation, custom software, software development company Spain',
+};
+
+const pageKeywords = keywords || defaultKeywords[lang];
 ---
 
 <!doctype html>
@@ -21,15 +38,107 @@ const { title, description, lang } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <meta name="generator" content={Astro.generator} />
+    <meta name="keywords" content={pageKeywords} />
+    <meta name="author" content="Lando" />
+    <meta name="theme-color" content="#06060b" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Canonical & Hreflang -->
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang={lang} href={canonicalUrl} />
+    <link rel="alternate" hreflang={altLang} href={altUrl} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/es/', Astro.site).toString()} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="Lando" />
+    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
+    <meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_ES'} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+
     <title>{title}</title>
+
+    <!-- Structured Data: Organization -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "Lando",
+      "description": lang === 'es'
+        ? "Consultoría tecnológica de alto impacto. Desarrollo de software, aplicaciones web y móviles, inteligencia artificial y MVPs."
+        : "High-impact tech consulting. Software development, web and mobile applications, artificial intelligence and MVPs.",
+      "url": siteUrl,
+      "logo": `${siteUrl}/logo.svg`,
+      "image": ogImageUrl,
+      "priceRange": "€€€",
+      "areaServed": {
+        "@type": "GeoCircle",
+        "geoMidpoint": { "@type": "GeoCoordinates", "latitude": 40.4168, "longitude": -3.7038 },
+        "geoRadius": "5000"
+      },
+      "serviceType": [
+        "Software Development",
+        "Web Development",
+        "Mobile App Development",
+        "Artificial Intelligence",
+        "Technical Consulting",
+        "MVP Development"
+      ],
+      "knowsAbout": [
+        "Java", "Kotlin", "React", "TypeScript", "Node.js", "Python",
+        "AWS", "Kubernetes", "Microservices", "Domain-Driven Design",
+        "CI/CD", "DevOps", "Machine Learning", "NLP"
+      ],
+      "sameAs": [],
+      "inLanguage": [lang === 'es' ? 'es-ES' : 'en-US']
+    })} />
+
+    <!-- Structured Data: WebSite with SearchAction -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Lando",
+      "url": siteUrl,
+      "inLanguage": lang === 'es' ? 'es-ES' : 'en-US',
+      "description": description
+    })} />
+
+    <!-- Structured Data: BreadcrumbList -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Inicio",
+          "item": `${siteUrl}/${lang}/`
+        }
+      ]
+    })} />
+
     <!-- Umami Analytics (self-hosted, privacy-friendly, no cookies) -->
     <script
       defer

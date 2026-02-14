@@ -1,0 +1,182 @@
+---
+import { type Lang } from '../i18n/translations';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const faqs: Record<string, { question: string; answer: string }[]> = {
+  es: [
+    {
+      question: '¿Cuánto cuesta desarrollar una aplicación web o móvil?',
+      answer: 'El coste depende del tipo de proyecto, complejidad y funcionalidades. Nuestros proyectos parten desde 2.500€ para webs básicas hasta 20.000€+ para aplicaciones complejas con IA. Usa nuestro estimador de presupuesto para obtener un rango orientativo en 1 minuto.',
+    },
+    {
+      question: '¿Cuánto tiempo se tarda en desarrollar un MVP?',
+      answer: 'Desarrollamos MVPs (Producto Mínimo Viable) desde 3 semanas. El tiempo exacto depende de la complejidad, pero nuestro enfoque ágil permite lanzar rápido, validar con usuarios reales e iterar.',
+    },
+    {
+      question: '¿Por qué solo trabajáis con 3 clientes a la vez?',
+      answer: 'Limitar a 3 clientes simultáneos nos permite dedicar atención exclusiva a cada proyecto. Esto garantiza máxima calidad, comunicación fluida y tiempos de entrega óptimos, algo que las agencias grandes no pueden ofrecer.',
+    },
+    {
+      question: '¿Qué tecnologías utilizáis para el desarrollo de software?',
+      answer: 'Trabajamos con las tecnologías más demandadas del mercado: React, TypeScript, Node.js, Python, Java, Kotlin, AWS, Kubernetes y más. Elegimos la stack tecnológica óptima para cada proyecto según sus necesidades específicas.',
+    },
+    {
+      question: '¿Ofrecéis servicios de inteligencia artificial para empresas?',
+      answer: 'Sí, integramos soluciones de IA como chatbots, automatización de procesos, modelos de machine learning y procesamiento de lenguaje natural. Ayudamos a empresas a aprovechar la IA para crear ventajas competitivas reales.',
+    },
+    {
+      question: '¿Trabajáis con empresas fuera de España?',
+      answer: 'Sí, trabajamos con clientes en toda Europa. Nuestro equipo tiene experiencia en empresas como KPN (Países Bajos), Inditex, Openbank y más. Ofrecemos servicio en español e inglés.',
+    },
+  ],
+  en: [
+    {
+      question: 'How much does it cost to develop a web or mobile application?',
+      answer: 'The cost depends on the project type, complexity, and features. Our projects start from €2,500 for basic websites up to €20,000+ for complex applications with AI. Use our budget estimator to get an indicative range in 1 minute.',
+    },
+    {
+      question: 'How long does it take to develop an MVP?',
+      answer: 'We develop MVPs (Minimum Viable Products) from 3 weeks. The exact time depends on complexity, but our agile approach allows for quick launch, validation with real users, and iteration.',
+    },
+    {
+      question: 'Why do you only work with 3 clients at a time?',
+      answer: 'Limiting to 3 simultaneous clients allows us to dedicate exclusive attention to each project. This ensures maximum quality, fluid communication, and optimal delivery times — something large agencies cannot offer.',
+    },
+    {
+      question: 'What technologies do you use for software development?',
+      answer: 'We work with the most in-demand technologies: React, TypeScript, Node.js, Python, Java, Kotlin, AWS, Kubernetes, and more. We choose the optimal tech stack for each project based on its specific needs.',
+    },
+    {
+      question: 'Do you offer artificial intelligence services for businesses?',
+      answer: 'Yes, we integrate AI solutions such as chatbots, process automation, machine learning models, and natural language processing. We help businesses leverage AI to create real competitive advantages.',
+    },
+    {
+      question: 'Do you work with companies outside Spain?',
+      answer: 'Yes, we work with clients across Europe. Our team has experience at companies like KPN (Netherlands), Inditex, Openbank, and more. We offer service in both Spanish and English.',
+    },
+  ],
+};
+
+const currentFaqs = faqs[lang];
+---
+
+<section class="section faq-section" id="faq">
+  <div class="container">
+    <div class="faq-header animate-on-scroll">
+      <p class="section-tagline">{lang === 'es' ? 'Preguntas frecuentes' : 'FAQ'}</p>
+      <h2 class="section-title">{lang === 'es' ? 'Resolvemos tus dudas' : 'Common questions answered'}</h2>
+    </div>
+
+    <div class="faq-list">
+      {currentFaqs.map((faq, i) => (
+        <details class="faq-item animate-on-scroll" style={`animation-delay: ${i * 0.05}s`}>
+          <summary class="faq-question">
+            <span>{faq.question}</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </summary>
+          <p class="faq-answer">{faq.answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Schema.org JSON-LD -->
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": currentFaqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer,
+    },
+  })),
+})} />
+
+<style>
+  .faq-section {
+    padding: var(--space-5xl) 0;
+  }
+
+  .faq-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto var(--space-3xl);
+  }
+
+  .faq-list {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .faq-item {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color var(--transition-base);
+  }
+
+  .faq-item:hover {
+    border-color: var(--color-border-hover);
+  }
+
+  .faq-item[open] {
+    border-color: rgba(124, 108, 240, 0.3);
+  }
+
+  .faq-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-lg) var(--space-xl);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-text);
+    list-style: none;
+    transition: color var(--transition-fast);
+  }
+
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question::marker {
+    display: none;
+    content: '';
+  }
+
+  .faq-question:hover {
+    color: var(--color-accent-light);
+  }
+
+  .faq-chevron {
+    flex-shrink: 0;
+    transition: transform var(--transition-base);
+    color: var(--color-text-muted);
+  }
+
+  .faq-item[open] .faq-chevron {
+    transform: rotate(180deg);
+    color: var(--color-accent-light);
+  }
+
+  .faq-answer {
+    padding: 0 var(--space-xl) var(--space-lg);
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+  }
+</style>
