@@ -15,6 +15,7 @@ export const translations = {
     'nav.services': 'Servicios',
     'nav.method': 'Método',
     'nav.testimonials': 'Testimonios',
+    'nav.faq': 'FAQ',
     'nav.contact': 'Contacto',
     'nav.lang': 'EN',
 
@@ -205,6 +206,7 @@ export const translations = {
     'nav.services': 'Services',
     'nav.method': 'Method',
     'nav.testimonials': 'Testimonials',
+    'nav.faq': 'FAQ',
     'nav.contact': 'Contact',
     'nav.lang': 'ES',
 
