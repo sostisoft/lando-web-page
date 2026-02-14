@@ -678,11 +678,11 @@ const { lang } = Astro.props;
     }
 
     // Base prices
-    const basePrices: Record<string, number> = { web: 400, app: 800, ai: 1000, consulting: 400 };
+    const basePrices: Record<string, number> = { web: 600, app: 4000, ai: 5000, consulting: 600 };
     const complexityMultiplier: Record<string, number> = { basic: 1, medium: 1.8, advanced: 3 };
     const featurePrices: Record<string, number> = {
-      auth: 1000, payments: 1500, dashboard: 2000, api: 1200,
-      ai_integration: 3000, multilang: 800, cms: 1200, realtime: 2000
+      auth: 1500, payments: 2500, dashboard: 3000, api: 1500,
+      ai_integration: 4000, multilang: 800, cms: 1500, realtime: 2500
     };
     const timelineMultiplier: Record<string, number> = { urgent: 1.4, normal: 1, flexible: 0.85 };
 
