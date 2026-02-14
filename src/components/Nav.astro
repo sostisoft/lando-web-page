@@ -251,11 +251,20 @@ const altLang = lang === 'es' ? 'en' : 'es';
 </style>
 
 <script>
+  // Smooth scroll helper (replaces CSS scroll-behavior for iOS compatibility)
+  function smoothScrollTo(id: string) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const navHeight = document.getElementById('nav')?.offsetHeight || 0;
+    const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+
   // Mobile menu toggle
   const toggle = document.getElementById('nav-toggle');
   const links = document.getElementById('nav-links');
-
   const nav = document.getElementById('nav');
+  const isMobile = () => window.innerWidth <= 768;
 
   toggle?.addEventListener('click', () => {
     toggle.classList.toggle('active');
@@ -263,13 +272,39 @@ const altLang = lang === 'es' ? 'en' : 'es';
     nav?.classList.toggle('menu-open');
   });
 
-  // Close on link click
+  // Handle nav link clicks (close menu + smooth scroll)
   links?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+
+      // Close mobile menu
       toggle?.classList.remove('active');
       links?.classList.remove('open');
       nav?.classList.remove('menu-open');
+
+      // Handle anchor links with programmatic scroll
+      if (href && href.startsWith('#') && href.length > 1) {
+        e.preventDefault();
+        const id = href.slice(1);
+        if (isMobile()) {
+          // Wait for menu close animation, then scroll
+          setTimeout(() => smoothScrollTo(id), 350);
+        } else {
+          smoothScrollTo(id);
+        }
+      }
     });
+  });
+
+  // Handle ALL anchor links on the page (footer, inline, etc.)
+  document.addEventListener('click', (e) => {
+    const anchor = (e.target as HTMLElement).closest('a[href^="#"]');
+    if (!anchor || anchor.closest('#nav-links')) return; // skip nav (handled above)
+    const href = anchor.getAttribute('href');
+    if (href && href.startsWith('#') && href.length > 1) {
+      e.preventDefault();
+      smoothScrollTo(href.slice(1));
+    }
   });
 
   // Scroll effect
