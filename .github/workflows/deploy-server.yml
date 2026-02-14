@@ -2,7 +2,7 @@ name: Deploy to Server
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/lando-consulting-site-BEX2E]
   workflow_dispatch:
 
 env:
@@ -19,7 +19,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            --build-arg ASTRO_SITE=http://217.154.190.107 \
+            --build-arg ASTRO_SITE=https://landofirm.com \
             --build-arg ASTRO_BASE=/ \
             -t lando-web:latest .
 
