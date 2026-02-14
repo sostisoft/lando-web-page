@@ -116,18 +116,18 @@ const altLang = lang === 'es' ? 'en' : 'es';
   }
 
   .logo-mobile {
-    height: 24px;
-    width: auto;
     display: none;
   }
 
   @media (max-width: 768px) {
     .logo-full {
-      display: none;
+      height: 28px;
     }
+  }
 
-    .logo-mobile {
-      display: block;
+  @media (max-width: 380px) {
+    .logo-full {
+      height: 24px;
     }
   }
 
