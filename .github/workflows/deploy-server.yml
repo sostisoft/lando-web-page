@@ -125,6 +125,37 @@ jobs:
             ss -tlnp 'sport = :80 or sport = :443 or sport = :3001' || true
           REMOTE
 
+      - name: Setup Let's Encrypt SSL certificate
+        run: |
+          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} 'bash -s' <<'REMOTE'
+            set -e
+            cd /opt/lando
+
+            # Check if we already have a real Let's Encrypt certificate
+            IS_LE=$(docker compose exec -T web sh -c \
+              "openssl x509 -in /etc/letsencrypt/live/landofirm.com/fullchain.pem -issuer -noout 2>/dev/null" \
+              | grep -c "Let's Encrypt" || true)
+
+            if [ "$IS_LE" -gt 0 ]; then
+              echo "==> Valid Let's Encrypt certificate found, attempting renewal..."
+              docker compose run --rm certbot renew --quiet || true
+            else
+              echo "==> No Let's Encrypt certificate found, obtaining new one..."
+              docker compose run --rm certbot certonly \
+                --webroot \
+                --webroot-path=/var/www/certbot \
+                -d landofirm.com \
+                --non-interactive \
+                --agree-tos \
+                --email info@landofirm.com \
+                --no-eff-email
+            fi
+
+            # Reload nginx to pick up new/renewed certificate
+            docker compose exec -T web nginx -s reload
+            echo "==> SSL setup complete"
+          REMOTE
+
       - name: Cleanup
         if: always()
         run: |
