@@ -150,8 +150,9 @@ const pageKeywords = keywords || defaultKeywords[lang];
     <!-- Umami Analytics: loaded dynamically by CookieBanner based on user consent -->
   </head>
   <body>
+    <a href="#main" class="skip-link">{lang === 'es' ? 'Ir al contenido principal' : 'Skip to main content'}</a>
     <Nav lang={lang} />
-    <main>
+    <main id="main">
       <slot />
     </main>
     <Footer lang={lang} />

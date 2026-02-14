@@ -194,13 +194,15 @@ const items = testimonials[lang];
     border: none;
     cursor: pointer;
     transition: all var(--transition-fast);
-    padding: 0;
+    padding: 18px 4px;
+    background-clip: content-box;
   }
 
   :global(.carousel-dot.active) {
     width: 24px;
     border-radius: 4px;
     background: var(--color-accent-light);
+    background-clip: content-box;
   }
 
   @media (max-width: 1024px) {

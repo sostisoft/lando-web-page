@@ -24,7 +24,7 @@ const { lang } = Astro.props;
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </div>
             <div>
-              <span class="cta-feature-title">{lang === 'es' ? 'Respuesta rapida' : 'Quick response'}</span>
+              <span class="cta-feature-title">{lang === 'es' ? 'Respuesta rápida' : 'Quick response'}</span>
               <span class="cta-feature-desc">{lang === 'es' ? 'Te respondemos en menos de 24h' : 'We respond within 24h'}</span>
             </div>
           </div>
@@ -80,12 +80,12 @@ const { lang } = Astro.props;
         <form class="contact-form" id="contact-form" data-lang={lang} data-form-endpoint={SITE.formEndpoint} data-email={SITE.email}>
           <div class="form-row">
             <div class="form-group">
-              <label for="contact-name">{t(lang, 'form.name')}</label>
-              <input type="text" id="contact-name" name="name" required placeholder={t(lang, 'form.name.placeholder')} />
+              <label for="contact-name">{t(lang, 'form.name')} <span aria-label={lang === 'es' ? 'obligatorio' : 'required'}>*</span></label>
+              <input type="text" id="contact-name" name="name" required aria-required="true" placeholder={t(lang, 'form.name.placeholder')} />
             </div>
             <div class="form-group">
-              <label for="contact-email">{t(lang, 'form.email')}</label>
-              <input type="email" id="contact-email" name="email" required placeholder={t(lang, 'form.email.placeholder')} />
+              <label for="contact-email">{t(lang, 'form.email')} <span aria-label={lang === 'es' ? 'obligatorio' : 'required'}>*</span></label>
+              <input type="email" id="contact-email" name="email" required aria-required="true" placeholder={t(lang, 'form.email.placeholder')} />
             </div>
           </div>
           <div class="form-row">
@@ -128,8 +128,8 @@ const { lang } = Astro.props;
             </div>
           </div>
           <div class="form-group">
-            <label for="contact-message">{t(lang, 'form.message')}</label>
-            <textarea id="contact-message" name="message" rows="4" required placeholder={t(lang, 'form.message.placeholder')}></textarea>
+            <label for="contact-message">{t(lang, 'form.message')} <span aria-label={lang === 'es' ? 'obligatorio' : 'required'}>*</span></label>
+            <textarea id="contact-message" name="message" rows="4" required aria-required="true" placeholder={t(lang, 'form.message.placeholder')}></textarea>
           </div>
           <!-- Hidden fields for budget data -->
           <input type="hidden" name="budget_estimate" id="hidden-budget" />
@@ -140,14 +140,15 @@ const { lang } = Astro.props;
           <input type="hidden" name="budget_duration" id="hidden-duration" />
           <input type="hidden" name="budget_comments" id="hidden-comments" />
 
-          <button type="submit" class="btn-primary btn-submit">
+          <button type="submit" class="btn-primary btn-submit" aria-label={t(lang, 'form.submit')}>
             <span class="btn-text">{t(lang, 'form.submit')}</span>
-            <span class="btn-loading" style="display:none;">
-              <svg class="spinner" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <span class="btn-loading" style="display:none;" aria-live="polite">
+              <svg class="spinner" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                 <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="40" stroke-dashoffset="10"/>
               </svg>
+              <span>{lang === 'es' ? 'Enviando...' : 'Sending...'}</span>
             </span>
-            <svg class="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <svg class="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M3.5 8H12.5M12.5 8L8.5 4M12.5 8L8.5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>

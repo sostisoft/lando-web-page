@@ -12,7 +12,7 @@
 
   --color-text: #f0f0f5;
   --color-text-secondary: #9898ab;
-  --color-text-muted: #55556a;
+  --color-text-muted: #8a8a9e;
 
   --color-accent: #2563EB;
   --color-accent-light: #60A5FA;
@@ -307,7 +307,7 @@ body::after {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-text-muted);
+  background: var(--color-text-secondary);
   border-radius: var(--radius-full);
 }
 
@@ -319,6 +319,37 @@ body::after {
 ::selection {
   background: var(--color-accent);
   color: white;
+}
+
+/* Accessibility: skip-to-content link */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--space-lg);
+  background: var(--color-accent);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  z-index: 100000;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: var(--space-sm);
+}
+
+/* Accessibility: keyboard focus indicators */
+:focus-visible {
+  outline: 2px solid var(--color-accent-light);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-accent-light);
+  outline-offset: 2px;
 }
 
 /* Accessibility: reduce motion for users who prefer it */
