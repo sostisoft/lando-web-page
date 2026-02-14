@@ -6,7 +6,7 @@ export const SITE = {
   formEndpoint: 'https://formspree.io/f/xyzgobpw',
 
   company: {
-    legalName: 'Lando Consulting SL',
+    legalName: 'Sosti Soft SL',
     taxId: 'B70829700',
     address: 'Calle Humanitarias 19 1A, 28025 Madrid',
     country: { es: 'España', en: 'Spain' },
