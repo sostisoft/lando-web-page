@@ -131,25 +131,49 @@ jobs:
             cd /opt/lando
 
             CERT_DIR="/etc/letsencrypt/live/landofirm.com"
+            SERVER_IP="217.154.190.107"
 
-            # --- Diagnostics: verify prerequisites for certbot ---
+            # ==============================
+            # DIAGNOSTICS
+            # ==============================
             echo "==> [DIAG] DNS resolution for landofirm.com:"
-            getent hosts landofirm.com || echo "DNS resolution FAILED"
+            DNS_IP=$(getent hosts landofirm.com | awk '{print $1}' | head -1)
+            echo "  landofirm.com -> ${DNS_IP:-FAILED}"
+
+            echo "==> [DIAG] DNS resolution for www.landofirm.com:"
+            DNS_WWW=$(getent hosts www.landofirm.com | awk '{print $1}' | head -1)
+            echo "  www.landofirm.com -> ${DNS_WWW:-FAILED}"
 
             echo "==> [DIAG] Server's public IP:"
-            curl -s --max-time 5 https://ifconfig.me || echo "Could not determine public IP"
-            echo ""
+            PUB_IP=$(curl -s --max-time 5 https://ifconfig.me 2>/dev/null || echo "unknown")
+            echo "  Public IP: ${PUB_IP}"
 
-            echo "==> [DIAG] Testing port 80 from localhost:"
-            curl -sI --max-time 5 http://localhost/.well-known/acme-challenge/test 2>&1 | head -5 || echo "Port 80 not responding"
+            if [ -n "$DNS_IP" ] && [ "$DNS_IP" != "$PUB_IP" ]; then
+              echo "  WARNING: DNS ($DNS_IP) does NOT match server IP ($PUB_IP) - certbot will FAIL!"
+            fi
 
-            echo "==> [DIAG] Checking if something else is on port 80/443:"
+            echo "==> [DIAG] Testing port 80 locally:"
+            curl -sI --max-time 5 http://localhost/ 2>&1 | head -3 || echo "  Port 80 not responding"
+
+            echo "==> [DIAG] Testing port 80 externally (via server's public IP):"
+            curl -sI --max-time 5 "http://${SERVER_IP}/" 2>&1 | head -3 || echo "  Port 80 not reachable externally"
+
+            echo "==> [DIAG] Processes on port 80/443:"
             ss -tlnp 'sport = :80 or sport = :443' 2>/dev/null || true
+
+            echo "==> [DIAG] Checking for Plesk services that might conflict:"
+            systemctl is-active nginx 2>/dev/null && echo "  WARNING: system nginx is running (Plesk?)" || true
+            systemctl is-active httpd 2>/dev/null && echo "  WARNING: httpd is running (Plesk?)" || true
+            systemctl is-active sw-engine 2>/dev/null && echo "  WARNING: Plesk sw-engine is running" || true
 
             echo "==> [DIAG] Current cert issuer:"
             docker compose exec -T web sh -c \
-              "openssl x509 -in ${CERT_DIR}/fullchain.pem -issuer -noout 2>/dev/null" || echo "No cert found"
+              "openssl x509 -in ${CERT_DIR}/fullchain.pem -issuer -noout 2>/dev/null" || echo "  No cert found"
             echo "---"
+
+            # ==============================
+            # SSL CERTIFICATE SETUP
+            # ==============================
 
             # Check if we already have a real Let's Encrypt certificate
             IS_LE=$(docker compose exec -T web sh -c \
@@ -160,46 +184,69 @@ jobs:
               echo "==> Valid Let's Encrypt certificate found, attempting renewal..."
               docker compose run --rm certbot renew || true
             else
-              echo "==> No Let's Encrypt certificate (self-signed detected), obtaining real one..."
+              echo "==> No Let's Encrypt certificate, obtaining real one..."
 
               # Stop the certbot renew loop to release the lock file
-              echo "==> Stopping certbot service to release lock..."
+              echo "==> Stopping certbot service..."
               docker compose stop certbot 2>/dev/null || true
               sleep 2
 
               # Remove self-signed cert files and any stale certbot state
-              echo "==> Cleaning self-signed cert and stale certbot state..."
+              echo "==> Cleaning stale cert state..."
               docker compose exec -T web sh -c \
                 "rm -rf /etc/letsencrypt/live /etc/letsencrypt/archive /etc/letsencrypt/renewal /etc/letsencrypt/.certbot.lock 2>/dev/null; echo done"
 
-              # Write a test file to verify the ACME webroot is working
-              echo "==> [DIAG] Testing ACME webroot..."
+              # Write a test file to verify the ACME webroot works end-to-end
+              echo "==> [DIAG] Testing ACME webroot from inside container..."
               docker compose exec -T web sh -c \
                 "mkdir -p /var/www/certbot/.well-known/acme-challenge && echo ok > /var/www/certbot/.well-known/acme-challenge/selftest"
-              WEBROOT_TEST=$(curl -s --max-time 5 http://localhost/.well-known/acme-challenge/selftest 2>/dev/null)
-              if [ "$WEBROOT_TEST" = "ok" ]; then
-                echo "==> [DIAG] ACME webroot is working correctly"
-              else
-                echo "==> [DIAG] WARNING: ACME webroot test FAILED (got: '${WEBROOT_TEST}')"
-              fi
+              WEBROOT_LOCAL=$(curl -s --max-time 5 http://localhost/.well-known/acme-challenge/selftest 2>/dev/null)
+              WEBROOT_EXT=$(curl -s --max-time 5 "http://${SERVER_IP}/.well-known/acme-challenge/selftest" 2>/dev/null)
+              echo "  Local test: '${WEBROOT_LOCAL}' (expect 'ok')"
+              echo "  External test: '${WEBROOT_EXT}' (expect 'ok')"
               docker compose exec -T web sh -c "rm -f /var/www/certbot/.well-known/acme-challenge/selftest" 2>/dev/null
 
-              # Run certbot with verbose output
+              if [ "$WEBROOT_LOCAL" != "ok" ]; then
+                echo "==> ERROR: webroot not working even locally. Check nginx config."
+              fi
+
+              # Build certbot domain list - include www only if DNS resolves correctly
+              CERTBOT_DOMAINS="-d landofirm.com"
+              if [ -n "$DNS_WWW" ]; then
+                CERTBOT_DOMAINS="$CERTBOT_DOMAINS -d www.landofirm.com"
+                echo "==> Requesting cert for: landofirm.com + www.landofirm.com"
+              else
+                echo "==> Requesting cert for: landofirm.com only (www DNS not configured)"
+              fi
+
+              # Run certbot
               echo "==> Running certbot certonly..."
               if docker compose run --rm certbot certonly \
                 --webroot \
                 --webroot-path=/var/www/certbot \
-                -d landofirm.com \
+                $CERTBOT_DOMAINS \
+                --preferred-challenges http-01 \
                 --non-interactive \
                 --agree-tos \
                 --email info@landofirm.com \
                 --no-eff-email \
                 -v 2>&1; then
-                echo "==> Certbot succeeded!"
+                echo "==> Certbot succeeded! Enabling HSTS..."
+
+                # Enable HSTS now that we have a valid cert
+                docker compose exec -T web sh -c \
+                  'echo "add_header Strict-Transport-Security \"max-age=63072000; includeSubDomains; preload\" always;" > /etc/nginx/conf.d/hsts.conf'
+
               else
                 CERTBOT_EXIT=$?
                 echo "==> Certbot FAILED (exit code ${CERTBOT_EXIT})"
-                echo "==> Regenerating self-signed cert so nginx doesn't crash..."
+                echo ""
+                echo "==> Common causes:"
+                echo "  1. DNS A record for landofirm.com does not point to ${PUB_IP}"
+                echo "  2. Firewall blocks port 80 from outside (check Plesk firewall)"
+                echo "  3. Another web server (Plesk nginx/Apache) grabbed port 80"
+                echo ""
+                echo "==> Regenerating self-signed cert so nginx stays up..."
                 docker compose exec -T web sh -c "
                   mkdir -p ${CERT_DIR} && \
                   openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
@@ -208,19 +255,22 @@ jobs:
                     -subj '/CN=landofirm.com' 2>/dev/null"
               fi
 
-              # Restart the certbot renew loop
+              # Restart certbot renew loop
               echo "==> Restarting certbot service..."
               docker compose start certbot 2>/dev/null || true
             fi
 
-            # Reload nginx to pick up new/renewed certificate
+            # Reload nginx to pick up new/renewed certificate + HSTS if enabled
             docker compose exec -T web nginx -s reload
             echo "==> SSL setup complete"
 
-            # Show certificate info for debugging
+            # Final status
             echo "==> Current certificate info:"
             docker compose exec -T web sh -c \
               "openssl x509 -in ${CERT_DIR}/fullchain.pem -subject -issuer -dates -noout 2>/dev/null" || echo "Could not read cert"
+
+            echo "==> HSTS status:"
+            docker compose exec -T web sh -c "cat /etc/nginx/conf.d/hsts.conf 2>/dev/null" || echo "  HSTS disabled (no valid cert)"
           REMOTE
 
       - name: Cleanup

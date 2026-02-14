@@ -30,6 +30,9 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 # Copy nginx config for Docker
 COPY deploy/nginx-docker.conf /etc/nginx/conf.d/default.conf
 
+# Create empty HSTS include (populated after real cert is obtained)
+RUN touch /etc/nginx/conf.d/hsts.conf
+
 # Copy SSL setup entrypoint (generates self-signed cert if needed)
 COPY deploy/docker-entrypoint.sh /docker-entrypoint.d/40-ssl-setup.sh
 RUN chmod +x /docker-entrypoint.d/40-ssl-setup.sh
