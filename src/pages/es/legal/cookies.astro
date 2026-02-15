@@ -24,14 +24,38 @@ import { SITE } from '../../../config/site';
     Son imprescindibles para el funcionamiento del sitio web. Permiten la navegación y el uso de las funciones básicas.
     No requieren consentimiento.
   </p>
-  <ul>
-    <li><strong>Preferencia de idioma:</strong> almacena el idioma seleccionado por el usuario. Duración: 1 año.</li>
-  </ul>
+
+  <table>
+    <thead>
+      <tr><th>Cookie</th><th>Propósito</th><th>Duración</th><th>Tipo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>cookie-preferences</code></td><td>Almacena las preferencias de consentimiento de cookies del usuario</td><td>Persistente (localStorage)</td><td>Propia</td></tr>
+    </tbody>
+  </table>
 
   <h3>Cookies analíticas</h3>
   <p>
     Nos permiten analizar el uso que hacen los usuarios del sitio web, para mejorar la experiencia de navegación.
     Solo se instalan con su consentimiento previo.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Cookie</th><th>Propósito</th><th>Duración</th><th>Tipo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>Umami Analytics</code></td><td>Análisis anónimo de uso del sitio web (páginas visitadas, navegador, país). No utiliza cookies tradicionales ni rastrea datos personales.</td><td>Sesión</td><td>Propia (self-hosted)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Servicios de terceros</h3>
+  <p>
+    Nuestro formulario de contacto utiliza <strong>Formspree</strong> como procesador para gestionar los envíos.
+    Al enviar el formulario, sus datos se transmiten a los servidores de Formspree, Inc. (EE.UU.), que actúa como
+    encargado del tratamiento conforme al artículo 28 del RGPD. Formspree puede establecer cookies técnicas
+    necesarias para el procesamiento del formulario. Más información en su
+    <a href="https://formspree.io/legal/privacy-policy" target="_blank" rel="noopener noreferrer">política de privacidad</a>.
   </p>
 
   <h2>3. ¿Cómo gestionar las cookies?</h2>

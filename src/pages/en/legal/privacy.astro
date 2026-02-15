@@ -56,9 +56,14 @@ import { SITE } from '../../../config/site';
   <h2>6. Data Recipients</h2>
   <p>
     Data will not be disclosed to third parties, except where required by law. Service providers necessary
-    for the development of our activity (hosting, email, management tools) may have access to data,
+    for the development of our activity may have access to data,
     with whom the corresponding data processing agreements have been signed in accordance with Article 28 of the GDPR.
   </p>
+  <p>In particular, the following data processors may access your data:</p>
+  <ul>
+    <li><strong>Formspree, Inc.</strong> (USA): processing of website contact form submissions. Data processed: name, email, company, message, and estimated budget data. International transfer covered by EU Commission standard contractual clauses.</li>
+    <li><strong>Hosting provider</strong>: website hosting and associated services.</li>
+  </ul>
 
   <h2>7. International Transfers</h2>
   <p>
@@ -80,6 +85,8 @@ import { SITE } from '../../../config/site';
   <p>
     To exercise these rights, send an email to <strong>{SITE.email}</strong> stating your request
     and attaching a copy of your ID document.
+    The controller will respond to your request within a maximum of <strong>30 calendar days</strong> from receipt,
+    in accordance with Article 12.3 of the GDPR.
   </p>
   <p>
     You also have the right to file a complaint with the
@@ -87,7 +94,19 @@ import { SITE } from '../../../config/site';
     — if you believe that the processing of your data is inappropriate.
   </p>
 
-  <h2>9. Security</h2>
+  <h2>9. Data Protection Officer</h2>
+  <p>
+    {SITE.company.legalName} has not appointed a Data Protection Officer (DPO) as it is not required
+    under Article 37 of the GDPR. For any questions regarding the processing of your personal data,
+    you may contact the data controller at <strong>{SITE.email}</strong>.
+  </p>
+
+  <h2>10. Automated Decisions</h2>
+  <p>
+    No automated decisions or profiling are carried out with your personal data.
+  </p>
+
+  <h2>11. Security</h2>
   <p>
     Lando has adopted the necessary technical and organizational measures to ensure the security of personal data
     and prevent its alteration, loss, unauthorized processing or access, in accordance with the state of technology

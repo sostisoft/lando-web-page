@@ -140,6 +140,19 @@ const { lang } = Astro.props;
           <input type="hidden" name="budget_duration" id="hidden-duration" />
           <input type="hidden" name="budget_comments" id="hidden-comments" />
 
+          <!-- RGPD consent -->
+          <div class="form-consent">
+            <label class="consent-label">
+              <input type="checkbox" id="contact-privacy" name="privacy_accepted" required aria-required="true" />
+              <span class="consent-text">
+                {lang === 'es'
+                  ? <Fragment>He leído y acepto la <a href="/es/legal/privacidad">Política de Privacidad</a>. Consiento el tratamiento de mis datos para gestionar mi consulta. <span class="required-mark">*</span></Fragment>
+                  : <Fragment>I have read and accept the <a href="/en/legal/privacy">Privacy Policy</a>. I consent to the processing of my data to manage my inquiry. <span class="required-mark">*</span></Fragment>
+                }
+              </span>
+            </label>
+          </div>
+
           <button type="submit" class="btn-primary btn-submit" aria-label={t(lang, 'form.submit')}>
             <span class="btn-text">{t(lang, 'form.submit')}</span>
             <span class="btn-loading" style="display:none;" aria-live="polite">
@@ -442,6 +455,45 @@ const { lang } = Astro.props;
   .form-group textarea {
     resize: vertical;
     min-height: 100px;
+  }
+
+  /* RGPD Consent */
+  .form-consent {
+    margin-top: var(--space-xs);
+  }
+
+  .consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    cursor: pointer;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  .consent-label input[type="checkbox"] {
+    flex-shrink: 0;
+    margin-top: 3px;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-accent);
+    cursor: pointer;
+  }
+
+  .consent-text a {
+    color: var(--color-accent-light);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .consent-text a:hover {
+    opacity: 0.8;
+  }
+
+  .required-mark {
+    color: var(--color-accent-light);
+    font-weight: 600;
   }
 
   .btn-submit {

@@ -56,9 +56,14 @@ import { SITE } from '../../../config/site';
   <h2>6. Destinatarios de los datos</h2>
   <p>
     Los datos no se cederán a terceros, salvo obligación legal. Podrán tener acceso a los datos los proveedores de servicios
-    necesarios para el desarrollo de nuestra actividad (hosting, email, herramientas de gestión), con los que se han suscrito
+    necesarios para el desarrollo de nuestra actividad, con los que se han suscrito
     los correspondientes contratos de encargo de tratamiento conforme al artículo 28 del RGPD.
   </p>
+  <p>En particular, los siguientes encargados de tratamiento pueden acceder a sus datos:</p>
+  <ul>
+    <li><strong>Formspree, Inc.</strong> (EE.UU.): procesamiento de formularios de contacto del sitio web. Datos tratados: nombre, email, empresa, mensaje y datos del presupuesto estimado. Transferencia internacional amparada por cláusulas contractuales tipo de la Comisión Europea.</li>
+    <li><strong>Proveedor de hosting</strong>: alojamiento del sitio web y servicios asociados.</li>
+  </ul>
 
   <h2>7. Transferencias internacionales</h2>
   <p>
@@ -80,6 +85,8 @@ import { SITE } from '../../../config/site';
   <p>
     Para ejercer estos derechos, envíe un email a <strong>{SITE.email}</strong> indicando su solicitud
     y adjuntando copia de su DNI o documento identificativo equivalente.
+    El responsable atenderá su solicitud en el plazo máximo de <strong>30 días naturales</strong> desde su recepción,
+    conforme al artículo 12.3 del RGPD.
   </p>
   <p>
     Asimismo, le informamos de su derecho a presentar una reclamación ante la
@@ -87,7 +94,19 @@ import { SITE } from '../../../config/site';
     — si considera que el tratamiento de sus datos no es adecuado.
   </p>
 
-  <h2>9. Seguridad</h2>
+  <h2>9. Delegado de Protección de Datos</h2>
+  <p>
+    {SITE.company.legalName} no ha designado un Delegado de Protección de Datos (DPO) al no estar obligado
+    conforme al artículo 37 del RGPD. Para cualquier cuestión relativa al tratamiento de sus datos personales,
+    puede dirigirse al responsable del tratamiento a través de <strong>{SITE.email}</strong>.
+  </p>
+
+  <h2>10. Decisiones automatizadas</h2>
+  <p>
+    No se realizan decisiones automatizadas ni elaboración de perfiles con sus datos personales.
+  </p>
+
+  <h2>11. Seguridad</h2>
   <p>
     Lando ha adoptado las medidas técnicas y organizativas necesarias para garantizar la seguridad de los datos personales
     y evitar su alteración, pérdida, tratamiento o acceso no autorizado, conforme al estado de la tecnología y la naturaleza
