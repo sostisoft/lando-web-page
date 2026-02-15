@@ -289,11 +289,18 @@ const altLang = lang === 'es' ? 'en' : 'es';
       if (href && href.startsWith('#') && href.length > 1) {
         e.preventDefault();
         const id = href.slice(1);
-        if (isMobile()) {
-          // Wait for menu close animation, then scroll
-          setTimeout(() => smoothScrollTo(id), 350);
+        const targetEl = document.getElementById(id);
+        if (targetEl) {
+          // Section exists on current page, smooth scroll
+          if (isMobile()) {
+            setTimeout(() => smoothScrollTo(id), 350);
+          } else {
+            smoothScrollTo(id);
+          }
         } else {
-          smoothScrollTo(id);
+          // Section not on current page, navigate to homepage with hash
+          const lang = document.documentElement.lang || 'es';
+          window.location.href = `/${lang}/#${id}`;
         }
       }
     });
@@ -306,7 +313,14 @@ const altLang = lang === 'es' ? 'en' : 'es';
     const href = anchor.getAttribute('href');
     if (href && href.startsWith('#') && href.length > 1) {
       e.preventDefault();
-      smoothScrollTo(href.slice(1));
+      const id = href.slice(1);
+      const targetEl = document.getElementById(id);
+      if (targetEl) {
+        smoothScrollTo(id);
+      } else {
+        const lang = document.documentElement.lang || 'es';
+        window.location.href = `/${lang}/#${id}`;
+      }
     }
   });
 
