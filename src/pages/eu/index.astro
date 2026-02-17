@@ -1,0 +1,34 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import Services from '../../components/Services.astro';
+import Method from '../../components/Method.astro';
+import Team from '../../components/Team.astro';
+import Clients from '../../components/Clients.astro';
+import Testimonials from '../../components/Testimonials.astro';
+import CTA from '../../components/CTA.astro';
+import BudgetEstimator from '../../components/BudgetEstimator.astro';
+import InlineCTA from '../../components/InlineCTA.astro';
+import FAQ from '../../components/FAQ.astro';
+
+const lang = 'eu' as const;
+---
+
+<Layout
+  title="Lando — Software Garapena eta Aholkularitza Teknologikoa | App-ak, Web, AA"
+  description="Neurri egindako software garapen enpresa. Web aplikazioak, app mugikorrak eta adimen artifiziala sortzen ditugu. MVP 3 astetan. Aholkularitza teknikoa gehienez 3 bezero aldiberekoekin."
+  keywords="neurri egindako software garapena, web garapen enpresa Espainia, aholkularitza teknologikoa, app mugikorren garapena, adimen artifiziala enpresak, MVP startup, app garapena, web orri profesionala sortu, eraldaketa digitala, software pertsonalizatua"
+  lang={lang}
+>
+  <Hero lang={lang} />
+  <Services lang={lang} />
+  <InlineCTA lang={lang} variant="estimator" />
+  <Method lang={lang} />
+  <BudgetEstimator lang={lang} />
+  <Clients lang={lang} />
+  <Testimonials lang={lang} />
+  <Team lang={lang} />
+  <FAQ lang={lang} />
+  <InlineCTA lang={lang} variant="contact" />
+  <CTA lang={lang} />
+</Layout>

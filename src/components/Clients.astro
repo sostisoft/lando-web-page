@@ -1,5 +1,5 @@
 ---
-import { type Lang } from '../i18n/translations';
+import { t, type Lang } from '../i18n/translations';
 
 interface Props {
   lang: Lang;
@@ -7,23 +7,66 @@ interface Props {
 
 const { lang } = Astro.props;
 
-const results = [
-  { metric: '0', metricLabel: 'downtime', sector: 'Telecom', region: lang === 'es' ? 'Europa' : 'Europe', desc: lang === 'es' ? 'Migración de plataforma legacy a microservicios' : 'Legacy platform migration to microservices', color: '#00a2e2' },
-  { metric: '5x', metricLabel: lang === 'es' ? 'más transacciones' : 'more transactions', sector: 'Fintech', region: lang === 'es' ? 'España' : 'Spain', desc: lang === 'es' ? 'Arquitectura de banca digital y APIs de pagos' : 'Digital banking architecture and payment APIs', color: '#e74c3c' },
-  { metric: '+300%', metricLabel: lang === 'es' ? 'rendimiento' : 'performance', sector: 'Retail', region: lang === 'es' ? 'Internacional' : 'International', desc: lang === 'es' ? 'Optimización de e-commerce y logística omnicanal' : 'E-commerce and omnichannel logistics optimization', color: '#00a651' },
-  { metric: '+35%', metricLabel: 'engagement', sector: 'PropTech', region: lang === 'es' ? 'España' : 'Spain', desc: lang === 'es' ? 'Motor de búsqueda y sistema de recomendaciones' : 'Search engine and recommendation system', color: '#00e0d0' },
-  { metric: '3', metricLabel: lang === 'es' ? 'semanas' : 'weeks', sector: 'Search AI', region: lang === 'es' ? 'España' : 'Spain', desc: lang === 'es' ? 'Integración de NLP en motor de búsqueda' : 'NLP integration in search engine', color: '#60A5FA' },
-  { metric: '99.9%', metricLabel: 'uptime', sector: lang === 'es' ? 'Seguridad' : 'Security', region: lang === 'es' ? 'Internacional' : 'International', desc: lang === 'es' ? 'Plataforma de monitorización en tiempo real' : 'Real-time monitoring platform', color: '#fdcb6e' },
-  { metric: '-40%', metricLabel: lang === 'es' ? 'costes ops.' : 'ops. costs', sector: lang === 'es' ? 'Transporte' : 'Transport', region: lang === 'es' ? 'Holanda' : 'Netherlands', desc: lang === 'es' ? 'Ticketing digital y planificación de rutas' : 'Digital ticketing and route planning', color: '#f9a825' },
-  { metric: '<8', metricLabel: lang === 'es' ? 'sem. a producción' : 'weeks to prod', sector: lang === 'es' ? 'Inversión' : 'Investment', region: lang === 'es' ? 'España' : 'Spain', desc: lang === 'es' ? 'Plataforma de inversión automatizada desde cero' : 'Automated investment platform from scratch', color: '#6c5ce7' },
-];
+interface Result {
+  metric: string;
+  metricLabel: string;
+  sector: string;
+  region: string;
+  desc: string;
+  color: string;
+}
+
+const clientData: Record<string, Result[]> = {
+  es: [
+    { metric: '0', metricLabel: 'downtime', sector: 'Telecom', region: 'Europa', desc: 'Migración de plataforma legacy a microservicios', color: '#00a2e2' },
+    { metric: '5x', metricLabel: 'más transacciones', sector: 'Fintech', region: 'España', desc: 'Arquitectura de banca digital y APIs de pagos', color: '#e74c3c' },
+    { metric: '+300%', metricLabel: 'rendimiento', sector: 'Retail', region: 'Internacional', desc: 'Optimización de e-commerce y logística omnicanal', color: '#00a651' },
+    { metric: '+35%', metricLabel: 'engagement', sector: 'PropTech', region: 'España', desc: 'Motor de búsqueda y sistema de recomendaciones', color: '#00e0d0' },
+    { metric: '3', metricLabel: 'semanas', sector: 'Search AI', region: 'España', desc: 'Integración de NLP en motor de búsqueda', color: '#60A5FA' },
+    { metric: '99.9%', metricLabel: 'uptime', sector: 'Seguridad', region: 'Internacional', desc: 'Plataforma de monitorización en tiempo real', color: '#fdcb6e' },
+    { metric: '-40%', metricLabel: 'costes ops.', sector: 'Transporte', region: 'Holanda', desc: 'Ticketing digital y planificación de rutas', color: '#f9a825' },
+    { metric: '<8', metricLabel: 'sem. a producción', sector: 'Inversión', region: 'España', desc: 'Plataforma de inversión automatizada desde cero', color: '#6c5ce7' },
+  ],
+  en: [
+    { metric: '0', metricLabel: 'downtime', sector: 'Telecom', region: 'Europe', desc: 'Legacy platform migration to microservices', color: '#00a2e2' },
+    { metric: '5x', metricLabel: 'more transactions', sector: 'Fintech', region: 'Spain', desc: 'Digital banking architecture and payment APIs', color: '#e74c3c' },
+    { metric: '+300%', metricLabel: 'performance', sector: 'Retail', region: 'International', desc: 'E-commerce and omnichannel logistics optimization', color: '#00a651' },
+    { metric: '+35%', metricLabel: 'engagement', sector: 'PropTech', region: 'Spain', desc: 'Search engine and recommendation system', color: '#00e0d0' },
+    { metric: '3', metricLabel: 'weeks', sector: 'Search AI', region: 'Spain', desc: 'NLP integration in search engine', color: '#60A5FA' },
+    { metric: '99.9%', metricLabel: 'uptime', sector: 'Security', region: 'International', desc: 'Real-time monitoring platform', color: '#fdcb6e' },
+    { metric: '-40%', metricLabel: 'ops. costs', sector: 'Transport', region: 'Netherlands', desc: 'Digital ticketing and route planning', color: '#f9a825' },
+    { metric: '<8', metricLabel: 'weeks to prod', sector: 'Investment', region: 'Spain', desc: 'Automated investment platform from scratch', color: '#6c5ce7' },
+  ],
+  ca: [
+    { metric: '0', metricLabel: 'downtime', sector: 'Telecom', region: 'Europa', desc: 'Migració de plataforma legacy a microserveis', color: '#00a2e2' },
+    { metric: '5x', metricLabel: 'més transaccions', sector: 'Fintech', region: 'Espanya', desc: 'Arquitectura de banca digital i APIs de pagaments', color: '#e74c3c' },
+    { metric: '+300%', metricLabel: 'rendiment', sector: 'Retail', region: 'Internacional', desc: 'Optimització d\'e-commerce i logística omnicanal', color: '#00a651' },
+    { metric: '+35%', metricLabel: 'engagement', sector: 'PropTech', region: 'Espanya', desc: 'Motor de cerca i sistema de recomanacions', color: '#00e0d0' },
+    { metric: '3', metricLabel: 'setmanes', sector: 'Search AI', region: 'Espanya', desc: 'Integració de NLP en motor de cerca', color: '#60A5FA' },
+    { metric: '99.9%', metricLabel: 'uptime', sector: 'Seguretat', region: 'Internacional', desc: 'Plataforma de monitorització en temps real', color: '#fdcb6e' },
+    { metric: '-40%', metricLabel: 'costos ops.', sector: 'Transport', region: 'Holanda', desc: 'Ticketing digital i planificació de rutes', color: '#f9a825' },
+    { metric: '<8', metricLabel: 'set. a producció', sector: 'Inversió', region: 'Espanya', desc: 'Plataforma d\'inversió automatitzada des de zero', color: '#6c5ce7' },
+  ],
+  eu: [
+    { metric: '0', metricLabel: 'downtime', sector: 'Telecom', region: 'Europa', desc: 'Legacy plataformaren migrazioa mikrozerbitzuetara', color: '#00a2e2' },
+    { metric: '5x', metricLabel: 'transakzio gehiago', sector: 'Fintech', region: 'Espainia', desc: 'Banka digitalaren arkitektura eta ordainketa APIak', color: '#e74c3c' },
+    { metric: '+300%', metricLabel: 'errendimendua', sector: 'Retail', region: 'Nazioartekoa', desc: 'E-commerce eta logistika omnikanal optimizazioa', color: '#00a651' },
+    { metric: '+35%', metricLabel: 'engagement', sector: 'PropTech', region: 'Espainia', desc: 'Bilaketa-motorra eta gomendio-sistema', color: '#00e0d0' },
+    { metric: '3', metricLabel: 'aste', sector: 'Search AI', region: 'Espainia', desc: 'NLP integrazioa bilaketa-motorrean', color: '#60A5FA' },
+    { metric: '99.9%', metricLabel: 'uptime', sector: 'Segurtasuna', region: 'Nazioartekoa', desc: 'Denbora errealeko monitorizazio plataforma', color: '#fdcb6e' },
+    { metric: '-40%', metricLabel: 'ops. kostuak', sector: 'Garraioa', region: 'Herbehereak', desc: 'Ticketing digitala eta ibilbide planifikazioa', color: '#f9a825' },
+    { metric: '<8', metricLabel: 'aste prod-era', sector: 'Inbertsioa', region: 'Espainia', desc: 'Inbertsio-plataforma automatizatua hutsetik', color: '#6c5ce7' },
+  ],
+};
+
+const results = clientData[lang] || clientData.es;
 ---
 
 <section class="section results" id="clients">
   <div class="container">
     <div class="results-header animate-on-scroll">
-      <p class="section-tagline">{lang === 'es' ? 'Resultados reales' : 'Real results'}</p>
-      <h2 class="section-title">{lang === 'es' ? 'Proyectos que hablan por sí solos' : 'Projects that speak for themselves'}</h2>
+      <p class="section-tagline">{t(lang, 'clients.tagline')}</p>
+      <h2 class="section-title">{t(lang, 'clients.title')}</h2>
     </div>
 
     <div class="results-grid">

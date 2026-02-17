@@ -41,9 +41,9 @@ const { lang } = Astro.props;
       <div class="footer-col">
         <h4 class="footer-heading">{t(lang, 'footer.legal')}</h4>
         <ul class="footer-links">
-          <li><a href={getLocalizedPath(lang, lang === 'es' ? '/legal/privacidad' : '/legal/privacy')}>{t(lang, 'footer.privacy')}</a></li>
+          <li><a href={getLocalizedPath(lang, lang === 'en' ? '/legal/privacy' : '/legal/privacidad')}>{t(lang, 'footer.privacy')}</a></li>
           <li><a href={getLocalizedPath(lang, '/legal/cookies')}>{t(lang, 'footer.cookies')}</a></li>
-          <li><a href={getLocalizedPath(lang, lang === 'es' ? '/legal/aviso-legal' : '/legal/legal-notice')}>{t(lang, 'footer.legal.notice')}</a></li>
+          <li><a href={getLocalizedPath(lang, lang === 'en' ? '/legal/legal-notice' : '/legal/aviso-legal')}>{t(lang, 'footer.legal.notice')}</a></li>
           <li><a href="#" id="cookie-change-prefs">{t(lang, 'cookies.prefs.change')}</a></li>
         </ul>
       </div>

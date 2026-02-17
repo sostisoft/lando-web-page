@@ -1,0 +1,34 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import Services from '../../components/Services.astro';
+import Method from '../../components/Method.astro';
+import Team from '../../components/Team.astro';
+import Clients from '../../components/Clients.astro';
+import Testimonials from '../../components/Testimonials.astro';
+import CTA from '../../components/CTA.astro';
+import BudgetEstimator from '../../components/BudgetEstimator.astro';
+import InlineCTA from '../../components/InlineCTA.astro';
+import FAQ from '../../components/FAQ.astro';
+
+const lang = 'ca' as const;
+---
+
+<Layout
+  title="Lando — Desenvolupament de Software i Consultoria Tecnològica | Apps, Web, IA"
+  description="Empresa de desenvolupament de software a mida. Creem aplicacions web, apps mòbils i intel·ligència artificial. MVP en 3 setmanes. Consultoria tècnica amb màxim 3 clients simultanis."
+  keywords="desenvolupament software a mida, empresa desenvolupament web Espanya, consultoria tecnològica, desenvolupament aplicacions mòbils, intel·ligència artificial empreses, MVP startup, desenvolupament app, crear pàgina web professional, transformació digital, software a mida"
+  lang={lang}
+>
+  <Hero lang={lang} />
+  <Services lang={lang} />
+  <InlineCTA lang={lang} variant="estimator" />
+  <Method lang={lang} />
+  <BudgetEstimator lang={lang} />
+  <Clients lang={lang} />
+  <Testimonials lang={lang} />
+  <Team lang={lang} />
+  <FAQ lang={lang} />
+  <InlineCTA lang={lang} variant="contact" />
+  <CTA lang={lang} />
+</Layout>

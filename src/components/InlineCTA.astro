@@ -1,5 +1,5 @@
 ---
-import { type Lang } from '../i18n/translations';
+import { t, type Lang } from '../i18n/translations';
 
 interface Props {
   lang: Lang;
@@ -10,15 +10,9 @@ const { lang, variant = 'estimator' } = Astro.props;
 
 const isEstimator = variant === 'estimator';
 const href = isEstimator ? '#estimator' : '#contact';
-const text = isEstimator
-  ? (lang === 'es' ? 'Calcula tu presupuesto en 1 minuto' : 'Get your estimate in 1 minute')
-  : (lang === 'es' ? 'Hablemos de tu proyecto' : "Let's talk about your project");
-const subtext = isEstimator
-  ? (lang === 'es' ? 'Sin compromiso ni registro' : 'No obligation, no signup')
-  : (lang === 'es' ? 'Respuesta en menos de 24h' : 'Response within 24h');
-const btnText = isEstimator
-  ? (lang === 'es' ? 'Calcular presupuesto' : 'Calculate budget')
-  : (lang === 'es' ? 'Contactar ahora' : 'Contact now');
+const text = isEstimator ? t(lang, 'inline.estimator.title') : t(lang, 'inline.contact.title');
+const subtext = isEstimator ? t(lang, 'inline.estimator.desc') : t(lang, 'inline.contact.desc');
+const btnText = isEstimator ? t(lang, 'inline.estimator.btn') : t(lang, 'inline.contact.btn');
 ---
 
 <div class="inline-cta animate-on-scroll">

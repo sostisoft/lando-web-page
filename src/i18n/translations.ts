@@ -3,6 +3,8 @@ import { SITE } from '../config/site';
 export const languages = {
   es: 'Español',
   en: 'English',
+  ca: 'Català',
+  eu: 'Euskara',
 } as const;
 
 export type Lang = keyof typeof languages;
@@ -17,7 +19,8 @@ export const translations = {
     'nav.testimonials': 'Testimonios',
     'nav.faq': 'FAQ',
     'nav.contact': 'Contacto',
-    'nav.lang': 'EN',
+    'nav.lang': 'ES',
+    'nav.quote': 'Presupuesto',
 
     // Hero
     'hero.tagline': 'Consultoría tecnológica de alto impacto',
@@ -65,6 +68,13 @@ export const translations = {
     'cta.desc': 'Rellena el formulario y te responderemos en menos de 24 horas. Analizaremos tu proyecto y te diremos exactamente cómo podemos ayudarte.',
     'cta.button': 'Reservar consulta gratuita',
     'cta.note': 'Sin compromiso · Respuesta en 24h',
+    'cta.feature.quick': 'Respuesta rápida',
+    'cta.feature.quick.desc': 'Te respondemos en menos de 24h',
+    'cta.feature.noobligation': 'Sin compromiso',
+    'cta.feature.noobligation.desc': 'Consulta gratuita inicial',
+    'cta.feature.estimate': 'Presupuesto preciso',
+    'cta.feature.estimate.desc': 'Usa nuestro estimador online',
+    'cta.email.label': 'O escríbenos directamente:',
 
     // Contact Form
     'form.name': 'Nombre',
@@ -79,6 +89,24 @@ export const translations = {
     'form.message.placeholder': 'Cuéntanos sobre tu proyecto...',
     'form.submit': 'Enviar mensaje',
     'form.budget.title': 'Resumen del presupuesto estimado',
+    'form.required': 'obligatorio',
+    'form.budget': 'Presupuesto aproximado',
+    'form.budget.placeholder': 'Selecciona un rango',
+    'form.budget.5k': 'Menos de 5.000€',
+    'form.budget.unsure': 'No estoy seguro',
+    'form.timeline': 'Plazo',
+    'form.timeline.placeholder': 'Selecciona un plazo',
+    'form.timeline.urgent': 'Urgente (< 2 semanas)',
+    'form.timeline.1-3months': '1-3 meses',
+    'form.timeline.3months+': '3+ meses',
+    'form.timeline.exploring': 'Solo explorando',
+    'form.consent.prefix': 'He leído y acepto la',
+    'form.consent.link': 'Política de Privacidad',
+    'form.consent.suffix': '. Consiento el tratamiento de mis datos para gestionar mi consulta.',
+    'form.consent.url': '/es/legal/privacidad',
+    'form.sending': 'Enviando...',
+    'form.success': 'Mensaje enviado con éxito. Te responderemos en menos de 24h.',
+    'form.error': 'Error al enviar. Inténtalo de nuevo o escríbenos a',
 
     // Budget Estimator
     'estimator.tagline': 'Presupuesto inteligente',
@@ -154,8 +182,6 @@ export const translations = {
     'team.experience5': '+7 años · AWS · Kubernetes · CI/CD',
     'team.desc5': 'Ingeniero de infraestructura cloud con enfoque en automatización, pipelines CI/CD y observabilidad. Migración y operación de sistemas críticos en producción.',
 
-    // Clients/Results (content inlined in Clients.astro)
-
     // Cookie Banner
     'cookies.banner.title': 'Usamos cookies',
     'cookies.banner.desc': 'Utilizamos cookies propias y de terceros para mejorar tu experiencia en nuestro sitio web. ',
@@ -187,6 +213,35 @@ export const translations = {
     'legal.cookies.title': 'Política de Cookies',
     'legal.notice.title': 'Aviso Legal',
     'legal.back': '← Volver al inicio',
+
+    // Hero stats
+    'hero.stat.clients': 'Clientes máx.',
+    'hero.stat.projects': 'Proyectos',
+    'hero.stat.return': 'Repiten',
+    'hero.trusted': 'Experiencia en:',
+
+    // InlineCTA
+    'inline.estimator.title': 'Calcula tu presupuesto en 1 minuto',
+    'inline.estimator.desc': 'Sin compromiso ni registro',
+    'inline.estimator.btn': 'Calcular presupuesto',
+    'inline.contact.title': 'Hablemos de tu proyecto',
+    'inline.contact.desc': 'Respuesta en menos de 24h',
+    'inline.contact.btn': 'Contactar ahora',
+
+    // FloatingCTA
+    'floating.estimate': 'Calcula tu presupuesto',
+    'floating.contact': 'Contactar',
+
+    // FAQ
+    'faq.tagline': 'Preguntas frecuentes',
+    'faq.title': 'Resolvemos tus dudas',
+
+    // Clients
+    'clients.tagline': 'Resultados reales',
+    'clients.title': 'Proyectos que hablan por sí solos',
+
+    // Accessibility
+    'a11y.skip': 'Ir al contenido principal',
   },
   en: {
     // Nav
@@ -195,7 +250,8 @@ export const translations = {
     'nav.testimonials': 'Testimonials',
     'nav.faq': 'FAQ',
     'nav.contact': 'Contact',
-    'nav.lang': 'ES',
+    'nav.lang': 'EN',
+    'nav.quote': 'Get Quote',
 
     // Hero
     'hero.tagline': 'High-impact tech consulting',
@@ -243,6 +299,13 @@ export const translations = {
     'cta.desc': 'Fill in the form and we\'ll respond within 24 hours. We\'ll analyze your project and tell you exactly how we can help.',
     'cta.button': 'Book free consultation',
     'cta.note': 'No obligation · Response within 24h',
+    'cta.feature.quick': 'Quick response',
+    'cta.feature.quick.desc': 'We respond within 24h',
+    'cta.feature.noobligation': 'No obligation',
+    'cta.feature.noobligation.desc': 'Free initial consultation',
+    'cta.feature.estimate': 'Precise estimate',
+    'cta.feature.estimate.desc': 'Use our online estimator',
+    'cta.email.label': 'Or email us directly:',
 
     // Contact Form
     'form.name': 'Name',
@@ -257,6 +320,24 @@ export const translations = {
     'form.message.placeholder': 'Tell us about your project...',
     'form.submit': 'Send message',
     'form.budget.title': 'Estimated budget summary',
+    'form.required': 'required',
+    'form.budget': 'Approximate budget',
+    'form.budget.placeholder': 'Select a range',
+    'form.budget.5k': 'Less than €5,000',
+    'form.budget.unsure': 'Not sure yet',
+    'form.timeline': 'Timeline',
+    'form.timeline.placeholder': 'Select a timeline',
+    'form.timeline.urgent': 'Urgent (< 2 weeks)',
+    'form.timeline.1-3months': '1-3 months',
+    'form.timeline.3months+': '3+ months',
+    'form.timeline.exploring': 'Just exploring',
+    'form.consent.prefix': 'I have read and accept the',
+    'form.consent.link': 'Privacy Policy',
+    'form.consent.suffix': '. I consent to the processing of my data to manage my inquiry.',
+    'form.consent.url': '/en/legal/privacy',
+    'form.sending': 'Sending...',
+    'form.success': 'Message sent successfully. We\'ll respond within 24h.',
+    'form.error': 'Error sending. Try again or email us at',
 
     // Budget Estimator
     'estimator.tagline': 'Smart budgeting',
@@ -332,8 +413,6 @@ export const translations = {
     'team.experience5': '+7 years · AWS · Kubernetes · CI/CD',
     'team.desc5': 'Cloud infrastructure engineer focused on automation, CI/CD pipelines, and observability. Migration and operation of critical production systems.',
 
-    // Clients/Results (content inlined in Clients.astro)
-
     // Cookie Banner
     'cookies.banner.title': 'We use cookies',
     'cookies.banner.desc': 'We use our own and third-party cookies to improve your experience on our website. ',
@@ -365,13 +444,504 @@ export const translations = {
     'legal.cookies.title': 'Cookie Policy',
     'legal.notice.title': 'Legal Notice',
     'legal.back': '← Back to home',
+
+    // Hero stats
+    'hero.stat.clients': 'Max clients',
+    'hero.stat.projects': 'Projects',
+    'hero.stat.return': 'Return',
+    'hero.trusted': 'Experience in:',
+
+    // InlineCTA
+    'inline.estimator.title': 'Get your estimate in 1 minute',
+    'inline.estimator.desc': 'No obligation, no signup',
+    'inline.estimator.btn': 'Calculate budget',
+    'inline.contact.title': "Let's talk about your project",
+    'inline.contact.desc': 'Response within 24h',
+    'inline.contact.btn': 'Contact now',
+
+    // FloatingCTA
+    'floating.estimate': 'Get your estimate',
+    'floating.contact': 'Contact us',
+
+    // FAQ
+    'faq.tagline': 'FAQ',
+    'faq.title': 'Common questions answered',
+
+    // Clients
+    'clients.tagline': 'Real results',
+    'clients.title': 'Projects that speak for themselves',
+
+    // Accessibility
+    'a11y.skip': 'Skip to main content',
+  },
+  ca: {
+    // Nav
+    'nav.services': 'Serveis',
+    'nav.method': 'Mètode',
+    'nav.testimonials': 'Testimonis',
+    'nav.faq': 'FAQ',
+    'nav.contact': 'Contacte',
+    'nav.lang': 'CA',
+    'nav.quote': 'Pressupost',
+
+    // Hero
+    'hero.tagline': 'Consultoria tecnològica d\'alt impacte',
+    'hero.title.line1': 'Transformem idees',
+    'hero.title.line2': 'en productes digitals',
+    'hero.title.highlight': 'extraordinaris',
+    'hero.description': 'Treballem amb un màxim de 3 clients simultàniament per garantir resultats òptims. El teu projecte mereix atenció exclusiva.',
+    'hero.cta': 'Reserva una consulta gratuïta',
+    'hero.cta.secondary': 'Descobreix el nostre mètode',
+
+    // Services
+    'services.tagline': 'El que fem',
+    'services.title': 'Serveis dissenyats per impulsar el teu negoci',
+    'services.consulting.title': 'Consultoria Tècnica',
+    'services.consulting.desc': 'T\'ajudem a prendre les decisions tecnològiques correctes. Analitzem la teva situació actual i dissenyem el full de ruta cap als teus objectius.',
+    'services.web.title': 'Desenvolupament Web & Apps',
+    'services.web.desc': 'Creem experiències digitals a mida. Des de webs corporatives amb dashboards avançats fins a aplicacions mòbils natives per a iOS i Android.',
+    'services.ai.title': 'Intel·ligència Artificial',
+    'services.ai.desc': 'Integrem solucions d\'IA per automatitzar processos, optimitzar operacions i crear avantatges competitius reals al teu negoci.',
+    'services.mvp.title': 'MVP & Producte',
+    'services.mvp.desc': 'Llancem el teu producte mínim viable en 3 setmanes. Validem la teva idea de negoci amb usuaris reals abans d\'invertir a gran escala.',
+
+    // Method
+    'method.tagline': 'Per què Lando',
+    'method.title': 'Un mètode pensat per a resultats reals',
+    'method.exclusive.number': '3',
+    'method.exclusive.label': 'clients màxim',
+    'method.exclusive.title': 'Dedicació exclusiva',
+    'method.exclusive.desc': 'Només treballem amb 3 clients alhora. Això ens permet garantir la màxima qualitat i atenció personalitzada a cada projecte.',
+    'method.mvp.number': '3',
+    'method.mvp.label': 'setmanes',
+    'method.mvp.title': 'MVP en temps rècord',
+    'method.mvp.desc': 'El teu producte mínim viable llest des de 3 setmanes. Validem ràpid, iterem amb dades reals i escalem amb confiança.',
+    'method.quality.number': '90',
+    'method.quality.label': 'dies suport',
+    'method.quality.title': 'Suport garantit',
+    'method.quality.desc': 'Cada projecte inclou 90 dies de suport post-llançament. Bugs, ajustos i consultes resoltes en menys de 24h. El teu producte està recolzat.',
+
+    // Testimonials
+    'testimonials.tagline': 'Clients satisfets',
+    'testimonials.title': 'El que diuen de nosaltres',
+
+    // CTA
+    'cta.title': 'Preparat per fer el següent pas?',
+    'cta.desc': 'Omple el formulari i et respondrem en menys de 24 hores. Analitzarem el teu projecte i et direm exactament com podem ajudar-te.',
+    'cta.button': 'Reservar consulta gratuïta',
+    'cta.note': 'Sense compromís · Resposta en 24h',
+    'cta.feature.quick': 'Resposta ràpida',
+    'cta.feature.quick.desc': 'Et responem en menys de 24h',
+    'cta.feature.noobligation': 'Sense compromís',
+    'cta.feature.noobligation.desc': 'Consulta gratuïta inicial',
+    'cta.feature.estimate': 'Pressupost precís',
+    'cta.feature.estimate.desc': 'Fes servir el nostre estimador en línia',
+    'cta.email.label': 'O escriu-nos directament:',
+
+    // Contact Form
+    'form.name': 'Nom',
+    'form.name.placeholder': 'El teu nom',
+    'form.email': 'Email',
+    'form.email.placeholder': 'tu@email.com',
+    'form.company': 'Empresa',
+    'form.company.placeholder': 'Nom de la teva empresa (opcional)',
+    'form.service': 'Servei d\'interès',
+    'form.service.placeholder': 'Selecciona un servei',
+    'form.message': 'Missatge',
+    'form.message.placeholder': 'Explica\'ns el teu projecte...',
+    'form.submit': 'Enviar missatge',
+    'form.budget.title': 'Resum del pressupost estimat',
+    'form.required': 'obligatori',
+    'form.budget': 'Pressupost aproximat',
+    'form.budget.placeholder': 'Selecciona un rang',
+    'form.budget.5k': 'Menys de 5.000€',
+    'form.budget.unsure': 'No estic segur',
+    'form.timeline': 'Termini',
+    'form.timeline.placeholder': 'Selecciona un termini',
+    'form.timeline.urgent': 'Urgent (< 2 setmanes)',
+    'form.timeline.1-3months': '1-3 mesos',
+    'form.timeline.3months+': '3+ mesos',
+    'form.timeline.exploring': 'Només explorant',
+    'form.consent.prefix': 'He llegit i accepto la',
+    'form.consent.link': 'Política de Privacitat',
+    'form.consent.suffix': '. Consento el tractament de les meves dades per gestionar la meva consulta.',
+    'form.consent.url': '/ca/legal/privacitat',
+    'form.sending': 'Enviant...',
+    'form.success': 'Missatge enviat amb èxit. Et respondrem en menys de 24h.',
+    'form.error': 'Error en enviar. Torna-ho a provar o escriu-nos a',
+
+    // Budget Estimator
+    'estimator.tagline': 'Pressupost intel·ligent',
+    'estimator.title': 'Calcula el teu pressupost en 1 minut',
+    'estimator.desc': 'El nostre estimador et donarà un rang de pressupost aproximat basat en les teves necessitats. Sense registre, sense compromís.',
+    'estimator.step1.title': 'Quin tipus de projecte necessites?',
+    'estimator.step1.desc': 'Selecciona el tipus de projecte que millor s\'ajusti a la teva idea.',
+    'estimator.type.web': 'Web / App Web',
+    'estimator.type.web.detail': 'Pàgines web, plataformes SaaS, e-commerce',
+    'estimator.type.app': 'App Mòbil',
+    'estimator.type.app.detail': 'Apps natives o híbrides per a iOS i Android',
+    'estimator.type.ai': 'Intel·ligència Artificial',
+    'estimator.type.ai.detail': 'Chatbots, automatització, models ML',
+    'estimator.type.consulting': 'Consultoria',
+    'estimator.type.consulting.detail': 'Auditoria tècnica, full de ruta digital',
+    'estimator.step2.title': 'Quina és la complexitat?',
+    'estimator.step2.desc': 'Això ens ajuda a estimar l\'abast del projecte.',
+    'estimator.complexity.basic': 'Bàsic',
+    'estimator.complexity.basic.detail': 'Funcionalitats estàndard, disseny net',
+    'estimator.complexity.medium': 'Intermedi',
+    'estimator.complexity.medium.detail': 'Integracions, lògica personalitzada',
+    'estimator.complexity.advanced': 'Avançat',
+    'estimator.complexity.advanced.detail': 'Arquitectura complexa, alta escalabilitat',
+    'estimator.step3.title': 'Quines funcionalitats necessites?',
+    'estimator.step3.desc': 'Selecciona totes les que apliquin al teu projecte.',
+    'estimator.feature.auth': 'Autenticació d\'usuaris',
+    'estimator.feature.payments': 'Passarel·la de pagaments',
+    'estimator.feature.dashboard': 'Panell d\'administració',
+    'estimator.feature.api': 'API / Integracions',
+    'estimator.feature.ai': 'Integració d\'IA',
+    'estimator.feature.multilang': 'Multiidioma',
+    'estimator.feature.cms': 'Gestor de continguts',
+    'estimator.feature.realtime': 'Temps real / Xat',
+    'estimator.next': 'Continuar',
+    'estimator.step4.title': 'Quin és el teu termini ideal?',
+    'estimator.step4.desc': 'El termini pot afectar el pressupost final.',
+    'estimator.timeline.urgent': 'Urgent',
+    'estimator.timeline.urgent.detail': 'Ho necessito per ahir',
+    'estimator.timeline.normal': 'Normal',
+    'estimator.timeline.normal.detail': '1-2 mesos és perfecte',
+    'estimator.timeline.flexible': 'Flexible',
+    'estimator.timeline.flexible.detail': 'No hi ha pressa, qualitat per sobre de tot',
+    'estimator.result.title': 'El teu pressupost estimat',
+    'estimator.result.project': 'Tipus de projecte',
+    'estimator.result.complexity': 'Complexitat',
+    'estimator.result.features': 'Funcionalitats',
+    'estimator.result.timeline': 'Termini',
+    'estimator.result.duration': 'Durada estimada',
+    'estimator.result.disclaimer': '* Aquest és un rang orientatiu. El pressupost final s\'ajusta després d\'una consulta personalitzada.',
+    'estimator.result.comments': 'Comentaris addicionals',
+    'estimator.result.comments.placeholder': 'Descriu breument què necessites, detalls especials...',
+    'estimator.result.cta': 'Sol·licitar pressupost exacte',
+    'estimator.result.restart': 'Tornar a calcular',
+    'estimator.back': 'Enrere',
+
+    // Team
+    'team.tagline': 'El nostre equip',
+    'team.title': 'Enginyers amb experiència real',
+    'team.subtitle': 'Professionals senior que han liderat projectes a les empreses tecnològiques més exigents d\'Europa.',
+    'team.role1': 'Senior Software Engineer',
+    'team.experience1': 'Java · Kotlin · Cloud · Microserveis',
+    'team.desc1': 'Especialitzat en arquitectures de microserveis i Domain-Driven Design. Projectes d\'alta escala en retail, banca i real estate.',
+    'team.role2': 'Solution Architect & Tech Lead',
+    'team.experience2': '+25 anys · Java Full-Stack · DevOps',
+    'team.desc2': 'Arquitecte de software amb més de 25 anys d\'experiència liderant equips i dissenyant sistemes per a telecomunicacions, logística i fintech a nivell europeu.',
+    'team.role3': 'Frontend Engineer',
+    'team.experience3': '+8 anys · React · TypeScript · UX',
+    'team.desc3': 'Especialista en interfícies d\'alt rendiment i accessibilitat. Experiència creant dashboards complexos, design systems i aplicacions SPA/SSR per a fintech i e-commerce.',
+    'team.role4': 'Backend Engineer',
+    'team.experience4': '+10 anys · Node.js · Python · APIs',
+    'team.desc4': 'Expert en disseny d\'APIs escalables, sistemes event-driven i arquitectures serverless. Projectes en banca digital, marketplaces i plataformes de dades en temps real.',
+    'team.role5': 'DevOps & Cloud Engineer',
+    'team.experience5': '+7 anys · AWS · Kubernetes · CI/CD',
+    'team.desc5': 'Enginyer d\'infraestructura cloud amb enfocament en automatització, pipelines CI/CD i observabilitat. Migració i operació de sistemes crítics en producció.',
+
+    // Cookie Banner
+    'cookies.banner.title': 'Fem servir cookies',
+    'cookies.banner.desc': 'Utilitzem cookies pròpies i de tercers per millorar la teva experiència al nostre lloc web. ',
+    'cookies.banner.more': 'Més informació',
+    'cookies.banner.accept': 'Acceptar totes',
+    'cookies.banner.reject': 'Rebutjar totes',
+    'cookies.banner.preferences': 'Personalitzar',
+    'cookies.prefs.title': 'Preferències de cookies',
+    'cookies.prefs.desc': 'Tria quines categories de cookies vols acceptar. Les cookies necessàries no es poden desactivar perquè són essencials per al funcionament del lloc.',
+    'cookies.prefs.necessary': 'Necessàries',
+    'cookies.prefs.necessary.desc': 'Essencials per al funcionament del lloc web. Inclouen la preferència d\'idioma i el consentiment de cookies.',
+    'cookies.prefs.necessary.always': 'Sempre actives',
+    'cookies.prefs.analytics': 'Analítiques',
+    'cookies.prefs.analytics.desc': 'Ens ajuden a entendre com els visitants interactuen amb el lloc web, de forma anònima i sense rastreig personal.',
+    'cookies.prefs.save': 'Guardar preferències',
+    'cookies.prefs.change': 'Preferències de cookies',
+
+    // Footer
+    'footer.description': 'Consultoria tecnològica d\'alt impacte. Transformem idees en productes digitals extraordinaris.',
+    'footer.services': 'Serveis',
+    'footer.legal': 'Legal',
+    'footer.privacy': 'Política de Privacitat',
+    'footer.cookies': 'Política de Cookies',
+    'footer.legal.notice': 'Avís Legal',
+    'footer.rights': `© ${new Date().getFullYear()} ${SITE.name}. Tots els drets reservats.`,
+
+    // Legal pages
+    'legal.privacy.title': 'Política de Privacitat',
+    'legal.cookies.title': 'Política de Cookies',
+    'legal.notice.title': 'Avís Legal',
+    'legal.back': '← Tornar a l\'inici',
+
+    // Hero stats
+    'hero.stat.clients': 'Clients màx.',
+    'hero.stat.projects': 'Projectes',
+    'hero.stat.return': 'Repeteixen',
+    'hero.trusted': 'Experiència en:',
+
+    // InlineCTA
+    'inline.estimator.title': 'Calcula el teu pressupost en 1 minut',
+    'inline.estimator.desc': 'Sense compromís ni registre',
+    'inline.estimator.btn': 'Calcular pressupost',
+    'inline.contact.title': 'Parlem del teu projecte',
+    'inline.contact.desc': 'Resposta en menys de 24h',
+    'inline.contact.btn': 'Contactar ara',
+
+    // FloatingCTA
+    'floating.estimate': 'Calcula el teu pressupost',
+    'floating.contact': 'Contactar',
+
+    // FAQ
+    'faq.tagline': 'Preguntes freqüents',
+    'faq.title': 'Resolem els teus dubtes',
+
+    // Clients
+    'clients.tagline': 'Resultats reals',
+    'clients.title': 'Projectes que parlen per si sols',
+
+    // Accessibility
+    'a11y.skip': 'Anar al contingut principal',
+  },
+  eu: {
+    // Nav
+    'nav.services': 'Zerbitzuak',
+    'nav.method': 'Metodoa',
+    'nav.testimonials': 'Testigantzak',
+    'nav.faq': 'FAQ',
+    'nav.contact': 'Kontaktua',
+    'nav.lang': 'EU',
+    'nav.quote': 'Aurrekontua',
+
+    // Hero
+    'hero.tagline': 'Eragin handiko aholkularitza teknologikoa',
+    'hero.title.line1': 'Ideiak bihurtzen ditugu',
+    'hero.title.line2': 'produktu digital',
+    'hero.title.highlight': 'apartetara',
+    'hero.description': 'Gehienez 3 bezerorekin lan egiten dugu aldi berean emaitza optimoak bermatzeko. Zure proiektuak arreta esklusiboa merezi du.',
+    'hero.cta': 'Erreserbatu doako kontsulta',
+    'hero.cta.secondary': 'Ezagutu gure metodoa',
+
+    // Services
+    'services.tagline': 'Zer egiten dugun',
+    'services.title': 'Zure negozioa bultzatzeko diseinatutako zerbitzuak',
+    'services.consulting.title': 'Aholkularitza Teknikoa',
+    'services.consulting.desc': 'Erabaki teknologiko zuzenak hartzen laguntzen dizugu. Zure egoera aktuala aztertzen dugu eta zure helburuetarako ibilbide-orria diseinatzen dugu.',
+    'services.web.title': 'Web & App Garapena',
+    'services.web.desc': 'Neurri egindako esperientzia digitalak sortzen ditugu. Web korporatiboetatik dashboard aurreratuekin iOS eta Android-erako mugikorretarako app natiboetaraino.',
+    'services.ai.title': 'Adimen Artifiziala',
+    'services.ai.desc': 'AA irtenbideak integratzen ditugu prozesuak automatizatzeko, eragiketak optimizatzeko eta abantaila lehiakor errealak sortzeko zure negozioan.',
+    'services.mvp.title': 'MVP & Produktua',
+    'services.mvp.desc': 'Zure gutxieneko produktu bideragarria 3 astetan abiarazten dugu. Zure negozio-ideia benetako erabiltzaileekin balioztatzen dugu eskala handian inbertitu aurretik.',
+
+    // Method
+    'method.tagline': 'Zergatik Lando',
+    'method.title': 'Benetako emaitzak lortzeko pentsatutako metodoa',
+    'method.exclusive.number': '3',
+    'method.exclusive.label': 'bezero gehienez',
+    'method.exclusive.title': 'Dedikazio esklusiboa',
+    'method.exclusive.desc': '3 bezerorekin bakarrik lan egiten dugu aldi berean. Honek kalitate gorena eta arreta pertsonalizatua bermatzea ahalbidetzen digu proiektu bakoitzean.',
+    'method.mvp.number': '3',
+    'method.mvp.label': 'aste',
+    'method.mvp.title': 'MVP denbora errekorrean',
+    'method.mvp.desc': 'Zure gutxieneko produktu bideragarria 3 astetik prest. Azkar balioztatzen dugu, datu errealekin iteratzen dugu eta konfiantzarekin eskalatzen dugu.',
+    'method.quality.number': '90',
+    'method.quality.label': 'egun laguntza',
+    'method.quality.title': 'Bermatutako laguntza',
+    'method.quality.desc': 'Proiektu bakoitzak abian jarri ondorengo 90 eguneko laguntza du. Akatsak, doikuntzak eta kontsultak 24 ordutan ebatzita. Zure produktuak babesa du.',
+
+    // Testimonials
+    'testimonials.tagline': 'Bezero pozik',
+    'testimonials.title': 'Gutaz zer esaten duten',
+
+    // CTA
+    'cta.title': 'Prest hurrengo urratsa emateko?',
+    'cta.desc': 'Bete formularioa eta 24 ordutan erantzungo dizugu. Zure proiektua aztertuko dugu eta zehatz-mehatz esango dizugu nola lagun zaitzakegun.',
+    'cta.button': 'Doako kontsulta erreserbatu',
+    'cta.note': 'Konpromisorik gabe · 24h-tan erantzuna',
+    'cta.feature.quick': 'Erantzun azkarra',
+    'cta.feature.quick.desc': '24 ordutan erantzuten dizugu',
+    'cta.feature.noobligation': 'Konpromisorik gabe',
+    'cta.feature.noobligation.desc': 'Hasierako doako kontsulta',
+    'cta.feature.estimate': 'Aurrekontu zehatza',
+    'cta.feature.estimate.desc': 'Erabili gure lineako estimatzailea',
+    'cta.email.label': 'Edo idatzi zuzenean:',
+
+    // Contact Form
+    'form.name': 'Izena',
+    'form.name.placeholder': 'Zure izena',
+    'form.email': 'Emaila',
+    'form.email.placeholder': 'zu@email.com',
+    'form.company': 'Enpresa',
+    'form.company.placeholder': 'Zure enpresaren izena (aukerakoa)',
+    'form.service': 'Interesatzen zaizun zerbitzua',
+    'form.service.placeholder': 'Hautatu zerbitzu bat',
+    'form.message': 'Mezua',
+    'form.message.placeholder': 'Kontatu zure proiektuari buruz...',
+    'form.submit': 'Mezua bidali',
+    'form.budget.title': 'Aurrekontu estimatuaren laburpena',
+    'form.required': 'derrigorrezkoa',
+    'form.budget': 'Gutxi gorabeherako aurrekontua',
+    'form.budget.placeholder': 'Hautatu tarte bat',
+    'form.budget.5k': '5.000€ baino gutxiago',
+    'form.budget.unsure': 'Ez nago ziur',
+    'form.timeline': 'Epea',
+    'form.timeline.placeholder': 'Hautatu epe bat',
+    'form.timeline.urgent': 'Urgentea (< 2 aste)',
+    'form.timeline.1-3months': '1-3 hilabete',
+    'form.timeline.3months+': '3+ hilabete',
+    'form.timeline.exploring': 'Esploratzen',
+    'form.consent.prefix': 'Irakurri eta onartzen dut',
+    'form.consent.link': 'Pribatutasun Politika',
+    'form.consent.suffix': '. Nire datuen tratamendua onartzen dut nire kontsulta kudeatzeko.',
+    'form.consent.url': '/eu/legal/pribatutasuna',
+    'form.sending': 'Bidaltzen...',
+    'form.success': 'Mezua arrakastaz bidali da. 24 ordutan erantzungo dizugu.',
+    'form.error': 'Akatsa bidaltzean. Saiatu berriro edo idatzi hona:',
+
+    // Budget Estimator
+    'estimator.tagline': 'Aurrekontu adimenduna',
+    'estimator.title': 'Kalkulatu zure aurrekontua minutu 1ean',
+    'estimator.desc': 'Gure estimatzaileak zure beharrizanetan oinarritutako aurrekontu-tarte hurbilgarria emango dizu. Erregistrorik gabe, konpromisorik gabe.',
+    'estimator.step1.title': 'Zer motatako proiektua behar duzu?',
+    'estimator.step1.desc': 'Hautatu zure ideiari ondoen egokitzen zaion proiektu mota.',
+    'estimator.type.web': 'Web / Web App',
+    'estimator.type.web.detail': 'Web orriak, SaaS plataformak, e-commerce',
+    'estimator.type.app': 'App Mugikorra',
+    'estimator.type.app.detail': 'App natiboak edo hibridoak iOS eta Android-erako',
+    'estimator.type.ai': 'Adimen Artifiziala',
+    'estimator.type.ai.detail': 'Chatbot-ak, automatizazioa, ML modeloak',
+    'estimator.type.consulting': 'Aholkularitza',
+    'estimator.type.consulting.detail': 'Auditoria teknikoa, ibilbide-orri digitala',
+    'estimator.step2.title': 'Zein da konplexutasuna?',
+    'estimator.step2.desc': 'Honek proiektuaren irismena kalkulatzen laguntzen digu.',
+    'estimator.complexity.basic': 'Oinarrizkoa',
+    'estimator.complexity.basic.detail': 'Funtzionalitate estandarrak, diseinu garbia',
+    'estimator.complexity.medium': 'Ertaina',
+    'estimator.complexity.medium.detail': 'Integrazioak, logika pertsonalizatua',
+    'estimator.complexity.advanced': 'Aurreratua',
+    'estimator.complexity.advanced.detail': 'Arkitektura konplexua, eskalagarritasun handia',
+    'estimator.step3.title': 'Zer funtzionalitate behar dituzu?',
+    'estimator.step3.desc': 'Hautatu zure proiektuari aplikatzen zaizkion guztiak.',
+    'estimator.feature.auth': 'Erabiltzaileen autentifikazioa',
+    'estimator.feature.payments': 'Ordainketa pasabidea',
+    'estimator.feature.dashboard': 'Administrazio panela',
+    'estimator.feature.api': 'API / Integrazioak',
+    'estimator.feature.ai': 'AA integrazioa',
+    'estimator.feature.multilang': 'Hizkuntza anitz',
+    'estimator.feature.cms': 'Eduki kudeatzailea',
+    'estimator.feature.realtime': 'Denbora erreala / Txata',
+    'estimator.next': 'Jarraitu',
+    'estimator.step4.title': 'Zein da zure epe ideala?',
+    'estimator.step4.desc': 'Epeak azken aurrekontuan eragina izan dezake.',
+    'estimator.timeline.urgent': 'Urgentea',
+    'estimator.timeline.urgent.detail': 'Atzo behar nuen',
+    'estimator.timeline.normal': 'Normala',
+    'estimator.timeline.normal.detail': '1-2 hilabete ezin hobeto',
+    'estimator.timeline.flexible': 'Malgua',
+    'estimator.timeline.flexible.detail': 'Presarik ez, kalitatea lehenik',
+    'estimator.result.title': 'Zure aurrekontu estimatua',
+    'estimator.result.project': 'Proiektu mota',
+    'estimator.result.complexity': 'Konplexutasuna',
+    'estimator.result.features': 'Funtzionalitateak',
+    'estimator.result.timeline': 'Epea',
+    'estimator.result.duration': 'Estimatutako iraupena',
+    'estimator.result.disclaimer': '* Hau orientazio-tartea da. Azken aurrekontua kontsulta pertsonalizatu baten ondoren doitzen da.',
+    'estimator.result.comments': 'Iruzkin gehigarriak',
+    'estimator.result.comments.placeholder': 'Laburki deskribatu zer behar duzun, xehetasun bereziak...',
+    'estimator.result.cta': 'Aurrekontu zehatza eskatu',
+    'estimator.result.restart': 'Berriro kalkulatu',
+    'estimator.back': 'Atzera',
+
+    // Team
+    'team.tagline': 'Gure taldea',
+    'team.title': 'Esperientzia errealeko ingeniariak',
+    'team.subtitle': 'Europako enpresa teknologiko zorrotzenetan proiektuak zuzendu dituzten profesional seniorrak.',
+    'team.role1': 'Senior Software Engineer',
+    'team.experience1': 'Java · Kotlin · Cloud · Mikrozerbitzuak',
+    'team.desc1': 'Mikrozerbitzuen arkitekturetan eta Domain-Driven Design-ean espezializatua. Eskala handiko proiektuak retailean, bankan eta higiezinetan.',
+    'team.role2': 'Solution Architect & Tech Lead',
+    'team.experience2': '+25 urte · Java Full-Stack · DevOps',
+    'team.desc2': '25 urte baino gehiagoko esperientziako software arkitektoa, taldeak zuzentzen eta telekomunikazio, logistika eta fintech-erako sistemak diseinatzen Europan zehar.',
+    'team.role3': 'Frontend Engineer',
+    'team.experience3': '+8 urte · React · TypeScript · UX',
+    'team.desc3': 'Errendimendu handiko interfazeetan eta irisgarritasunean espezialista. Dashboard konplexuak, design system-ak eta SPA/SSR aplikazioak sortzeko esperientzia fintech eta e-commerce-rako.',
+    'team.role4': 'Backend Engineer',
+    'team.experience4': '+10 urte · Node.js · Python · APIak',
+    'team.desc4': 'API eskalagarrien diseinuan, event-driven sistemetan eta serverless arkitekturetan aditua. Proiektuak banka digitalean, marketplace-etan eta denbora errealeko datu plataformetan.',
+    'team.role5': 'DevOps & Cloud Engineer',
+    'team.experience5': '+7 urte · AWS · Kubernetes · CI/CD',
+    'team.desc5': 'Cloud azpiegitura ingeniaria automatizazioan, CI/CD pipeline-etan eta obserbagarritasunean zentratua. Produkzioko sistema kritikoen migrazioa eta operazioa.',
+
+    // Cookie Banner
+    'cookies.banner.title': 'Cookieak erabiltzen ditugu',
+    'cookies.banner.desc': 'Cookie propioak eta hirugarrenenak erabiltzen ditugu gure webgunean zure esperientzia hobetzeko. ',
+    'cookies.banner.more': 'Informazio gehiago',
+    'cookies.banner.accept': 'Denak onartu',
+    'cookies.banner.reject': 'Denak baztertu',
+    'cookies.banner.preferences': 'Pertsonalizatu',
+    'cookies.prefs.title': 'Cookie hobespenak',
+    'cookies.prefs.desc': 'Aukeratu zer cookie-kategoria onartu nahi dituzun. Beharrezko cookie-ak ezin dira desaktibatu gunearen funtzionamenduarentzat funtsezkoak direlako.',
+    'cookies.prefs.necessary': 'Beharrezkoak',
+    'cookies.prefs.necessary.desc': 'Webgunearen funtzionamenduarentzat funtsezkoak. Hizkuntza hobespen eta cookie-en baimena barne hartzen dituzte.',
+    'cookies.prefs.necessary.always': 'Beti aktibo',
+    'cookies.prefs.analytics': 'Analitikoak',
+    'cookies.prefs.analytics.desc': 'Bisitariek webgunearekin nola elkarreragiten duten ulertzen laguntzen digute, anonimoki eta jarraipen pertsonalik gabe.',
+    'cookies.prefs.save': 'Hobespenak gorde',
+    'cookies.prefs.change': 'Cookie hobespenak',
+
+    // Footer
+    'footer.description': 'Eragin handiko aholkularitza teknologikoa. Ideiak produktu digital apartetan bihurtzen ditugu.',
+    'footer.services': 'Zerbitzuak',
+    'footer.legal': 'Legala',
+    'footer.privacy': 'Pribatutasun Politika',
+    'footer.cookies': 'Cookie Politika',
+    'footer.legal.notice': 'Lege Oharra',
+    'footer.rights': `© ${new Date().getFullYear()} ${SITE.name}. Eskubide guztiak erreserbatuta.`,
+
+    // Legal pages
+    'legal.privacy.title': 'Pribatutasun Politika',
+    'legal.cookies.title': 'Cookie Politika',
+    'legal.notice.title': 'Lege Oharra',
+    'legal.back': '← Hasierara itzuli',
+
+    // Hero stats
+    'hero.stat.clients': 'Bezero gehienez',
+    'hero.stat.projects': 'Proiektuak',
+    'hero.stat.return': 'Errepikatzen dute',
+    'hero.trusted': 'Esperientzia honetan:',
+
+    // InlineCTA
+    'inline.estimator.title': 'Kalkulatu zure aurrekontua minutu 1ean',
+    'inline.estimator.desc': 'Konpromisorik gabe, erregistrorik gabe',
+    'inline.estimator.btn': 'Aurrekontua kalkulatu',
+    'inline.contact.title': 'Hitz egin dezagun zure proiektuaz',
+    'inline.contact.desc': '24 ordutan erantzuna',
+    'inline.contact.btn': 'Kontaktatu orain',
+
+    // FloatingCTA
+    'floating.estimate': 'Kalkulatu aurrekontua',
+    'floating.contact': 'Kontaktatu',
+
+    // FAQ
+    'faq.tagline': 'Maiz egiten diren galderak',
+    'faq.title': 'Zure zalantzak argitzen ditugu',
+
+    // Clients
+    'clients.tagline': 'Benetako emaitzak',
+    'clients.title': 'Berez hitz egiten duten proiektuak',
+
+    // Accessibility
+    'a11y.skip': 'Joan eduki nagusira',
   },
 } as const;
 
 export type TranslationKey = keyof typeof translations.es;
 
 export function t(lang: Lang, key: TranslationKey): string {
-  return translations[lang][key] ?? translations[defaultLang][key] ?? key;
+  return translations[lang]?.[key] ?? translations[defaultLang][key] ?? key;
 }
 
 export function getLangFromUrl(url: URL): Lang {

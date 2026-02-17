@@ -59,10 +59,20 @@ jobs:
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
             'cd /opt/lando && test -f .env || (echo "POSTGRES_PASSWORD=$(openssl rand -hex 24)" > .env && echo "APP_SECRET=$(openssl rand -hex 32)" >> .env && echo "==> Generated .env")'
 
-      - name: Ensure SMTP config exists
+      - name: Update SMTP config from secrets
         run: |
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
-            'cd /opt/lando && grep -q SMTP_HOST .env || (echo -e "\nSMTP_HOST=smtp.ionos.es\nSMTP_PORT=587\nSMTP_USER=${{ secrets.SMTP_USER }}\nSMTP_PASS=${{ secrets.SMTP_PASS }}\nMAIL_TO=info@landofirm.com\nMAIL_FROM=info@landofirm.com\nALLOWED_ORIGINS=https://landofirm.com" >> .env && echo "==> SMTP config added")'
+            "cd /opt/lando && \
+             sed -i '/^SMTP_HOST=/d;/^SMTP_PORT=/d;/^SMTP_USER=/d;/^SMTP_PASS=/d;/^MAIL_TO=/d;/^MAIL_FROM=/d;/^ALLOWED_ORIGINS=/d' .env && \
+             printf '%s\n' \
+               'SMTP_HOST=smtp.ionos.es' \
+               'SMTP_PORT=587' \
+               'SMTP_USER=${{ secrets.SMTP_USER }}' \
+               'SMTP_PASS=${{ secrets.SMTP_PASS }}' \
+               'MAIL_TO=info@landofirm.com' \
+               'MAIL_FROM=info@landofirm.com' \
+               'ALLOWED_ORIGINS=https://landofirm.com' >> .env && \
+             echo '==> SMTP config updated from secrets'"
 
       - name: Load Docker images
         run: |
