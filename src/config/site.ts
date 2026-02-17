@@ -3,7 +3,7 @@ export const SITE = {
   domain: 'landofirm.com',
   url: 'https://landofirm.com',
   email: 'info@landofirm.com',
-  formEndpoint: 'https://api.landofirm.com/api/contact',
+  formEndpoint: '/api/contact',
 
   company: {
     legalName: 'Sosti Soft SL',

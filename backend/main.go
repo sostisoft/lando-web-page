@@ -21,6 +21,7 @@ type ContactForm struct {
 	Budget           string `json:"budget"`
 	Timeline         string `json:"timeline"`
 	Message          string `json:"message"`
+	Lang             string `json:"lang"`
 	PrivacyAccepted  string `json:"privacy_accepted"`
 	BudgetEstimate   string `json:"budget_estimate"`
 	BudgetProject    string `json:"budget_project"`
@@ -45,7 +46,6 @@ func NewRateLimiter(limit int, window time.Duration) *RateLimiter {
 		limit:    limit,
 		window:   window,
 	}
-	// Cleanup old entries every minute
 	go func() {
 		for range time.Tick(time.Minute) {
 			rl.cleanup()
@@ -61,7 +61,6 @@ func (rl *RateLimiter) Allow(ip string) bool {
 	now := time.Now()
 	cutoff := now.Add(-rl.window)
 
-	// Filter old requests
 	valid := make([]time.Time, 0)
 	for _, t := range rl.requests[ip] {
 		if t.After(cutoff) {
@@ -115,6 +114,112 @@ func getClientIP(r *http.Request) string {
 	return strings.Split(r.RemoteAddr, ":")[0]
 }
 
+// sendEmail sends an email via SMTP
+func sendEmail(auth smtp.Auth, addr, from, to, subject, replyTo, body string) error {
+	headers := fmt.Sprintf("From: %s\r\nTo: %s\r\nSubject: %s\r\n", from, to, subject)
+	if replyTo != "" {
+		headers += fmt.Sprintf("Reply-To: %s\r\n", replyTo)
+	}
+	headers += "MIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n"
+	msg := headers + "\r\n" + body
+	return smtp.SendMail(addr, auth, from, []string{to}, []byte(msg))
+}
+
+// buildNotificationBody builds the internal notification email
+func buildNotificationBody(form ContactForm, clientIP string) string {
+	var b strings.Builder
+	b.WriteString("Nueva consulta desde landofirm.com\n")
+	b.WriteString("====================================\n\n")
+	b.WriteString(fmt.Sprintf("Nombre: %s\n", form.Name))
+	b.WriteString(fmt.Sprintf("Email: %s\n", form.Email))
+	if form.Company != "" {
+		b.WriteString(fmt.Sprintf("Empresa: %s\n", form.Company))
+	}
+	if form.Service != "" {
+		b.WriteString(fmt.Sprintf("Servicio: %s\n", form.Service))
+	}
+	if form.Budget != "" {
+		b.WriteString(fmt.Sprintf("Presupuesto: %s\n", form.Budget))
+	}
+	if form.Timeline != "" {
+		b.WriteString(fmt.Sprintf("Plazo: %s\n", form.Timeline))
+	}
+	b.WriteString(fmt.Sprintf("\nMensaje:\n%s\n", form.Message))
+
+	if form.BudgetEstimate != "" {
+		b.WriteString("\n--- Datos del estimador ---\n")
+		b.WriteString(fmt.Sprintf("Rango estimado: %s\n", form.BudgetEstimate))
+		b.WriteString(fmt.Sprintf("Tipo proyecto: %s\n", form.BudgetProject))
+		b.WriteString(fmt.Sprintf("Complejidad: %s\n", form.BudgetComplexity))
+		b.WriteString(fmt.Sprintf("Funcionalidades: %s\n", form.BudgetFeatures))
+		b.WriteString(fmt.Sprintf("Plazo: %s\n", form.BudgetTimeline))
+		b.WriteString(fmt.Sprintf("Duración: %s\n", form.BudgetDuration))
+		if form.BudgetComments != "" {
+			b.WriteString(fmt.Sprintf("Comentarios: %s\n", form.BudgetComments))
+		}
+	}
+
+	b.WriteString(fmt.Sprintf("\n--- Metadatos ---\n"))
+	b.WriteString(fmt.Sprintf("Idioma: %s\n", form.Lang))
+	b.WriteString(fmt.Sprintf("IP: %s\n", clientIP))
+	b.WriteString(fmt.Sprintf("Fecha: %s\n", time.Now().Format("2006-01-02 15:04:05 MST")))
+	return b.String()
+}
+
+// buildConfirmationBody builds the auto-reply email to the user
+func buildConfirmationBody(form ContactForm) string {
+	if form.Lang == "en" {
+		return fmt.Sprintf(`Hi %s,
+
+Thank you for contacting Lando. We have received your message and our team will review it shortly.
+
+We will get back to you as soon as possible, typically within 24 hours.
+
+Here is a summary of what you sent us:
+
+- Service: %s
+- Message: %s
+
+If you need to add any additional information, you can reply directly to this email.
+
+Best regards,
+The Lando Team
+https://landofirm.com
+
+---
+This is an automatic confirmation. Please do not reply to this message if you do not need to add information.
+`, form.Name, valueOrDash(form.Service), form.Message)
+	}
+
+	return fmt.Sprintf(`Hola %s,
+
+Gracias por contactar con Lando. Hemos recibido tu mensaje y nuestro equipo lo revisará en breve.
+
+Te responderemos lo antes posible, normalmente en menos de 24 horas.
+
+Aquí tienes un resumen de lo que nos has enviado:
+
+- Servicio: %s
+- Mensaje: %s
+
+Si necesitas añadir información adicional, puedes responder directamente a este email.
+
+Un saludo,
+El equipo de Lando
+https://landofirm.com
+
+---
+Esta es una confirmación automática. No respondas a este mensaje si no necesitas añadir información.
+`, form.Name, valueOrDash(form.Service), form.Message)
+}
+
+func valueOrDash(s string) string {
+	if s == "" {
+		return "-"
+	}
+	return s
+}
+
 func main() {
 	port := getEnv("PORT", "8080")
 	smtpHost := getEnv("SMTP_HOST", "")
@@ -128,6 +233,9 @@ func main() {
 	if smtpHost == "" || smtpUser == "" || smtpPass == "" {
 		log.Fatal("SMTP_HOST, SMTP_USER, and SMTP_PASS environment variables are required")
 	}
+
+	auth := smtp.PlainAuth("", smtpUser, smtpPass, smtpHost)
+	smtpAddr := smtpHost + ":" + smtpPort
 
 	// 5 requests per IP per hour
 	limiter := NewRateLimiter(5, time.Hour)
@@ -177,6 +285,10 @@ func main() {
 		form.Name = strings.TrimSpace(form.Name)
 		form.Email = strings.TrimSpace(form.Email)
 		form.Message = strings.TrimSpace(form.Message)
+		form.Lang = strings.TrimSpace(form.Lang)
+		if form.Lang == "" {
+			form.Lang = "es"
+		}
 
 		if form.Name == "" || form.Email == "" || form.Message == "" {
 			w.WriteHeader(http.StatusBadRequest)
@@ -190,65 +302,39 @@ func main() {
 			return
 		}
 
-		// Build email body
-		var body strings.Builder
-		body.WriteString(fmt.Sprintf("Nueva consulta desde landofirm.com\n"))
-		body.WriteString(fmt.Sprintf("====================================\n\n"))
-		body.WriteString(fmt.Sprintf("Nombre: %s\n", form.Name))
-		body.WriteString(fmt.Sprintf("Email: %s\n", form.Email))
-		if form.Company != "" {
-			body.WriteString(fmt.Sprintf("Empresa: %s\n", form.Company))
-		}
+		// 1. Send notification email to Lando
+		notifSubject := fmt.Sprintf("Nuevo contacto: %s", form.Name)
 		if form.Service != "" {
-			body.WriteString(fmt.Sprintf("Servicio: %s\n", form.Service))
-		}
-		if form.Budget != "" {
-			body.WriteString(fmt.Sprintf("Presupuesto: %s\n", form.Budget))
-		}
-		if form.Timeline != "" {
-			body.WriteString(fmt.Sprintf("Plazo: %s\n", form.Timeline))
-		}
-		body.WriteString(fmt.Sprintf("\nMensaje:\n%s\n", form.Message))
-
-		// Budget estimator data if present
-		if form.BudgetEstimate != "" {
-			body.WriteString(fmt.Sprintf("\n--- Datos del estimador ---\n"))
-			body.WriteString(fmt.Sprintf("Rango estimado: %s\n", form.BudgetEstimate))
-			body.WriteString(fmt.Sprintf("Tipo proyecto: %s\n", form.BudgetProject))
-			body.WriteString(fmt.Sprintf("Complejidad: %s\n", form.BudgetComplexity))
-			body.WriteString(fmt.Sprintf("Funcionalidades: %s\n", form.BudgetFeatures))
-			body.WriteString(fmt.Sprintf("Plazo: %s\n", form.BudgetTimeline))
-			body.WriteString(fmt.Sprintf("Duración: %s\n", form.BudgetDuration))
-			if form.BudgetComments != "" {
-				body.WriteString(fmt.Sprintf("Comentarios: %s\n", form.BudgetComments))
-			}
+			notifSubject = fmt.Sprintf("Nuevo contacto: %s (%s)", form.Name, form.Service)
 		}
 
-		body.WriteString(fmt.Sprintf("\n--- Metadatos ---\n"))
-		body.WriteString(fmt.Sprintf("IP: %s\n", clientIP))
-		body.WriteString(fmt.Sprintf("Fecha: %s\n", time.Now().Format("2006-01-02 15:04:05 MST")))
-
-		// Compose MIME email
-		subject := fmt.Sprintf("Nuevo contacto: %s (%s)", form.Name, form.Service)
-		if form.Service == "" {
-			subject = fmt.Sprintf("Nuevo contacto: %s", form.Name)
-		}
-
-		msg := fmt.Sprintf("From: %s\r\nTo: %s\r\nSubject: %s\r\nReply-To: %s\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n%s",
-			mailFrom, mailTo, subject, form.Email, body.String())
-
-		// Send via SMTP
-		auth := smtp.PlainAuth("", smtpUser, smtpPass, smtpHost)
-		addr := smtpHost + ":" + smtpPort
-		err := smtp.SendMail(addr, auth, mailFrom, []string{mailTo}, []byte(msg))
+		notifBody := buildNotificationBody(form, clientIP)
+		err := sendEmail(auth, smtpAddr, mailFrom, mailTo, notifSubject, form.Email, notifBody)
 		if err != nil {
-			log.Printf("SMTP error: %v (from=%s, to=%s)", err, clientIP, form.Email)
+			log.Printf("SMTP error (notification): %v (ip=%s, email=%s)", err, clientIP, form.Email)
 			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(map[string]string{"error": "failed to send email"})
 			return
 		}
+		log.Printf("Notification sent: from=%s name=%s service=%s", form.Email, form.Name, form.Service)
 
-		log.Printf("Email sent: from=%s name=%s service=%s", form.Email, form.Name, form.Service)
+		// 2. Send confirmation email to the user
+		var confirmSubject string
+		if form.Lang == "en" {
+			confirmSubject = "Lando — We have received your message"
+		} else {
+			confirmSubject = "Lando — Hemos recibido tu mensaje"
+		}
+
+		confirmBody := buildConfirmationBody(form)
+		err = sendEmail(auth, smtpAddr, mailFrom, form.Email, confirmSubject, "", confirmBody)
+		if err != nil {
+			// Log but don't fail the request — the main notification was already sent
+			log.Printf("SMTP error (confirmation to %s): %v", form.Email, err)
+		} else {
+			log.Printf("Confirmation sent to: %s", form.Email)
+		}
+
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]string{"ok": "message sent"})
 	})

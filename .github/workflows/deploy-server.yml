@@ -16,15 +16,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build Docker image
+      - name: Build Docker images
         run: |
           docker build \
             --build-arg ASTRO_SITE=https://landofirm.com \
             --build-arg ASTRO_BASE=/ \
             -t lando-web:latest .
+          docker build -t lando-contact:latest ./backend
 
-      - name: Save Docker image
-        run: docker save lando-web:latest | gzip > /tmp/lando-web.tar.gz
+      - name: Save Docker images
+        run: |
+          docker save lando-web:latest | gzip > /tmp/lando-web.tar.gz
+          docker save lando-contact:latest | gzip > /tmp/lando-contact.tar.gz
 
       - name: Setup SSH key
         run: |
@@ -45,6 +48,9 @@ jobs:
             /tmp/lando-web.tar.gz \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/lando/lando-web.tar.gz
           scp $SSH_OPTS \
+            /tmp/lando-contact.tar.gz \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/lando/lando-contact.tar.gz
+          scp $SSH_OPTS \
             docker-compose.yml \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/lando/docker-compose.yml
 
@@ -53,10 +59,15 @@ jobs:
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
             'cd /opt/lando && test -f .env || (echo "POSTGRES_PASSWORD=$(openssl rand -hex 24)" > .env && echo "APP_SECRET=$(openssl rand -hex 32)" >> .env && echo "==> Generated .env")'
 
-      - name: Load Docker image
+      - name: Ensure SMTP config exists
         run: |
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
-            'cd /opt/lando && echo "==> Loading image..." && docker load < lando-web.tar.gz && rm -f lando-web.tar.gz && echo "==> Image loaded"'
+            'cd /opt/lando && grep -q SMTP_HOST .env || (echo -e "\nSMTP_HOST=smtp.ionos.es\nSMTP_PORT=587\nSMTP_USER=${{ secrets.SMTP_USER }}\nSMTP_PASS=${{ secrets.SMTP_PASS }}\nMAIL_TO=info@landofirm.com\nMAIL_FROM=info@landofirm.com\nALLOWED_ORIGINS=https://landofirm.com" >> .env && echo "==> SMTP config added")'
+
+      - name: Load Docker images
+        run: |
+          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            'cd /opt/lando && echo "==> Loading images..." && docker load < lando-web.tar.gz && docker load < lando-contact.tar.gz && rm -f lando-web.tar.gz lando-contact.tar.gz && echo "==> Images loaded"'
 
       - name: Pull external images
         timeout-minutes: 10

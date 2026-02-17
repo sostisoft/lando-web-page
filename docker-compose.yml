@@ -15,6 +15,22 @@ services:
     networks:
       - lando-net
 
+  # --- Contact API: handles form submissions + sends emails ---
+  contact-api:
+    image: lando-contact:latest
+    container_name: lando-contact
+    environment:
+      SMTP_HOST: ${SMTP_HOST:-smtp.ionos.es}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      MAIL_TO: ${MAIL_TO:-info@landofirm.com}
+      MAIL_FROM: ${MAIL_FROM:-info@landofirm.com}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-https://landofirm.com}
+    restart: always
+    networks:
+      - lando-net
+
   # --- Umami: self-hosted analytics ---
   umami:
     image: ghcr.io/umami-software/umami:postgresql-latest
