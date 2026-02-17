@@ -1,9 +1,11 @@
 package main
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"net/smtp"
 	"os"
@@ -30,6 +32,34 @@ type ContactForm struct {
 	BudgetTimeline   string `json:"budget_timeline"`
 	BudgetDuration   string `json:"budget_duration"`
 	BudgetComments   string `json:"budget_comments"`
+}
+
+// loginAuth implements smtp.Auth for LOGIN mechanism (required by IONOS and many providers)
+type loginAuth struct {
+	username, password string
+}
+
+func LoginAuth(username, password string) smtp.Auth {
+	return &loginAuth{username, password}
+}
+
+func (a *loginAuth) Start(server *smtp.ServerInfo) (string, []byte, error) {
+	return "LOGIN", []byte(a.username), nil
+}
+
+func (a *loginAuth) Next(fromServer []byte, more bool) ([]byte, error) {
+	if more {
+		prompt := strings.TrimSpace(string(fromServer))
+		switch strings.ToLower(prompt) {
+		case "username:":
+			return []byte(a.username), nil
+		case "password:":
+			return []byte(a.password), nil
+		default:
+			return nil, fmt.Errorf("unexpected server prompt: %s", prompt)
+		}
+	}
+	return nil, nil
 }
 
 // RateLimiter tracks requests per IP
@@ -114,15 +144,83 @@ func getClientIP(r *http.Request) string {
 	return strings.Split(r.RemoteAddr, ":")[0]
 }
 
-// sendEmail sends an email via SMTP
-func sendEmail(auth smtp.Auth, addr, from, to, subject, replyTo, body string) error {
+// sendEmailSMTP sends an email with manual STARTTLS and LOGIN auth support
+func sendEmailSMTP(host, port, user, pass, from, to, subject, replyTo, body string) error {
+	addr := host + ":" + port
+
+	// Build message
 	headers := fmt.Sprintf("From: %s\r\nTo: %s\r\nSubject: %s\r\n", from, to, subject)
 	if replyTo != "" {
 		headers += fmt.Sprintf("Reply-To: %s\r\n", replyTo)
 	}
 	headers += "MIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n"
-	msg := headers + "\r\n" + body
-	return smtp.SendMail(addr, auth, from, []string{to}, []byte(msg))
+	msg := []byte(headers + "\r\n" + body)
+
+	// Connect
+	conn, err := net.DialTimeout("tcp", addr, 15*time.Second)
+	if err != nil {
+		return fmt.Errorf("connect to %s: %w", addr, err)
+	}
+
+	c, err := smtp.NewClient(conn, host)
+	if err != nil {
+		conn.Close()
+		return fmt.Errorf("smtp client: %w", err)
+	}
+	defer c.Close()
+
+	// EHLO
+	if err = c.Hello("localhost"); err != nil {
+		return fmt.Errorf("EHLO: %w", err)
+	}
+
+	// STARTTLS (required for port 587)
+	if ok, _ := c.Extension("STARTTLS"); ok {
+		tlsConfig := &tls.Config{ServerName: host}
+		if err = c.StartTLS(tlsConfig); err != nil {
+			return fmt.Errorf("STARTTLS: %w", err)
+		}
+	}
+
+	// Authenticate - use LOGIN (IONOS and most providers) with PLAIN as fallback
+	hasAuth, authMechs := c.Extension("AUTH")
+	if hasAuth {
+		mechs := strings.ToUpper(authMechs)
+		if strings.Contains(mechs, "LOGIN") {
+			if err = c.Auth(LoginAuth(user, pass)); err != nil {
+				return fmt.Errorf("LOGIN auth: %w", err)
+			}
+		} else if strings.Contains(mechs, "PLAIN") {
+			if err = c.Auth(smtp.PlainAuth("", user, pass, host)); err != nil {
+				return fmt.Errorf("PLAIN auth: %w", err)
+			}
+		} else {
+			return fmt.Errorf("server does not support LOGIN or PLAIN auth (advertised: %s)", authMechs)
+		}
+	} else if !hasAuth {
+		return fmt.Errorf("server does not advertise AUTH extension")
+	}
+
+	// Send
+	if err = c.Mail(from); err != nil {
+		return fmt.Errorf("MAIL FROM: %w", err)
+	}
+	if err = c.Rcpt(to); err != nil {
+		return fmt.Errorf("RCPT TO: %w", err)
+	}
+
+	w, err := c.Data()
+	if err != nil {
+		return fmt.Errorf("DATA: %w", err)
+	}
+	if _, err = w.Write(msg); err != nil {
+		return fmt.Errorf("write body: %w", err)
+	}
+	if err = w.Close(); err != nil {
+		return fmt.Errorf("close data: %w", err)
+	}
+
+	return c.Quit()
 }
 
 // buildNotificationBody builds the internal notification email
@@ -234,15 +332,22 @@ func main() {
 		log.Fatal("SMTP_HOST, SMTP_USER, and SMTP_PASS environment variables are required")
 	}
 
-	auth := smtp.PlainAuth("", smtpUser, smtpPass, smtpHost)
-	smtpAddr := smtpHost + ":" + smtpPort
-
 	// 5 requests per IP per hour
 	limiter := NewRateLimiter(5, time.Hour)
 
 	originsMap := make(map[string]bool)
 	for _, o := range strings.Split(allowedOrigins, ",") {
 		originsMap[strings.TrimSpace(o)] = true
+	}
+
+	// Test SMTP connection on startup
+	log.Printf("Testing SMTP connection to %s:%s as %s...", smtpHost, smtpPort, smtpUser)
+	testConn, err := net.DialTimeout("tcp", smtpHost+":"+smtpPort, 15*time.Second)
+	if err != nil {
+		log.Printf("WARNING: Cannot reach SMTP server %s:%s: %v", smtpHost, smtpPort, err)
+	} else {
+		testConn.Close()
+		log.Printf("SMTP server %s:%s is reachable", smtpHost, smtpPort)
 	}
 
 	http.HandleFunc("/api/contact", func(w http.ResponseWriter, r *http.Request) {
@@ -309,7 +414,7 @@ func main() {
 		}
 
 		notifBody := buildNotificationBody(form, clientIP)
-		err := sendEmail(auth, smtpAddr, mailFrom, mailTo, notifSubject, form.Email, notifBody)
+		err := sendEmailSMTP(smtpHost, smtpPort, smtpUser, smtpPass, mailFrom, mailTo, notifSubject, form.Email, notifBody)
 		if err != nil {
 			log.Printf("SMTP error (notification): %v (ip=%s, email=%s)", err, clientIP, form.Email)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -327,7 +432,7 @@ func main() {
 		}
 
 		confirmBody := buildConfirmationBody(form)
-		err = sendEmail(auth, smtpAddr, mailFrom, form.Email, confirmSubject, "", confirmBody)
+		err = sendEmailSMTP(smtpHost, smtpPort, smtpUser, smtpPass, mailFrom, form.Email, confirmSubject, "", confirmBody)
 		if err != nil {
 			// Log but don't fail the request — the main notification was already sent
 			log.Printf("SMTP error (confirmation to %s): %v", form.Email, err)
