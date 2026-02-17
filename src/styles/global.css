@@ -201,8 +201,6 @@ ul, ol {
   gap: var(--space-sm);
   padding: 0.875rem 2rem;
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
   color: var(--color-text);
   font-weight: 600;
   font-size: 1rem;
@@ -222,8 +220,6 @@ ul, ol {
 /* === Glass Card === */
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-xl);
 }
@@ -286,16 +282,7 @@ ul, ol {
   transform: translateY(0);
 }
 
-/* Grain overlay */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.025;
-  z-index: 9999;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-}
+/* Grain overlay removed — saves a compositing layer + SVG filter on every frame */
 
 /* Scrollbar */
 ::-webkit-scrollbar {
@@ -362,4 +349,13 @@ a:focus-visible {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Performance: skip rendering off-screen sections until needed */
+.section,
+.cta-section,
+.estimator-section,
+.faq-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
 }
