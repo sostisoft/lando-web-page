@@ -1,5 +1,6 @@
 ---
 import LegalLayout from '../../../layouts/LegalLayout.astro';
+import { SITE } from '../../../config/site';
 ---
 
 <LegalLayout
@@ -23,14 +24,38 @@ import LegalLayout from '../../../layouts/LegalLayout.astro';
     These are essential for the website to function. They enable navigation and the use of basic features.
     They do not require consent.
   </p>
-  <ul>
-    <li><strong>Language preference:</strong> stores the language selected by the user. Duration: 1 year.</li>
-  </ul>
+
+  <table>
+    <thead>
+      <tr><th>Cookie</th><th>Purpose</th><th>Duration</th><th>Type</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>cookie-preferences</code></td><td>Stores the user's cookie consent preferences</td><td>Persistent (localStorage)</td><td>First-party</td></tr>
+    </tbody>
+  </table>
 
   <h3>Analytical Cookies</h3>
   <p>
     These allow us to analyze how users interact with the website, to improve the browsing experience.
     They are only installed with your prior consent.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Cookie</th><th>Purpose</th><th>Duration</th><th>Type</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>Umami Analytics</code></td><td>Anonymous website usage analysis (pages visited, browser, country). Does not use traditional cookies or track personal data.</td><td>Session</td><td>First-party (self-hosted)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Third-Party Services</h3>
+  <p>
+    Our contact form uses <strong>Formspree</strong> as a processor to handle submissions.
+    When you submit the form, your data is transmitted to the servers of Formspree, Inc. (USA), which acts as
+    a data processor in accordance with Article 28 of the GDPR. Formspree may set technical cookies
+    necessary for form processing. More information in their
+    <a href="https://formspree.io/legal/privacy-policy" target="_blank" rel="noopener noreferrer">privacy policy</a>.
   </p>
 
   <h2>3. How to Manage Cookies</h2>
@@ -65,6 +90,6 @@ import LegalLayout from '../../../layouts/LegalLayout.astro';
   <h2>6. Contact</h2>
   <p>
     If you have any questions about our Cookie Policy, you can contact us at
-    <strong>hello@lando.com</strong>.
+    <strong>{SITE.email}</strong>.
   </p>
 </LegalLayout>

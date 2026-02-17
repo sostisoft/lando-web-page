@@ -9,13 +9,15 @@ import Testimonials from '../../components/Testimonials.astro';
 import CTA from '../../components/CTA.astro';
 import BudgetEstimator from '../../components/BudgetEstimator.astro';
 import InlineCTA from '../../components/InlineCTA.astro';
+import FAQ from '../../components/FAQ.astro';
 
 const lang = 'en' as const;
 ---
 
 <Layout
-  title="Lando — High-Impact Tech Consulting"
-  description="We transform ideas into extraordinary digital products. We work with a maximum of 3 clients at a time to guarantee optimal results. MVP from 3 weeks."
+  title="Lando — Custom Software Development & Tech Consulting | Web, Apps, AI"
+  description="Custom software development company. We build web applications, mobile apps and AI solutions. MVP in 3 weeks. Technical consulting with maximum 3 simultaneous clients."
+  keywords="custom software development, software development company Europe, tech consulting, mobile app development, artificial intelligence for business, MVP startup, web application development, digital transformation, bespoke software, software agency Spain"
   lang={lang}
 >
   <Hero lang={lang} />
@@ -24,8 +26,9 @@ const lang = 'en' as const;
   <Method lang={lang} />
   <BudgetEstimator lang={lang} />
   <Clients lang={lang} />
-  <InlineCTA lang={lang} variant="contact" />
   <Testimonials lang={lang} />
   <Team lang={lang} />
+  <FAQ lang={lang} />
+  <InlineCTA lang={lang} variant="contact" />
   <CTA lang={lang} />
 </Layout>

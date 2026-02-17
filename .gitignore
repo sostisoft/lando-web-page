@@ -3,5 +3,9 @@ dist/
 .astro/
 .env
 .env.*
+!.env.example
 *.log
 .DS_Store
+
+# Go binary
+backend/contact-api

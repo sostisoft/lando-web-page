@@ -2,7 +2,7 @@ name: Deploy to Server
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/lando-consulting-site-BEX2E]
   workflow_dispatch:
 
 env:
@@ -16,15 +16,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build Docker image
+      - name: Build Docker images
         run: |
           docker build \
-            --build-arg ASTRO_SITE=https://lando.consulting \
+            --build-arg ASTRO_SITE=https://landofirm.com \
             --build-arg ASTRO_BASE=/ \
             -t lando-web:latest .
+          docker build -t lando-contact:latest ./backend
 
-      - name: Save Docker image
-        run: docker save lando-web:latest | gzip > /tmp/lando-web.tar.gz
+      - name: Save Docker images
+        run: |
+          docker save lando-web:latest | gzip > /tmp/lando-web.tar.gz
+          docker save lando-contact:latest | gzip > /tmp/lando-contact.tar.gz
 
       - name: Setup SSH key
         run: |
@@ -45,6 +48,9 @@ jobs:
             /tmp/lando-web.tar.gz \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/lando/lando-web.tar.gz
           scp $SSH_OPTS \
+            /tmp/lando-contact.tar.gz \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/lando/lando-contact.tar.gz
+          scp $SSH_OPTS \
             docker-compose.yml \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/lando/docker-compose.yml
 
@@ -53,16 +59,51 @@ jobs:
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
             'cd /opt/lando && test -f .env || (echo "POSTGRES_PASSWORD=$(openssl rand -hex 24)" > .env && echo "APP_SECRET=$(openssl rand -hex 32)" >> .env && echo "==> Generated .env")'
 
-      - name: Load Docker image
+      - name: Ensure SMTP config exists
         run: |
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
-            'cd /opt/lando && echo "==> Loading image..." && docker load < lando-web.tar.gz && rm -f lando-web.tar.gz && echo "==> Image loaded"'
+            'cd /opt/lando && grep -q SMTP_HOST .env || (echo -e "\nSMTP_HOST=smtp.ionos.es\nSMTP_PORT=587\nSMTP_USER=${{ secrets.SMTP_USER }}\nSMTP_PASS=${{ secrets.SMTP_PASS }}\nMAIL_TO=info@landofirm.com\nMAIL_FROM=info@landofirm.com\nALLOWED_ORIGINS=https://landofirm.com" >> .env && echo "==> SMTP config added")'
+
+      - name: Load Docker images
+        run: |
+          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            'cd /opt/lando && echo "==> Loading images..." && docker load < lando-web.tar.gz && docker load < lando-contact.tar.gz && rm -f lando-web.tar.gz lando-contact.tar.gz && echo "==> Images loaded"'
 
       - name: Pull external images
         timeout-minutes: 10
         run: |
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
             'cd /opt/lando && echo "==> Pulling images..." && docker compose pull umami db certbot 2>&1 && echo "==> Pull complete"'
+
+      - name: Disable Plesk services
+        run: |
+          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} 'bash -s' <<'REMOTE'
+            echo "==> Checking for Plesk services..."
+
+            # List of Plesk services that conflict with Docker on ports 80/443
+            PLESK_SERVICES="nginx httpd sw-engine sw-cp-server psa"
+
+            for svc in $PLESK_SERVICES; do
+              if systemctl list-unit-files "${svc}.service" 2>/dev/null | grep -q "$svc"; then
+                echo "  Found ${svc}.service — stopping and disabling..."
+                systemctl stop "$svc" 2>/dev/null || true
+                systemctl disable "$svc" 2>/dev/null || true
+                systemctl mask "$svc" 2>/dev/null || true
+              fi
+            done
+
+            # Also disable Plesk-related timers and sockets
+            for unit in sw-engine.socket plesk-task-manager.service plesk-web-socket.service; do
+              if systemctl list-unit-files "$unit" 2>/dev/null | grep -q "${unit%%.*}"; then
+                echo "  Found ${unit} — stopping and disabling..."
+                systemctl stop "$unit" 2>/dev/null || true
+                systemctl disable "$unit" 2>/dev/null || true
+                systemctl mask "$unit" 2>/dev/null || true
+              fi
+            done
+
+            echo "==> Plesk services disabled"
+          REMOTE
 
       - name: Stop old containers and free ports
         run: |
@@ -74,27 +115,208 @@ jobs:
             docker compose down --timeout 30
             docker rm -f lando-web 2>/dev/null || true
 
-            echo "==> Diagnosing ports 80/443..."
-            ss -tlnp 'sport = :80 or sport = :443' || true
+            echo "==> Stopping any old standalone containers..."
+            docker rm -f lando-umami 2>/dev/null || true
+            docker rm -f umami umami-db 2>/dev/null || true
 
-            echo "==> Killing anything on port 80/443..."
+            echo "==> Diagnosing ports 80/443/3000..."
+            ss -tlnp 'sport = :80 or sport = :443 or sport = :3000' || true
+
+            echo "==> Killing anything on needed ports..."
             fuser -k 80/tcp 2>/dev/null || true
             fuser -k 443/tcp 2>/dev/null || true
+            fuser -k 3000/tcp 2>/dev/null || true
             sleep 2
 
             echo "==> Verifying ports are free..."
-            if ss -tlnp 'sport = :80' | grep -q ':80'; then
-              echo "WARNING: port 80 still in use"
-              ss -tlnp 'sport = :80'
-            else
-              echo "==> Ports clear"
-            fi
+            for port in 80 443 3000; do
+              if ss -tlnp "sport = :$port" | grep -q ":$port"; then
+                echo "WARNING: port $port still in use"
+                ss -tlnp "sport = :$port"
+              fi
+            done
+            echo "==> Port check done"
           REMOTE
 
       - name: Start services
         run: |
           ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
             'cd /opt/lando && echo "==> Starting services..." && docker compose up -d --remove-orphans && echo "==> Done" && docker compose ps'
+
+      - name: Verify services are healthy
+        run: |
+          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} 'bash -s' <<'REMOTE'
+            cd /opt/lando
+            echo "==> Waiting 15s for services to start..."
+            sleep 15
+
+            echo "==> Container status:"
+            docker compose ps
+
+            echo "==> Checking Umami logs (last 30 lines):"
+            docker compose logs --tail=30 umami
+
+            echo "==> Checking DB logs (last 15 lines):"
+            docker compose logs --tail=15 db
+
+            echo "==> Checking Web/Nginx logs (last 15 lines):"
+            docker compose logs --tail=15 web
+
+            echo "==> Port listeners:"
+            ss -tlnp 'sport = :80 or sport = :443 or sport = :3000' || true
+          REMOTE
+
+      - name: Setup Let's Encrypt SSL certificate
+        run: |
+          ssh $SSH_OPTS ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} 'bash -s' <<'REMOTE'
+            cd /opt/lando
+
+            CERT_DIR="/etc/letsencrypt/live/landofirm.com"
+            SERVER_IP="217.154.190.107"
+
+            # ==============================
+            # DIAGNOSTICS
+            # ==============================
+            echo "==> [DIAG] DNS resolution for landofirm.com:"
+            DNS_IP=$(getent hosts landofirm.com | awk '{print $1}' | head -1)
+            echo "  landofirm.com -> ${DNS_IP:-FAILED}"
+
+            echo "==> [DIAG] DNS resolution for www.landofirm.com:"
+            DNS_WWW=$(getent hosts www.landofirm.com | awk '{print $1}' | head -1)
+            echo "  www.landofirm.com -> ${DNS_WWW:-FAILED}"
+
+            echo "==> [DIAG] Server's public IP:"
+            PUB_IP=$(curl -s --max-time 5 https://ifconfig.me 2>/dev/null || echo "unknown")
+            echo "  Public IP: ${PUB_IP}"
+
+            if [ -n "$DNS_IP" ] && [ "$DNS_IP" != "$PUB_IP" ]; then
+              echo "  WARNING: DNS ($DNS_IP) does NOT match server IP ($PUB_IP) - certbot will FAIL!"
+            fi
+
+            echo "==> [DIAG] Testing port 80 locally:"
+            curl -sI --max-time 5 http://localhost/ 2>&1 | head -3 || echo "  Port 80 not responding"
+
+            echo "==> [DIAG] Testing port 80 externally (via server's public IP):"
+            curl -sI --max-time 5 "http://${SERVER_IP}/" 2>&1 | head -3 || echo "  Port 80 not reachable externally"
+
+            echo "==> [DIAG] Processes on port 80/443:"
+            ss -tlnp 'sport = :80 or sport = :443' 2>/dev/null || true
+
+            echo "==> [DIAG] Checking for Plesk services that might conflict:"
+            systemctl is-active nginx 2>/dev/null && echo "  WARNING: system nginx is running (Plesk?)" || true
+            systemctl is-active httpd 2>/dev/null && echo "  WARNING: httpd is running (Plesk?)" || true
+            systemctl is-active sw-engine 2>/dev/null && echo "  WARNING: Plesk sw-engine is running" || true
+
+            echo "==> [DIAG] Current cert issuer:"
+            docker compose exec -T web sh -c \
+              "openssl x509 -in ${CERT_DIR}/fullchain.pem -issuer -noout 2>/dev/null" || echo "  No cert found"
+            echo "---"
+
+            # ==============================
+            # SSL CERTIFICATE SETUP
+            # ==============================
+
+            # Check if we already have a real Let's Encrypt certificate
+            IS_LE=$(docker compose exec -T web sh -c \
+              "openssl x509 -in ${CERT_DIR}/fullchain.pem -issuer -noout 2>/dev/null" \
+              | grep -c "Let's Encrypt" || true)
+
+            if [ "$IS_LE" -gt 0 ]; then
+              echo "==> Valid Let's Encrypt certificate found, attempting renewal..."
+              docker compose run --rm --entrypoint "certbot" certbot renew || true
+            else
+              echo "==> No Let's Encrypt certificate, obtaining real one..."
+
+              # Stop the certbot renew loop to release the lock file
+              echo "==> Stopping certbot service..."
+              docker compose stop certbot 2>/dev/null || true
+              sleep 2
+
+              # Remove self-signed cert files and any stale certbot state
+              echo "==> Cleaning stale cert state..."
+              docker compose exec -T web sh -c \
+                "rm -rf /etc/letsencrypt/live /etc/letsencrypt/archive /etc/letsencrypt/renewal /etc/letsencrypt/.certbot.lock 2>/dev/null; echo done"
+
+              # Write a test file to verify the ACME webroot works end-to-end
+              echo "==> [DIAG] Testing ACME webroot from inside container..."
+              docker compose exec -T web sh -c \
+                "mkdir -p /var/www/certbot/.well-known/acme-challenge && echo ok > /var/www/certbot/.well-known/acme-challenge/selftest"
+              WEBROOT_LOCAL=$(curl -s --max-time 5 http://localhost/.well-known/acme-challenge/selftest 2>/dev/null)
+              WEBROOT_EXT=$(curl -s --max-time 5 "http://${SERVER_IP}/.well-known/acme-challenge/selftest" 2>/dev/null)
+              echo "  Local test: '${WEBROOT_LOCAL}' (expect 'ok')"
+              echo "  External test: '${WEBROOT_EXT}' (expect 'ok')"
+              docker compose exec -T web sh -c "rm -f /var/www/certbot/.well-known/acme-challenge/selftest" 2>/dev/null
+
+              if [ "$WEBROOT_LOCAL" != "ok" ]; then
+                echo "==> ERROR: webroot not working even locally. Check nginx config."
+              fi
+
+              # Build certbot domain list - include www only if DNS resolves correctly
+              CERTBOT_DOMAINS="-d landofirm.com"
+              if [ -n "$DNS_WWW" ]; then
+                CERTBOT_DOMAINS="$CERTBOT_DOMAINS -d www.landofirm.com"
+                echo "==> Requesting cert for: landofirm.com + www.landofirm.com"
+              else
+                echo "==> Requesting cert for: landofirm.com only (www DNS not configured)"
+              fi
+
+              # Run certbot
+              echo "==> Running certbot certonly..."
+              if docker compose run --rm --entrypoint "certbot" certbot certonly \
+                --webroot \
+                --webroot-path=/var/www/certbot \
+                $CERTBOT_DOMAINS \
+                --preferred-challenges http-01 \
+                --non-interactive \
+                --agree-tos \
+                --email info@landofirm.com \
+                --no-eff-email \
+                --force-renewal \
+                -v 2>&1; then
+                echo "==> Certbot succeeded! Enabling HSTS..."
+
+                # Enable HSTS now that we have a valid cert
+                docker compose exec -T web sh -c \
+                  'echo "add_header Strict-Transport-Security \"max-age=63072000; includeSubDomains; preload\" always;" > /etc/nginx/conf.d/hsts.conf'
+
+              else
+                CERTBOT_EXIT=$?
+                echo "==> Certbot FAILED (exit code ${CERTBOT_EXIT})"
+                echo ""
+                echo "==> Common causes:"
+                echo "  1. DNS A record for landofirm.com does not point to ${PUB_IP}"
+                echo "  2. Firewall blocks port 80 from outside (check Plesk firewall)"
+                echo "  3. Another web server (Plesk nginx/Apache) grabbed port 80"
+                echo ""
+                echo "==> Regenerating self-signed cert so nginx stays up..."
+                docker compose exec -T web sh -c "
+                  mkdir -p ${CERT_DIR} && \
+                  openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+                    -keyout ${CERT_DIR}/privkey.pem \
+                    -out ${CERT_DIR}/fullchain.pem \
+                    -subj '/CN=landofirm.com' 2>/dev/null"
+              fi
+
+              # Restart certbot renew loop
+              echo "==> Restarting certbot service..."
+              docker compose start certbot 2>/dev/null || true
+            fi
+
+            # Ensure web container is running, then reload nginx
+            echo "==> Ensuring web service is up..."
+            docker compose up -d web
+            sleep 3
+            docker compose exec -T web nginx -s reload
+            echo "==> SSL setup complete"
+
+            # Final status
+            echo "==> Current certificate info:"
+            docker compose exec -T web sh -c \
+              "openssl x509 -in ${CERT_DIR}/fullchain.pem -subject -issuer -dates -noout 2>/dev/null" || echo "Could not read cert"
+
+            echo "==> HSTS status:"
+            docker compose exec -T web sh -c "cat /etc/nginx/conf.d/hsts.conf 2>/dev/null" || echo "  HSTS disabled (no valid cert)"
+          REMOTE
 
       - name: Cleanup
         if: always()

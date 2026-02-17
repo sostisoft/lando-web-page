@@ -1,5 +1,6 @@
 ---
 import LegalLayout from '../../../layouts/LegalLayout.astro';
+import { SITE } from '../../../config/site';
 ---
 
 <LegalLayout
@@ -16,28 +17,28 @@ import LegalLayout from '../../../layouts/LegalLayout.astro';
     owner are provided:
   </p>
   <ul>
-    <li><strong>Company name:</strong> Lando Consulting S.L.</li>
-    <li><strong>Tax ID (NIF):</strong> B70829700</li>
-    <li><strong>Registered address:</strong> Calle Humanitarias 19 1A, 28025 Madrid, Spain</li>
-    <li><strong>Email:</strong> hello@lando.com</li>
-    <li><strong>Commercial Registry:</strong> Registered at the Commercial Registry of Madrid</li>
+    <li><strong>Company name:</strong> {SITE.company.legalName}</li>
+    <li><strong>Tax ID (NIF):</strong> {SITE.company.taxId}</li>
+    <li><strong>Registered address:</strong> {SITE.company.address}, {SITE.company.country.en}</li>
+    <li><strong>Email:</strong> {SITE.email}</li>
+    <li><strong>Commercial Registry:</strong> Registered at the {SITE.company.registry.en}</li>
   </ul>
 
   <h2>2. Purpose</h2>
   <p>
     This website aims to provide users with information about the technology consulting and software
-    development services offered by Lando Consulting S.L.
+    development services offered by {SITE.company.legalName}
   </p>
 
   <h2>3. Intellectual and Industrial Property</h2>
   <p>
     All website content, including texts, images, logos, icons, software, graphic designs, source code,
-    and other elements, are the property of Lando Consulting S.L. or third parties who have authorized
+    and other elements, are the property of {SITE.company.legalName} or third parties who have authorized
     their use, and are protected by applicable intellectual and industrial property laws.
   </p>
   <p>
     The reproduction, distribution, public communication, transformation, or any other activity involving
-    the contents of this website is prohibited without the prior written authorization of Lando Consulting S.L.
+    the contents of this website is prohibited without the prior written authorization of {SITE.company.legalName}
   </p>
 
   <h2>4. Terms of Use</h2>

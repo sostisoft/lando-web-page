@@ -8,6 +8,7 @@ interface Props {
 const { lang } = Astro.props;
 ---
 
+<!-- Banner principal -->
 <div class="cookie-banner" id="cookie-banner" data-lang={lang} style="display:none;">
   <div class="cookie-content">
     <div class="cookie-text">
@@ -18,13 +19,57 @@ const { lang } = Astro.props;
       </p>
     </div>
     <div class="cookie-actions">
-      <button class="cookie-btn cookie-btn-accept" id="cookie-accept">{t(lang, 'cookies.banner.accept')}</button>
-      <button class="cookie-btn cookie-btn-reject" id="cookie-reject">{t(lang, 'cookies.banner.reject')}</button>
+      <button class="cookie-btn cookie-btn-accept" id="cookie-accept-all">{t(lang, 'cookies.banner.accept')}</button>
+      <button class="cookie-btn cookie-btn-preferences" id="cookie-open-prefs">{t(lang, 'cookies.banner.preferences')}</button>
+      <button class="cookie-btn cookie-btn-reject" id="cookie-reject-all">{t(lang, 'cookies.banner.reject')}</button>
+    </div>
+  </div>
+</div>
+
+<!-- Panel de preferencias -->
+<div class="cookie-overlay" id="cookie-overlay" style="display:none;">
+  <div class="cookie-prefs-panel" id="cookie-prefs-panel">
+    <div class="cookie-prefs-header">
+      <h3 class="cookie-prefs-title">{t(lang, 'cookies.prefs.title')}</h3>
+      <button class="cookie-prefs-close" id="cookie-prefs-close" aria-label="Close">&times;</button>
+    </div>
+    <p class="cookie-prefs-desc">{t(lang, 'cookies.prefs.desc')}</p>
+
+    <div class="cookie-categories">
+      <!-- Necesarias (siempre activas) -->
+      <div class="cookie-category">
+        <div class="cookie-category-header">
+          <div class="cookie-category-info">
+            <span class="cookie-category-name">{t(lang, 'cookies.prefs.necessary')}</span>
+            <span class="cookie-category-always">{t(lang, 'cookies.prefs.necessary.always')}</span>
+          </div>
+        </div>
+        <p class="cookie-category-desc">{t(lang, 'cookies.prefs.necessary.desc')}</p>
+      </div>
+
+      <!-- Analíticas (toggle) -->
+      <div class="cookie-category">
+        <div class="cookie-category-header">
+          <div class="cookie-category-info">
+            <span class="cookie-category-name">{t(lang, 'cookies.prefs.analytics')}</span>
+          </div>
+          <label class="cookie-toggle">
+            <input type="checkbox" id="cookie-toggle-analytics" />
+            <span class="cookie-toggle-slider"></span>
+          </label>
+        </div>
+        <p class="cookie-category-desc">{t(lang, 'cookies.prefs.analytics.desc')}</p>
+      </div>
+    </div>
+
+    <div class="cookie-prefs-actions">
+      <button class="cookie-btn cookie-btn-accept" id="cookie-save-prefs">{t(lang, 'cookies.prefs.save')}</button>
     </div>
   </div>
 </div>
 
 <style>
+  /* ---- Banner principal ---- */
   .cookie-banner {
     position: fixed;
     bottom: 0;
@@ -100,6 +145,7 @@ const { lang } = Astro.props;
     cursor: pointer;
     transition: all var(--transition-fast);
     border: none;
+    white-space: nowrap;
   }
 
   .cookie-btn-accept {
@@ -110,6 +156,16 @@ const { lang } = Astro.props;
   .cookie-btn-accept:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 15px var(--color-accent-glow);
+  }
+
+  .cookie-btn-preferences {
+    background: transparent;
+    color: var(--color-accent-light);
+    border: 1px solid var(--color-accent);
+  }
+
+  .cookie-btn-preferences:hover {
+    background: rgba(37, 99, 235, 0.1);
   }
 
   .cookie-btn-reject {
@@ -123,6 +179,189 @@ const { lang } = Astro.props;
     color: var(--color-text);
   }
 
+  /* ---- Overlay + Panel de preferencias ---- */
+  .cookie-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+    animation: fadeIn 0.25s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .cookie-prefs-panel {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    max-width: 520px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: var(--space-2xl);
+    animation: scaleIn 0.3s ease-out;
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .cookie-prefs-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-md);
+  }
+
+  .cookie-prefs-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .cookie-prefs-close {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: var(--space-xs);
+    line-height: 1;
+    transition: color var(--transition-fast);
+  }
+
+  .cookie-prefs-close:hover {
+    color: var(--color-text);
+  }
+
+  .cookie-prefs-desc {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-xl);
+  }
+
+  /* ---- Categorías ---- */
+  .cookie-categories {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+
+  .cookie-category {
+    padding: var(--space-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .cookie-category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-sm);
+  }
+
+  .cookie-category-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .cookie-category-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-text);
+  }
+
+  .cookie-category-always {
+    font-size: 0.75rem;
+    color: var(--color-cta);
+    background: rgba(16, 185, 129, 0.1);
+    padding: 0.15rem 0.6rem;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+  }
+
+  .cookie-category-desc {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  /* ---- Toggle switch ---- */
+  .cookie-toggle {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .cookie-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .cookie-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: var(--color-border);
+    border-radius: var(--radius-full);
+    transition: background var(--transition-fast);
+  }
+
+  .cookie-toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: transform var(--transition-fast);
+  }
+
+  .cookie-toggle input:checked + .cookie-toggle-slider {
+    background: var(--color-accent);
+  }
+
+  .cookie-toggle input:checked + .cookie-toggle-slider::before {
+    transform: translateX(20px);
+  }
+
+  /* ---- Acciones del panel ---- */
+  .cookie-prefs-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .cookie-prefs-actions .cookie-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* ---- Responsive ---- */
   @media (max-width: 768px) {
     .cookie-content {
       flex-direction: column;
@@ -131,27 +370,151 @@ const { lang } = Astro.props;
 
     .cookie-actions {
       width: 100%;
-      justify-content: center;
+      flex-direction: column;
+    }
+
+    .cookie-btn {
+      width: 100%;
+      text-align: center;
+    }
+
+    .cookie-prefs-panel {
+      padding: var(--space-xl);
     }
   }
 </style>
 
 <script>
+  // ---- Cookie consent manager ----
+  const STORAGE_KEY = 'cookie-preferences';
+
+  interface CookiePreferences {
+    necessary: boolean;
+    analytics: boolean;
+  }
+
+  function getPreferences(): CookiePreferences | null {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw) as CookiePreferences;
+    } catch {
+      return null;
+    }
+  }
+
+  function savePreferences(prefs: CookiePreferences) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+    // Remove old key if it exists
+    localStorage.removeItem('cookie-consent');
+    applyPreferences(prefs);
+  }
+
+  function applyPreferences(prefs: CookiePreferences) {
+    // Analytics: load or block Umami
+    if (prefs.analytics) {
+      enableAnalytics();
+    } else {
+      disableAnalytics();
+    }
+    // Dispatch event so other scripts can react
+    window.dispatchEvent(new CustomEvent('cookie-consent-updated', { detail: prefs }));
+  }
+
+  function enableAnalytics() {
+    // If script already loaded, do nothing
+    if (document.getElementById('umami-script')) return;
+    const s = document.createElement('script');
+    s.id = 'umami-script';
+    s.defer = true;
+    s.src = '/script.js';
+    s.dataset.websiteId = '24eb1087-169c-4c47-a4fd-b155d7e22021';
+    document.head.appendChild(s);
+  }
+
+  function disableAnalytics() {
+    const s = document.getElementById('umami-script');
+    if (s) s.remove();
+  }
+
+  // ---- DOM elements ----
   const banner = document.getElementById('cookie-banner');
-  if (banner) {
-    const consent = localStorage.getItem('cookie-consent');
-    if (!consent) {
+  const overlay = document.getElementById('cookie-overlay');
+  const analyticsToggle = document.getElementById('cookie-toggle-analytics') as HTMLInputElement | null;
+
+  if (banner && overlay) {
+    const prefs = getPreferences();
+
+    // Also check old format for migration
+    const oldConsent = localStorage.getItem('cookie-consent');
+
+    if (prefs) {
+      // User already has preferences saved - apply them silently
+      applyPreferences(prefs);
+    } else if (oldConsent) {
+      // Migrate from old accept/reject format
+      const migrated: CookiePreferences = {
+        necessary: true,
+        analytics: oldConsent === 'accepted',
+      };
+      savePreferences(migrated);
+    } else {
+      // No preferences yet - show banner
       banner.style.display = 'block';
     }
 
-    document.getElementById('cookie-accept')?.addEventListener('click', () => {
-      localStorage.setItem('cookie-consent', 'accepted');
+    // Accept All
+    document.getElementById('cookie-accept-all')?.addEventListener('click', () => {
+      savePreferences({ necessary: true, analytics: true });
       banner.style.display = 'none';
+      overlay.style.display = 'none';
     });
 
-    document.getElementById('cookie-reject')?.addEventListener('click', () => {
-      localStorage.setItem('cookie-consent', 'rejected');
+    // Reject All
+    document.getElementById('cookie-reject-all')?.addEventListener('click', () => {
+      savePreferences({ necessary: true, analytics: false });
       banner.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+
+    // Open Preferences
+    document.getElementById('cookie-open-prefs')?.addEventListener('click', () => {
+      if (analyticsToggle) analyticsToggle.checked = false;
+      overlay.style.display = 'flex';
+    });
+
+    // Close Preferences (X button)
+    document.getElementById('cookie-prefs-close')?.addEventListener('click', () => {
+      overlay.style.display = 'none';
+    });
+
+    // Close Preferences (click outside panel)
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.style.display = 'none';
+      }
+    });
+
+    // Save Preferences
+    document.getElementById('cookie-save-prefs')?.addEventListener('click', () => {
+      savePreferences({
+        necessary: true,
+        analytics: analyticsToggle?.checked ?? false,
+      });
+      banner.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+
+    // Footer link: open preferences panel
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('#cookie-change-prefs')) {
+        e.preventDefault();
+        // Pre-fill toggle with current preferences
+        const current = getPreferences();
+        if (analyticsToggle) analyticsToggle.checked = current?.analytics ?? false;
+        overlay.style.display = 'flex';
+      }
     });
   }
 </script>

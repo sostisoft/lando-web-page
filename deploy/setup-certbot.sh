@@ -11,7 +11,7 @@ DOMAIN="${1:-}"
 
 if [ -z "$DOMAIN" ]; then
     echo "Usage: bash setup-certbot.sh your-domain.com"
-    echo "Example: bash setup-certbot.sh lando.consulting"
+    echo "Example: bash setup-certbot.sh landofirm.com"
     exit 1
 fi
 

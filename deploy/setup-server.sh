@@ -11,6 +11,33 @@ echo "========================================="
 echo "  Lando Consulting - Server Setup"
 echo "========================================="
 
+# --- 0. Disable Plesk web services ---
+echo ""
+echo "[0/6] Disabling Plesk web services (if present)..."
+
+PLESK_SERVICES="nginx httpd sw-engine sw-cp-server psa"
+PLESK_UNITS="sw-engine.socket plesk-task-manager.service plesk-web-socket.service"
+
+for svc in $PLESK_SERVICES; do
+    if systemctl list-unit-files "${svc}.service" 2>/dev/null | grep -q "$svc"; then
+        echo "  Stopping and disabling ${svc}..."
+        systemctl stop "$svc" 2>/dev/null || true
+        systemctl disable "$svc" 2>/dev/null || true
+        systemctl mask "$svc" 2>/dev/null || true
+    fi
+done
+
+for unit in $PLESK_UNITS; do
+    if systemctl list-unit-files "$unit" 2>/dev/null | grep -q "${unit%%.*}"; then
+        echo "  Stopping and disabling ${unit}..."
+        systemctl stop "$unit" 2>/dev/null || true
+        systemctl disable "$unit" 2>/dev/null || true
+        systemctl mask "$unit" 2>/dev/null || true
+    fi
+done
+
+echo "  Plesk services disabled (ports 80/443 freed for Docker)"
+
 # --- 1. Install Docker ---
 echo ""
 echo "[1/6] Installing Docker..."
@@ -130,16 +157,10 @@ fi
 echo ""
 echo "[6/6] Configuring Nginx for static site..."
 
-# Check if Plesk manages nginx
-if command -v plesk &> /dev/null; then
-    echo "  Plesk detected. Use Plesk panel to configure the domain."
-    echo "  Point the domain's document root to: /var/www/lando-web/html"
-    echo ""
-    echo "  Alternatively, add a custom Nginx config via Plesk."
-else
-    # Standalone nginx config
-    if command -v nginx &> /dev/null; then
-        cat > /etc/nginx/conf.d/lando-web.conf << 'NGINX'
+# Note: Plesk services are already disabled in step 0.
+# Configure nginx directly (Plesk no longer manages it).
+if command -v nginx &> /dev/null; then
+    cat > /etc/nginx/conf.d/lando-web.conf << 'NGINX'
 server {
     listen 80;
     server_name _;
@@ -173,11 +194,10 @@ server {
     }
 }
 NGINX
-        nginx -t && systemctl reload nginx
-        echo "  Nginx configured and reloaded"
-    else
-        echo "  Nginx not found. Install it or use Plesk to configure."
-    fi
+    nginx -t && systemctl reload nginx
+    echo "  Nginx configured and reloaded"
+else
+    echo "  Nginx not found. Install it or use Docker (deploy-server.yml)."
 fi
 
 echo ""

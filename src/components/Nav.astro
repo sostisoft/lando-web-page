@@ -13,23 +13,23 @@ const altLang = lang === 'es' ? 'en' : 'es';
   <div class="container nav-inner">
     <a href={getLocalizedPath(lang, '/')} class="nav-logo">
       <!-- Full logo (desktop) -->
-      <svg class="logo-full" viewBox="0 0 1000 300" role="img" aria-label="LANDO">
+      <svg class="logo-full" viewBox="10 25 860 215" role="img" aria-label="LANDO">
         <text x="100" y="220" font-family="Arial Black, sans-serif" font-weight="900" font-size="180" fill="#e8e8ec" text-anchor="middle">L</text>
         <g transform="translate(270, 100)">
-          <circle cx="0" cy="0" r="12" fill="#6c63ff"/>
-          <path d="M-35 45 A 48 48 0 0 0 35 45" fill="none" stroke="#6c63ff" stroke-width="18" stroke-linecap="round"/>
-          <path d="M-75 95 A 103 103 0 0 0 75 95" fill="none" stroke="#6c63ff" stroke-width="18" stroke-linecap="round"/>
+          <circle cx="0" cy="0" r="12" fill="#2563EB"/>
+          <path d="M-35 45 A 48 48 0 0 0 35 45" fill="none" stroke="#2563EB" stroke-width="18" stroke-linecap="round"/>
+          <path d="M-75 95 A 103 103 0 0 0 75 95" fill="none" stroke="#2563EB" stroke-width="18" stroke-linecap="round"/>
         </g>
         <text x="440" y="220" font-family="Arial Black, sans-serif" font-weight="900" font-size="180" fill="#e8e8ec" text-anchor="middle">N</text>
         <text x="610" y="220" font-family="Arial Black, sans-serif" font-weight="900" font-size="180" fill="#e8e8ec" text-anchor="middle">D</text>
         <text x="780" y="220" font-family="Arial Black, sans-serif" font-weight="900" font-size="180" fill="#e8e8ec" text-anchor="middle">O</text>
       </svg>
       <!-- Icon only (mobile) -->
-      <svg class="logo-mobile" viewBox="180 75 180 145" role="img" aria-label="LANDO">
-        <g transform="translate(270, 100)">
-          <circle cx="0" cy="0" r="12" fill="#6c63ff"/>
-          <path d="M-35 45 A 48 48 0 0 0 35 45" fill="none" stroke="#6c63ff" stroke-width="18" stroke-linecap="round"/>
-          <path d="M-75 95 A 103 103 0 0 0 75 95" fill="none" stroke="#6c63ff" stroke-width="18" stroke-linecap="round"/>
+      <svg class="logo-mobile" viewBox="0 5 180 155" role="img" aria-label="LANDO">
+        <g transform="translate(90, 18)">
+          <circle cx="0" cy="0" r="12" fill="#2563EB"/>
+          <path d="M-35 45 A 48 48 0 0 0 35 45" fill="none" stroke="#2563EB" stroke-width="18" stroke-linecap="round"/>
+          <path d="M-75 95 A 103 103 0 0 0 75 95" fill="none" stroke="#2563EB" stroke-width="18" stroke-linecap="round"/>
         </g>
       </svg>
     </a>
@@ -38,6 +38,7 @@ const altLang = lang === 'es' ? 'en' : 'es';
       <a href="#services" class="nav-link">{t(lang, 'nav.services')}</a>
       <a href="#method" class="nav-link">{t(lang, 'nav.method')}</a>
       <a href="#testimonials" class="nav-link">{t(lang, 'nav.testimonials')}</a>
+      <a href="#faq" class="nav-link">{t(lang, 'nav.faq')}</a>
       <a href="#contact" class="nav-link">{t(lang, 'nav.contact')}</a>
       <a href={getLocalizedPath(altLang, '/')} class="nav-lang">{t(lang, 'nav.lang')}</a>
       <a href="#estimator" class="nav-cta">{lang === 'es' ? 'Presupuesto' : 'Get Quote'}</a>
@@ -57,7 +58,7 @@ const altLang = lang === 'es' ? 'en' : 'es';
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 10000;
     height: var(--nav-height);
     display: flex;
     align-items: center;
@@ -73,6 +74,13 @@ const altLang = lang === 'es' ? 'en' : 'es';
     box-shadow: 0 1px 20px rgba(0, 0, 0, 0.5);
   }
 
+  .nav.menu-open {
+    background: #06060b;
+    border-bottom: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
   .nav-cta {
     padding: 0.5rem 1.25rem;
     background: var(--color-accent-gradient);
@@ -81,12 +89,12 @@ const altLang = lang === 'es' ? 'en' : 'es';
     font-weight: 600;
     border-radius: var(--radius-full);
     transition: all var(--transition-base);
-    box-shadow: 0 2px 10px rgba(124, 108, 240, 0.25);
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.25);
   }
 
   .nav-cta:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 20px rgba(124, 108, 240, 0.4);
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
   }
 
   .nav-inner {
@@ -98,28 +106,28 @@ const altLang = lang === 'es' ? 'en' : 'es';
   .nav-logo {
     display: flex;
     align-items: center;
-    z-index: 10;
+    z-index: 11;
   }
 
   .logo-full {
-    height: 28px;
+    height: 40px;
     width: auto;
     display: block;
   }
 
   .logo-mobile {
-    height: 36px;
-    width: auto;
     display: none;
   }
 
   @media (max-width: 768px) {
     .logo-full {
-      display: none;
+      height: 28px;
     }
+  }
 
-    .logo-mobile {
-      display: block;
+  @media (max-width: 380px) {
+    .logo-full {
+      height: 24px;
     }
   }
 
@@ -159,7 +167,10 @@ const altLang = lang === 'es' ? 'en' : 'es';
   .nav-lang {
     font-size: 0.8rem;
     font-weight: 600;
-    padding: 0.35rem 0.75rem;
+    padding: 0.5rem 0.75rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
     border: 1px solid var(--color-border-hover);
     border-radius: var(--radius-full);
     color: var(--color-text-secondary);
@@ -175,7 +186,7 @@ const altLang = lang === 'es' ? 'en' : 'es';
     display: none;
     flex-direction: column;
     gap: 5px;
-    z-index: 10;
+    z-index: 11;
   }
 
   .nav-toggle span {
@@ -194,23 +205,38 @@ const altLang = lang === 'es' ? 'en' : 'es';
 
     .nav-links {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 10;
+      display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: center;
       gap: var(--space-2xl);
-      background: var(--color-bg);
-      opacity: 0;
+      background: #06060b;
+      transform: translateX(100%);
       visibility: hidden;
-      transition: all var(--transition-base);
+      transition: transform var(--transition-base), visibility var(--transition-base);
     }
 
     .nav-links.open {
-      opacity: 1;
+      transform: translateX(0);
       visibility: visible;
     }
 
     .nav-link {
       font-size: 1.5rem;
+    }
+
+    .nav-lang {
+      font-size: 1rem;
+    }
+
+    .nav-cta {
+      font-size: 1rem;
+      padding: 0.75rem 2rem;
     }
 
     .nav-toggle.active span:nth-child(1) {
@@ -228,25 +254,77 @@ const altLang = lang === 'es' ? 'en' : 'es';
 </style>
 
 <script>
+  // Smooth scroll helper (replaces CSS scroll-behavior for iOS compatibility)
+  function smoothScrollTo(id: string) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const navHeight = document.getElementById('nav')?.offsetHeight || 0;
+    const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+
   // Mobile menu toggle
   const toggle = document.getElementById('nav-toggle');
   const links = document.getElementById('nav-links');
+  const nav = document.getElementById('nav');
+  const isMobile = () => window.innerWidth <= 768;
 
   toggle?.addEventListener('click', () => {
     toggle.classList.toggle('active');
     links?.classList.toggle('open');
+    nav?.classList.toggle('menu-open');
   });
 
-  // Close on link click
+  // Handle nav link clicks (close menu + smooth scroll)
   links?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+
+      // Close mobile menu
       toggle?.classList.remove('active');
       links?.classList.remove('open');
+      nav?.classList.remove('menu-open');
+
+      // Handle anchor links with programmatic scroll
+      if (href && href.startsWith('#') && href.length > 1) {
+        e.preventDefault();
+        const id = href.slice(1);
+        const targetEl = document.getElementById(id);
+        if (targetEl) {
+          // Section exists on current page, smooth scroll
+          if (isMobile()) {
+            setTimeout(() => smoothScrollTo(id), 350);
+          } else {
+            smoothScrollTo(id);
+          }
+        } else {
+          // Section not on current page, navigate to homepage with hash
+          const lang = document.documentElement.lang || 'es';
+          window.location.href = `/${lang}/#${id}`;
+        }
+      }
     });
   });
 
+  // Handle ALL anchor links on the page (footer, inline, etc.)
+  document.addEventListener('click', (e) => {
+    const anchor = (e.target as HTMLElement).closest('a[href^="#"]');
+    if (!anchor || anchor.closest('#nav-links')) return; // skip nav (handled above)
+    const href = anchor.getAttribute('href');
+    if (href && href.startsWith('#') && href.length > 1) {
+      e.preventDefault();
+      const id = href.slice(1);
+      const targetEl = document.getElementById(id);
+      if (targetEl) {
+        smoothScrollTo(id);
+      } else {
+        const lang = document.documentElement.lang || 'es';
+        window.location.href = `/${lang}/#${id}`;
+      }
+    }
+  });
+
   // Scroll effect
-  const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
     if (window.scrollY > 50) {
       nav?.classList.add('scrolled');

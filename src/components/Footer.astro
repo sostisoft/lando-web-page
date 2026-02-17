@@ -16,9 +16,9 @@ const { lang } = Astro.props;
           <svg class="footer-logo-svg" viewBox="0 0 1000 300" role="img" aria-label="LANDO">
             <text x="100" y="220" font-family="Arial Black, sans-serif" font-weight="900" font-size="180" fill="#e8e8ec" text-anchor="middle">L</text>
             <g transform="translate(270, 100)">
-              <circle cx="0" cy="0" r="12" fill="#6c63ff"/>
-              <path d="M-35 45 A 48 48 0 0 0 35 45" fill="none" stroke="#6c63ff" stroke-width="18" stroke-linecap="round"/>
-              <path d="M-75 95 A 103 103 0 0 0 75 95" fill="none" stroke="#6c63ff" stroke-width="18" stroke-linecap="round"/>
+              <circle cx="0" cy="0" r="12" fill="#2563EB"/>
+              <path d="M-35 45 A 48 48 0 0 0 35 45" fill="none" stroke="#2563EB" stroke-width="18" stroke-linecap="round"/>
+              <path d="M-75 95 A 103 103 0 0 0 75 95" fill="none" stroke="#2563EB" stroke-width="18" stroke-linecap="round"/>
             </g>
             <text x="440" y="220" font-family="Arial Black, sans-serif" font-weight="900" font-size="180" fill="#e8e8ec" text-anchor="middle">N</text>
             <text x="610" y="220" font-family="Arial Black, sans-serif" font-weight="900" font-size="180" fill="#e8e8ec" text-anchor="middle">D</text>
@@ -41,9 +41,10 @@ const { lang } = Astro.props;
       <div class="footer-col">
         <h4 class="footer-heading">{t(lang, 'footer.legal')}</h4>
         <ul class="footer-links">
-          <li><a href={getLocalizedPath(lang, '/legal/privacidad')}>{t(lang, 'footer.privacy')}</a></li>
+          <li><a href={getLocalizedPath(lang, lang === 'es' ? '/legal/privacidad' : '/legal/privacy')}>{t(lang, 'footer.privacy')}</a></li>
           <li><a href={getLocalizedPath(lang, '/legal/cookies')}>{t(lang, 'footer.cookies')}</a></li>
-          <li><a href={getLocalizedPath(lang, '/legal/aviso-legal')}>{t(lang, 'footer.legal.notice')}</a></li>
+          <li><a href={getLocalizedPath(lang, lang === 'es' ? '/legal/aviso-legal' : '/legal/legal-notice')}>{t(lang, 'footer.legal.notice')}</a></li>
+          <li><a href="#" id="cookie-change-prefs">{t(lang, 'cookies.prefs.change')}</a></li>
         </ul>
       </div>
     </div>
