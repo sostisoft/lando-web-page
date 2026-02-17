@@ -27,4 +27,11 @@ export default defineConfig({
       redirectToDefaultLocale: false,
     },
   },
+  vite: {
+    server: {
+      proxy: {
+        '/api/contact': 'http://localhost:8080',
+      },
+    },
+  },
 });

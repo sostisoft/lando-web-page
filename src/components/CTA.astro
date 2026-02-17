@@ -603,6 +603,26 @@ const { lang } = Astro.props;
       if (serviceVal) {
         (document.getElementById('contact-service') as HTMLSelectElement).value = serviceVal;
       }
+
+      // Auto-fill budget select from estimated range
+      if (d.budgetRange) {
+        const nums = d.budgetRange.replace(/[^0-9]/g, ' ').trim().split(/\s+/).map(Number);
+        const high = nums.length > 1 ? nums[nums.length - 1] : nums[0];
+        const budgetSelect = document.getElementById('contact-budget') as HTMLSelectElement;
+        if (high < 5000) budgetSelect.value = '<5k';
+        else if (high <= 15000) budgetSelect.value = '5k-15k';
+        else if (high <= 50000) budgetSelect.value = '15k-50k';
+        else budgetSelect.value = '50k+';
+      }
+
+      // Auto-fill timeline select from estimator
+      if (d.timeline) {
+        const tl = d.timeline.toLowerCase();
+        const timelineSelect = document.getElementById('contact-timeline') as HTMLSelectElement;
+        if (tl.includes('urgent') || tl.includes('urgente')) timelineSelect.value = 'urgent';
+        else if (tl.includes('normal')) timelineSelect.value = '1-3months';
+        else if (tl.includes('flexib')) timelineSelect.value = '3months+';
+      }
     }) as EventListener);
 
     // Close budget summary
