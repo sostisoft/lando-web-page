@@ -1,5 +1,5 @@
 ---
-import { type Lang } from '../i18n/translations';
+import { t, type Lang } from '../i18n/translations';
 
 interface Props {
   lang: Lang;
@@ -60,16 +60,68 @@ const faqs: Record<string, { question: string; answer: string }[]> = {
       answer: 'Yes, we work with clients across Europe. Our team has experience in sectors like telecom, fintech, retail, and proptech in the Netherlands, Germany, and Spain. We offer service in both Spanish and English.',
     },
   ],
+  ca: [
+    {
+      question: 'Quant costa desenvolupar una aplicació web o mòbil?',
+      answer: 'El cost depèn del tipus de projecte, complexitat i funcionalitats. Els nostres projectes parteixen des de 500€ per a webs bàsiques fins a 20.000€+ per a aplicacions complexes amb IA. Fes servir el nostre estimador de pressupost per obtenir un rang orientatiu en 1 minut.',
+    },
+    {
+      question: 'Quant temps es triga a desenvolupar un MVP?',
+      answer: 'Desenvolupem MVPs (Producte Mínim Viable) des de 3 setmanes. El temps exacte depèn de la complexitat, però el nostre enfocament àgil permet llançar ràpid, validar amb usuaris reals i iterar.',
+    },
+    {
+      question: 'Per què només treballeu amb 3 clients alhora?',
+      answer: 'Limitar a 3 clients simultanis ens permet dedicar atenció exclusiva a cada projecte. Això garanteix màxima qualitat, comunicació fluida i temps de lliurament òptims, quelcom que les agències grans no poden oferir.',
+    },
+    {
+      question: 'Quines tecnologies utilitzeu per al desenvolupament de software?',
+      answer: 'Treballem amb les tecnologies més demandades del mercat: React, TypeScript, Node.js, Python, Java, Kotlin, AWS, Kubernetes i més. Escollim la stack tecnològica òptima per a cada projecte segons les seves necessitats específiques.',
+    },
+    {
+      question: 'Oferiu serveis d\'intel·ligència artificial per a empreses?',
+      answer: 'Sí, integrem solucions d\'IA com chatbots, automatització de processos, models de machine learning i processament de llenguatge natural. Ajudem a empreses a aprofitar la IA per crear avantatges competitius reals.',
+    },
+    {
+      question: 'Treballeu amb empreses fora d\'Espanya?',
+      answer: 'Sí, treballem amb clients a tota Europa. El nostre equip té experiència en sectors com telecom, fintech, retail i proptech a Holanda, Alemanya i Espanya. Oferim servei en espanyol, anglès i català.',
+    },
+  ],
+  eu: [
+    {
+      question: 'Zenbat balio du web edo mugikorretarako aplikazio bat garatzeak?',
+      answer: 'Kostua proiektu motaren, konplexutasunaren eta funtzionalitateen araberakoa da. Gure proiektuak 500€-tik hasten dira oinarrizko webentzat eta 20.000€+ AArekin aplikazio konplexuetarako. Erabili gure aurrekontu estimatzailea minutu 1ean orientazio-tartea lortzeko.',
+    },
+    {
+      question: 'Zenbat denbora behar da MVP bat garatzeko?',
+      answer: 'MVPak (Gutxieneko Produktu Bideragarria) 3 astetik garatzen ditugu. Denbora zehatza konplexutasunaren araberakoa da, baina gure ikuspegi arinarekin azkar abian jartzen da, benetako erabiltzaileekin balioztatzen da eta iteratzen da.',
+    },
+    {
+      question: 'Zergatik lan egiten duzue 3 bezerorekin bakarrik aldi berean?',
+      answer: '3 bezero aldiberekoetara mugatzeak proiektu bakoitzari arreta esklusiboa eskaintzea ahalbidetzen digu. Honek kalitate gorena, komunikazio arina eta entrega denbora optimoak bermatzen ditu, agentzia handiek eskaini ezin dutena.',
+    },
+    {
+      question: 'Zer teknologia erabiltzen dituzue software garapenerako?',
+      answer: 'Merkatuko teknologia eskakizunduenekin lan egiten dugu: React, TypeScript, Node.js, Python, Java, Kotlin, AWS, Kubernetes eta gehiago. Stack teknologiko optimoa hautatzen dugu proiektu bakoitzerako bere behar espezifikoen arabera.',
+    },
+    {
+      question: 'Adimen artifizialeko zerbitzuak eskaintzen dituzue enpresei?',
+      answer: 'Bai, AA irtenbideak integratzen ditugu, hala nola chatbot-ak, prozesu automatizazioa, machine learning modeloak eta hizkuntza naturalaren prozesamendua. Enpresei laguntzen diegu AA aprobetxatzen abantaila lehiakor errealak sortzeko.',
+    },
+    {
+      question: 'Espainiaz kanpoko enpresekin lan egiten duzue?',
+      answer: 'Bai, Europa osoko bezeroekin lan egiten dugu. Gure taldeak esperientzia du telecom, fintech, retail eta proptech sektoreetan Herbehereetan, Alemanian eta Espainian. Zerbitzua gaztelaniaz, ingelesez eta euskaraz eskaintzen dugu.',
+    },
+  ],
 };
 
-const currentFaqs = faqs[lang];
+const currentFaqs = faqs[lang] || faqs.es;
 ---
 
 <section class="section faq-section" id="faq">
   <div class="container">
     <div class="faq-header animate-on-scroll">
-      <p class="section-tagline">{lang === 'es' ? 'Preguntas frecuentes' : 'FAQ'}</p>
-      <h2 class="section-title">{lang === 'es' ? 'Resolvemos tus dudas' : 'Common questions answered'}</h2>
+      <p class="section-tagline">{t(lang, 'faq.tagline')}</p>
+      <h2 class="section-title">{t(lang, 'faq.title')}</h2>
     </div>
 
     <div class="faq-list">

@@ -14,6 +14,8 @@ export default defineConfig({
         locales: {
           es: 'es-ES',
           en: 'en-US',
+          ca: 'ca-ES',
+          eu: 'eu-ES',
         },
       },
       filter: (page) => !page.includes('/api/'),
@@ -21,7 +23,7 @@ export default defineConfig({
   ],
   i18n: {
     defaultLocale: 'es',
-    locales: ['es', 'en'],
+    locales: ['es', 'en', 'ca', 'eu'],
     routing: {
       prefixDefaultLocale: true,
       redirectToDefaultLocale: false,

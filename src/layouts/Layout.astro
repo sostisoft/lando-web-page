@@ -4,7 +4,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import FloatingCTA from '../components/FloatingCTA.astro';
-import { type Lang } from '../i18n/translations';
+import { t, type Lang, languages } from '../i18n/translations';
 
 interface Props {
   title: string;
@@ -19,14 +19,20 @@ const { title, description, lang, keywords, ogImage, noindex = false } = Astro.p
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') || '';
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
-const altLang = lang === 'es' ? 'en' : 'es';
-const currentPath = Astro.url.pathname.replace(/^\/(es|en)/, '');
-const altUrl = new URL(`/${altLang}${currentPath}`, Astro.site).toString();
+const currentPath = Astro.url.pathname.replace(/^\/(es|en|ca|eu)/, '');
+const allLangs = Object.keys(languages) as Lang[];
+const altUrls = allLangs
+  .filter(l => l !== lang)
+  .map(l => ({ lang: l, url: new URL(`/${l}${currentPath}`, Astro.site).toString() }));
 const ogImageUrl = ogImage || `${siteUrl}/og-image.png`;
+
+const localeMap: Record<Lang, string> = { es: 'es_ES', en: 'en_US', ca: 'ca_ES', eu: 'eu_ES' };
 
 const defaultKeywords: Record<Lang, string> = {
   es: 'desarrollo software, consultoría tecnológica, desarrollo web, desarrollo aplicaciones, MVP, inteligencia artificial, apps móviles, transformación digital, desarrollo a medida, empresa desarrollo software España',
   en: 'software development, tech consulting, web development, app development, MVP, artificial intelligence, mobile apps, digital transformation, custom software, software development company Spain',
+  ca: 'desenvolupament software, consultoria tecnològica, desenvolupament web, desenvolupament aplicacions, MVP, intel·ligència artificial, apps mòbils, transformació digital, software a mida, empresa desenvolupament software Espanya',
+  eu: 'software garapena, aholkularitza teknologikoa, web garapena, aplikazio garapena, MVP, adimen artifiziala, app mugikorrak, eraldaketa digitala, software pertsonalizatua, software garapen enpresa Espainia',
 };
 
 const pageKeywords = keywords || defaultKeywords[lang];
@@ -46,7 +52,9 @@ const pageKeywords = keywords || defaultKeywords[lang];
     <!-- Canonical & Hreflang -->
     <link rel="canonical" href={canonicalUrl} />
     <link rel="alternate" hreflang={lang} href={canonicalUrl} />
-    <link rel="alternate" hreflang={altLang} href={altUrl} />
+    {altUrls.map(alt => (
+      <link rel="alternate" hreflang={alt.lang} href={alt.url} />
+    ))}
     <link rel="alternate" hreflang="x-default" href={new URL('/es/', Astro.site).toString()} />
 
     <!-- Open Graph -->
@@ -55,8 +63,10 @@ const pageKeywords = keywords || defaultKeywords[lang];
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content="Lando" />
-    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
-    <meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_ES'} />
+    <meta property="og:locale" content={localeMap[lang]} />
+    {altUrls.map(alt => (
+      <meta property="og:locale:alternate" content={localeMap[alt.lang]} />
+    ))}
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -112,7 +122,7 @@ const pageKeywords = keywords || defaultKeywords[lang];
         "@type": "ContactPoint",
         "email": "info@landofirm.com",
         "contactType": "customer service",
-        "availableLanguage": ["Spanish", "English"]
+        "availableLanguage": ["Spanish", "English", "Catalan", "Basque"]
       },
       "areaServed": {
         "@type": "GeoCircle",
@@ -136,52 +146,44 @@ const pageKeywords = keywords || defaultKeywords[lang];
         "https://github.com/sostisoft",
         "https://www.linkedin.com/company/landofirm"
       ],
-      "inLanguage": [lang === 'es' ? 'es-ES' : 'en-US']
+      "inLanguage": [localeMap[lang].replace('_', '-')]
     })} />
 
     <!-- Structured Data: Services -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "ItemList",
-      "name": lang === 'es' ? "Servicios de Lando" : "Lando Services",
+      "name": t(lang, 'footer.services'),
       "itemListElement": [
         {
           "@type": "Service",
           "position": 1,
-          "name": lang === 'es' ? "Consultoría Técnica" : "Technical Consulting",
-          "description": lang === 'es'
-            ? "Análisis de situación actual y diseño de hoja de ruta tecnológica. Decisiones tecnológicas correctas para tu negocio."
-            : "Current situation analysis and technology roadmap design. The right technology decisions for your business.",
+          "name": t(lang, 'services.consulting.title'),
+          "description": t(lang, 'services.consulting.desc'),
           "provider": { "@type": "Organization", "name": "Lando" },
           "serviceType": "Technical Consulting"
         },
         {
           "@type": "Service",
           "position": 2,
-          "name": lang === 'es' ? "Desarrollo Web & Apps" : "Web & App Development",
-          "description": lang === 'es'
-            ? "Desarrollo de experiencias digitales a medida. Webs corporativas, dashboards avanzados y aplicaciones móviles nativas."
-            : "Custom digital experiences. Corporate websites, advanced dashboards, and native mobile applications.",
+          "name": t(lang, 'services.web.title'),
+          "description": t(lang, 'services.web.desc'),
           "provider": { "@type": "Organization", "name": "Lando" },
           "serviceType": "Software Development"
         },
         {
           "@type": "Service",
           "position": 3,
-          "name": lang === 'es' ? "Inteligencia Artificial" : "Artificial Intelligence",
-          "description": lang === 'es'
-            ? "Integración de soluciones de IA para automatizar procesos, optimizar operaciones y crear ventajas competitivas."
-            : "AI solutions integration to automate processes, optimize operations, and create competitive advantages.",
+          "name": t(lang, 'services.ai.title'),
+          "description": t(lang, 'services.ai.desc'),
           "provider": { "@type": "Organization", "name": "Lando" },
           "serviceType": "AI Consulting"
         },
         {
           "@type": "Service",
           "position": 4,
-          "name": lang === 'es' ? "MVP & Producto" : "MVP & Product",
-          "description": lang === 'es'
-            ? "Lanzamiento de producto mínimo viable en 3 semanas. Validación con usuarios reales antes de invertir a gran escala."
-            : "Minimum viable product launch in 3 weeks. Validation with real users before investing at scale.",
+          "name": t(lang, 'services.mvp.title'),
+          "description": t(lang, 'services.mvp.desc'),
           "provider": { "@type": "Organization", "name": "Lando" },
           "serviceType": "MVP Development"
         }
@@ -194,7 +196,7 @@ const pageKeywords = keywords || defaultKeywords[lang];
       "@type": "WebSite",
       "name": "Lando",
       "url": siteUrl,
-      "inLanguage": lang === 'es' ? 'es-ES' : 'en-US',
+      "inLanguage": localeMap[lang].replace('_', '-'),
       "description": description
     })} />
 
@@ -204,9 +206,9 @@ const pageKeywords = keywords || defaultKeywords[lang];
       "@type": "BreadcrumbList",
       "itemListElement": (() => {
         const items = [
-          { "@type": "ListItem", "position": 1, "name": lang === 'es' ? "Inicio" : "Home", "item": `${siteUrl}/${lang}/` }
+          { "@type": "ListItem", "position": 1, "name": t(lang, 'legal.back').replace('← ', ''), "item": `${siteUrl}/${lang}/` }
         ];
-        const path = Astro.url.pathname.replace(/^\/(es|en)\//, '').replace(/\/$/, '');
+        const path = Astro.url.pathname.replace(/^\/(es|en|ca|eu)\//, '').replace(/\/$/, '');
         if (path.startsWith('legal')) {
           items.push({ "@type": "ListItem", "position": 2, "name": "Legal", "item": `${siteUrl}/${lang}/legal/` });
           const pageName = title.replace(' — Lando', '');
@@ -221,7 +223,7 @@ const pageKeywords = keywords || defaultKeywords[lang];
     <!-- Umami Analytics: loaded dynamically by CookieBanner based on user consent -->
   </head>
   <body>
-    <a href="#main" class="skip-link">{lang === 'es' ? 'Ir al contenido principal' : 'Skip to main content'}</a>
+    <a href="#main" class="skip-link">{t(lang, 'a11y.skip')}</a>
     <Nav lang={lang} />
     <main id="main">
       <slot />

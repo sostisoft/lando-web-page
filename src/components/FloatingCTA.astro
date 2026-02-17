@@ -1,5 +1,5 @@
 ---
-import { type Lang } from '../i18n/translations';
+import { t, type Lang } from '../i18n/translations';
 
 interface Props {
   lang: Lang;
@@ -7,8 +7,8 @@ interface Props {
 
 const { lang } = Astro.props;
 
-const ctaText = lang === 'es' ? 'Calcula tu presupuesto' : 'Get your estimate';
-const contactText = lang === 'es' ? 'Contactar' : 'Contact us';
+const ctaText = t(lang, 'floating.estimate');
+const contactText = t(lang, 'floating.contact');
 ---
 
 <!-- Floating CTA button (appears on scroll) -->

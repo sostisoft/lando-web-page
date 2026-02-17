@@ -1,12 +1,12 @@
 ---
-import { t, type Lang, getLocalizedPath } from '../i18n/translations';
+import { t, languages, type Lang, getLocalizedPath } from '../i18n/translations';
 
 interface Props {
   lang: Lang;
 }
 
 const { lang } = Astro.props;
-const altLang = lang === 'es' ? 'en' : 'es';
+const otherLangs = (Object.keys(languages) as Lang[]).filter(l => l !== lang);
 ---
 
 <nav class="nav" id="nav">
@@ -40,8 +40,18 @@ const altLang = lang === 'es' ? 'en' : 'es';
       <a href="#testimonials" class="nav-link">{t(lang, 'nav.testimonials')}</a>
       <a href="#faq" class="nav-link">{t(lang, 'nav.faq')}</a>
       <a href="#contact" class="nav-link">{t(lang, 'nav.contact')}</a>
-      <a href={getLocalizedPath(altLang, '/')} class="nav-lang">{t(lang, 'nav.lang')}</a>
-      <a href="#estimator" class="nav-cta">{lang === 'es' ? 'Presupuesto' : 'Get Quote'}</a>
+      <div class="nav-lang-dropdown" id="lang-dropdown">
+        <button class="nav-lang" type="button" aria-expanded="false" aria-haspopup="true">
+          {t(lang, 'nav.lang')}
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-lang-menu" role="menu">
+          {otherLangs.map(l => (
+            <a href={getLocalizedPath(l, '/')} class="nav-lang-option" role="menuitem">{languages[l]}</a>
+          ))}
+        </div>
+      </div>
+      <a href="#estimator" class="nav-cta">{t(lang, 'nav.quote')}</a>
     </div>
 
     <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
@@ -164,6 +174,11 @@ const altLang = lang === 'es' ? 'en' : 'es';
     width: 100%;
   }
 
+  /* Language dropdown */
+  .nav-lang-dropdown {
+    position: relative;
+  }
+
   .nav-lang {
     font-size: 0.8rem;
     font-weight: 600;
@@ -171,14 +186,55 @@ const altLang = lang === 'es' ? 'en' : 'es';
     min-height: 44px;
     display: inline-flex;
     align-items: center;
+    gap: 4px;
     border: 1px solid var(--color-border-hover);
     border-radius: var(--radius-full);
     color: var(--color-text-secondary);
     transition: all var(--transition-fast);
+    cursor: pointer;
+    background: transparent;
+    font-family: var(--font-sans);
   }
 
   .nav-lang:hover {
     border-color: var(--color-accent-light);
+    color: var(--color-accent-light);
+  }
+
+  .nav-lang-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 4px;
+    min-width: 120px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-fast);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    z-index: 100;
+  }
+
+  .nav-lang-dropdown.open .nav-lang-menu {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .nav-lang-option {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    text-align: center;
+  }
+
+  .nav-lang-option:hover {
+    background: rgba(37, 99, 235, 0.1);
     color: var(--color-accent-light);
   }
 
@@ -234,6 +290,31 @@ const altLang = lang === 'es' ? 'en' : 'es';
       font-size: 1rem;
     }
 
+    .nav-lang-menu {
+      position: static;
+      transform: none;
+      opacity: 1;
+      visibility: visible;
+      display: none;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      min-width: auto;
+    }
+
+    .nav-lang-dropdown.open .nav-lang-menu {
+      display: flex;
+      gap: var(--space-md);
+    }
+
+    .nav-lang-option {
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+    }
+
     .nav-cta {
       font-size: 1rem;
       padding: 0.75rem 2rem;
@@ -273,6 +354,19 @@ const altLang = lang === 'es' ? 'en' : 'es';
     toggle.classList.toggle('active');
     links?.classList.toggle('open');
     nav?.classList.toggle('menu-open');
+  });
+
+  // Language dropdown
+  const langDropdown = document.getElementById('lang-dropdown');
+  const langBtn = langDropdown?.querySelector('.nav-lang');
+  langBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    langDropdown?.classList.toggle('open');
+    langBtn.setAttribute('aria-expanded', langDropdown?.classList.contains('open') ? 'true' : 'false');
+  });
+  document.addEventListener('click', () => {
+    langDropdown?.classList.remove('open');
+    langBtn?.setAttribute('aria-expanded', 'false');
   });
 
   // Handle nav link clicks (close menu + smooth scroll)

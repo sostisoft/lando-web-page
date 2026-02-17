@@ -264,51 +264,158 @@ func buildNotificationBody(form ContactForm, clientIP string) string {
 	return b.String()
 }
 
+// emailStrings holds localized strings for the confirmation email
+type emailStrings struct {
+	greeting       string
+	thanks         string
+	response       string
+	summary        string
+	serviceLabel   string
+	messageLabel   string
+	budgetSection  string
+	budgetRange    string
+	projectType    string
+	complexity     string
+	features       string
+	timeline       string
+	duration       string
+	comments       string
+	addInfo        string
+	regards        string
+	teamName       string
+	autoDisclaimer string
+}
+
+func getEmailStrings(lang string) emailStrings {
+	switch lang {
+	case "en":
+		return emailStrings{
+			greeting:       "Hi",
+			thanks:         "Thank you for contacting Lando. We have received your message and our team will review it shortly.",
+			response:       "We will get back to you as soon as possible, typically within 24 hours.",
+			summary:        "Here is a summary of what you sent us:",
+			serviceLabel:   "Service",
+			messageLabel:   "Message",
+			budgetSection:  "Budget estimate details",
+			budgetRange:    "Estimated range",
+			projectType:    "Project type",
+			complexity:     "Complexity",
+			features:       "Features",
+			timeline:       "Timeline",
+			duration:       "Estimated duration",
+			comments:       "Comments",
+			addInfo:        "If you need to add any additional information, you can reply directly to this email.",
+			regards:        "Best regards,",
+			teamName:       "The Lando Team",
+			autoDisclaimer: "This is an automatic confirmation. Please do not reply to this message if you do not need to add information.",
+		}
+	case "ca":
+		return emailStrings{
+			greeting:       "Hola",
+			thanks:         "Gràcies per contactar amb Lando. Hem rebut el teu missatge i el nostre equip el revisarà en breu.",
+			response:       "Et respondrem el més aviat possible, normalment en menys de 24 hores.",
+			summary:        "Aquí tens un resum del que ens has enviat:",
+			serviceLabel:   "Servei",
+			messageLabel:   "Missatge",
+			budgetSection:  "Detalls del pressupost estimat",
+			budgetRange:    "Rang estimat",
+			projectType:    "Tipus de projecte",
+			complexity:     "Complexitat",
+			features:       "Funcionalitats",
+			timeline:       "Termini",
+			duration:       "Durada estimada",
+			comments:       "Comentaris",
+			addInfo:        "Si necessites afegir informació addicional, pots respondre directament a aquest email.",
+			regards:        "Una salutació,",
+			teamName:       "L'equip de Lando",
+			autoDisclaimer: "Aquesta és una confirmació automàtica. No responguis a aquest missatge si no necessites afegir informació.",
+		}
+	case "eu":
+		return emailStrings{
+			greeting:       "Kaixo",
+			thanks:         "Eskerrik asko Landorekin harremanetan jartzeagatik. Zure mezua jaso dugu eta gure taldeak laster berrikusiko du.",
+			response:       "Ahalik eta azkarren erantzungo dizugu, normalean 24 ordutan.",
+			summary:        "Hona hemen bidali diguzunaren laburpena:",
+			serviceLabel:   "Zerbitzua",
+			messageLabel:   "Mezua",
+			budgetSection:  "Aurrekontu estimatuaren xehetasunak",
+			budgetRange:    "Estimatutako tartea",
+			projectType:    "Proiektu mota",
+			complexity:     "Konplexutasuna",
+			features:       "Funtzionalitateak",
+			timeline:       "Epea",
+			duration:       "Estimatutako iraupena",
+			comments:       "Iruzkinak",
+			addInfo:        "Informazio gehigarria gehitu behar baduzu, zuzenean erantzun dezakezu email honi.",
+			regards:        "Agur bero bat,",
+			teamName:       "Lando taldea",
+			autoDisclaimer: "Hau baieztapen automatikoa da. Ez erantzun mezu honi informazioa gehitu behar ez baduzu.",
+		}
+	default: // es
+		return emailStrings{
+			greeting:       "Hola",
+			thanks:         "Gracias por contactar con Lando. Hemos recibido tu mensaje y nuestro equipo lo revisará en breve.",
+			response:       "Te responderemos lo antes posible, normalmente en menos de 24 horas.",
+			summary:        "Aquí tienes un resumen de lo que nos has enviado:",
+			serviceLabel:   "Servicio",
+			messageLabel:   "Mensaje",
+			budgetSection:  "Detalles del presupuesto estimado",
+			budgetRange:    "Rango estimado",
+			projectType:    "Tipo de proyecto",
+			complexity:     "Complejidad",
+			features:       "Funcionalidades",
+			timeline:       "Plazo",
+			duration:       "Duración estimada",
+			comments:       "Comentarios",
+			addInfo:        "Si necesitas añadir información adicional, puedes responder directamente a este email.",
+			regards:        "Un saludo,",
+			teamName:       "El equipo de Lando",
+			autoDisclaimer: "Esta es una confirmación automática. No respondas a este mensaje si no necesitas añadir información.",
+		}
+	}
+}
+
 // buildConfirmationBody builds the auto-reply email to the user
 func buildConfirmationBody(form ContactForm) string {
-	if form.Lang == "en" {
-		return fmt.Sprintf(`Hi %s,
+	s := getEmailStrings(form.Lang)
+	var b strings.Builder
 
-Thank you for contacting Lando. We have received your message and our team will review it shortly.
+	b.WriteString(fmt.Sprintf("%s %s,\n\n", s.greeting, form.Name))
+	b.WriteString(s.thanks + "\n\n")
+	b.WriteString(s.response + "\n\n")
+	b.WriteString(s.summary + "\n\n")
+	b.WriteString(fmt.Sprintf("- %s: %s\n", s.serviceLabel, valueOrDash(form.Service)))
+	b.WriteString(fmt.Sprintf("- %s: %s\n", s.messageLabel, form.Message))
 
-We will get back to you as soon as possible, typically within 24 hours.
-
-Here is a summary of what you sent us:
-
-- Service: %s
-- Message: %s
-
-If you need to add any additional information, you can reply directly to this email.
-
-Best regards,
-The Lando Team
-https://landofirm.com
-
----
-This is an automatic confirmation. Please do not reply to this message if you do not need to add information.
-`, form.Name, valueOrDash(form.Service), form.Message)
+	// Include full budget details if the user came from the estimator
+	if form.BudgetEstimate != "" {
+		b.WriteString(fmt.Sprintf("\n--- %s ---\n\n", s.budgetSection))
+		b.WriteString(fmt.Sprintf("  %s: %s\n", s.budgetRange, form.BudgetEstimate))
+		if form.BudgetProject != "" {
+			b.WriteString(fmt.Sprintf("  %s: %s\n", s.projectType, form.BudgetProject))
+		}
+		if form.BudgetComplexity != "" {
+			b.WriteString(fmt.Sprintf("  %s: %s\n", s.complexity, form.BudgetComplexity))
+		}
+		if form.BudgetFeatures != "" {
+			b.WriteString(fmt.Sprintf("  %s: %s\n", s.features, form.BudgetFeatures))
+		}
+		if form.BudgetTimeline != "" {
+			b.WriteString(fmt.Sprintf("  %s: %s\n", s.timeline, form.BudgetTimeline))
+		}
+		if form.BudgetDuration != "" {
+			b.WriteString(fmt.Sprintf("  %s: %s\n", s.duration, form.BudgetDuration))
+		}
+		if form.BudgetComments != "" {
+			b.WriteString(fmt.Sprintf("  %s: %s\n", s.comments, form.BudgetComments))
+		}
 	}
 
-	return fmt.Sprintf(`Hola %s,
+	b.WriteString(fmt.Sprintf("\n%s\n\n", s.addInfo))
+	b.WriteString(fmt.Sprintf("%s\n%s\nhttps://landofirm.com\n\n", s.regards, s.teamName))
+	b.WriteString(fmt.Sprintf("---\n%s\n", s.autoDisclaimer))
 
-Gracias por contactar con Lando. Hemos recibido tu mensaje y nuestro equipo lo revisará en breve.
-
-Te responderemos lo antes posible, normalmente en menos de 24 horas.
-
-Aquí tienes un resumen de lo que nos has enviado:
-
-- Servicio: %s
-- Mensaje: %s
-
-Si necesitas añadir información adicional, puedes responder directamente a este email.
-
-Un saludo,
-El equipo de Lando
-https://landofirm.com
-
----
-Esta es una confirmación automática. No respondas a este mensaje si no necesitas añadir información.
-`, form.Name, valueOrDash(form.Service), form.Message)
+	return b.String()
 }
 
 func valueOrDash(s string) string {
@@ -425,10 +532,19 @@ func main() {
 
 		// 2. Send confirmation email to the user
 		var confirmSubject string
-		if form.Lang == "en" {
+		switch form.Lang {
+		case "en":
 			confirmSubject = "Lando — We have received your message"
-		} else {
+		case "ca":
+			confirmSubject = "Lando — Hem rebut el teu missatge"
+		case "eu":
+			confirmSubject = "Lando — Zure mezua jaso dugu"
+		default:
 			confirmSubject = "Lando — Hemos recibido tu mensaje"
+		}
+		// If budget estimate was included, append it to subject
+		if form.BudgetEstimate != "" {
+			confirmSubject += " [" + form.BudgetEstimate + "]"
 		}
 
 		confirmBody := buildConfirmationBody(form)

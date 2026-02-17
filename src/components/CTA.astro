@@ -14,7 +14,7 @@ const { lang } = Astro.props;
     <div class="cta-layout">
       <!-- Left: Info -->
       <div class="cta-info animate-on-scroll">
-        <p class="section-tagline">{lang === 'es' ? 'Contacto' : 'Contact'}</p>
+        <p class="section-tagline">{t(lang, 'nav.contact')}</p>
         <h2 class="cta-title">{t(lang, 'cta.title')}</h2>
         <p class="cta-desc">{t(lang, 'cta.desc')}</p>
 
@@ -24,8 +24,8 @@ const { lang } = Astro.props;
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </div>
             <div>
-              <span class="cta-feature-title">{lang === 'es' ? 'Respuesta rápida' : 'Quick response'}</span>
-              <span class="cta-feature-desc">{lang === 'es' ? 'Te respondemos en menos de 24h' : 'We respond within 24h'}</span>
+              <span class="cta-feature-title">{t(lang, 'cta.feature.quick')}</span>
+              <span class="cta-feature-desc">{t(lang, 'cta.feature.quick.desc')}</span>
             </div>
           </div>
           <div class="cta-feature">
@@ -33,8 +33,8 @@ const { lang } = Astro.props;
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
             <div>
-              <span class="cta-feature-title">{lang === 'es' ? 'Sin compromiso' : 'No obligation'}</span>
-              <span class="cta-feature-desc">{lang === 'es' ? 'Consulta gratuita inicial' : 'Free initial consultation'}</span>
+              <span class="cta-feature-title">{t(lang, 'cta.feature.noobligation')}</span>
+              <span class="cta-feature-desc">{t(lang, 'cta.feature.noobligation.desc')}</span>
             </div>
           </div>
           <div class="cta-feature">
@@ -42,14 +42,14 @@ const { lang } = Astro.props;
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             </div>
             <div>
-              <span class="cta-feature-title">{lang === 'es' ? 'Presupuesto preciso' : 'Precise estimate'}</span>
-              <span class="cta-feature-desc">{lang === 'es' ? 'Usa nuestro estimador online' : 'Use our online estimator'}</span>
+              <span class="cta-feature-title">{t(lang, 'cta.feature.estimate')}</span>
+              <span class="cta-feature-desc">{t(lang, 'cta.feature.estimate.desc')}</span>
             </div>
           </div>
         </div>
 
         <div class="cta-email-direct">
-          <span>{lang === 'es' ? 'O escribenos directamente:' : 'Or email us directly:'}</span>
+          <span>{t(lang, 'cta.email.label')}</span>
           <a href={`mailto:${SITE.email}`} class="cta-email-link">{SITE.email}</a>
         </div>
       </div>
@@ -77,14 +77,15 @@ const { lang } = Astro.props;
           </div>
         </div>
 
-        <form class="contact-form" id="contact-form" data-lang={lang} data-form-endpoint={SITE.formEndpoint} data-email={SITE.email}>
+        <form class="contact-form" id="contact-form" data-lang={lang} data-form-endpoint={SITE.formEndpoint} data-email={SITE.email}
+              data-success={t(lang, 'form.success')} data-error={t(lang, 'form.error')} data-features-label={t(lang, 'estimator.result.features')}>
           <div class="form-row">
             <div class="form-group">
-              <label for="contact-name">{t(lang, 'form.name')} <span aria-label={lang === 'es' ? 'obligatorio' : 'required'}>*</span></label>
+              <label for="contact-name">{t(lang, 'form.name')} <span aria-label={t(lang, 'form.required')}>*</span></label>
               <input type="text" id="contact-name" name="name" required aria-required="true" placeholder={t(lang, 'form.name.placeholder')} />
             </div>
             <div class="form-group">
-              <label for="contact-email">{t(lang, 'form.email')} <span aria-label={lang === 'es' ? 'obligatorio' : 'required'}>*</span></label>
+              <label for="contact-email">{t(lang, 'form.email')} <span aria-label={t(lang, 'form.required')}>*</span></label>
               <input type="email" id="contact-email" name="email" required aria-required="true" placeholder={t(lang, 'form.email.placeholder')} />
             </div>
           </div>
@@ -106,29 +107,29 @@ const { lang } = Astro.props;
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label for="contact-budget">{lang === 'es' ? 'Presupuesto aproximado' : 'Approximate budget'}</label>
+              <label for="contact-budget">{t(lang, 'form.budget')}</label>
               <select id="contact-budget" name="budget">
-                <option value="">{lang === 'es' ? 'Selecciona un rango' : 'Select a range'}</option>
-                <option value="<5k">{lang === 'es' ? 'Menos de 5.000€' : 'Less than €5,000'}</option>
+                <option value="">{t(lang, 'form.budget.placeholder')}</option>
+                <option value="<5k">{t(lang, 'form.budget.5k')}</option>
                 <option value="5k-15k">5.000€ - 15.000€</option>
                 <option value="15k-50k">15.000€ - 50.000€</option>
                 <option value="50k+">50.000€+</option>
-                <option value="unsure">{lang === 'es' ? 'No estoy seguro' : 'Not sure yet'}</option>
+                <option value="unsure">{t(lang, 'form.budget.unsure')}</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="contact-timeline">{lang === 'es' ? 'Plazo' : 'Timeline'}</label>
+              <label for="contact-timeline">{t(lang, 'form.timeline')}</label>
               <select id="contact-timeline" name="timeline">
-                <option value="">{lang === 'es' ? 'Selecciona un plazo' : 'Select a timeline'}</option>
-                <option value="urgent">{lang === 'es' ? 'Urgente (< 2 semanas)' : 'Urgent (< 2 weeks)'}</option>
-                <option value="1-3months">{lang === 'es' ? '1-3 meses' : '1-3 months'}</option>
-                <option value="3months+">{lang === 'es' ? '3+ meses' : '3+ months'}</option>
-                <option value="exploring">{lang === 'es' ? 'Solo explorando' : 'Just exploring'}</option>
+                <option value="">{t(lang, 'form.timeline.placeholder')}</option>
+                <option value="urgent">{t(lang, 'form.timeline.urgent')}</option>
+                <option value="1-3months">{t(lang, 'form.timeline.1-3months')}</option>
+                <option value="3months+">{t(lang, 'form.timeline.3months+')}</option>
+                <option value="exploring">{t(lang, 'form.timeline.exploring')}</option>
               </select>
             </div>
           </div>
           <div class="form-group">
-            <label for="contact-message">{t(lang, 'form.message')} <span aria-label={lang === 'es' ? 'obligatorio' : 'required'}>*</span></label>
+            <label for="contact-message">{t(lang, 'form.message')} <span aria-label={t(lang, 'form.required')}>*</span></label>
             <textarea id="contact-message" name="message" rows="4" required aria-required="true" placeholder={t(lang, 'form.message.placeholder')}></textarea>
           </div>
           <!-- Hidden fields -->
@@ -146,10 +147,7 @@ const { lang } = Astro.props;
             <label class="consent-label">
               <input type="checkbox" id="contact-privacy" name="privacy_accepted" required aria-required="true" />
               <span class="consent-text">
-                {lang === 'es'
-                  ? <Fragment>He leído y acepto la <a href="/es/legal/privacidad">Política de Privacidad</a>. Consiento el tratamiento de mis datos para gestionar mi consulta. <span class="required-mark">*</span></Fragment>
-                  : <Fragment>I have read and accept the <a href="/en/legal/privacy">Privacy Policy</a>. I consent to the processing of my data to manage my inquiry. <span class="required-mark">*</span></Fragment>
-                }
+                {t(lang, 'form.consent.prefix')} <a href={t(lang, 'form.consent.url')}>{t(lang, 'form.consent.link')}</a>{t(lang, 'form.consent.suffix')} <span class="required-mark">*</span>
               </span>
             </label>
           </div>
@@ -160,7 +158,7 @@ const { lang } = Astro.props;
               <svg class="spinner" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                 <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="40" stroke-dashoffset="10"/>
               </svg>
-              <span>{lang === 'es' ? 'Enviando...' : 'Sending...'}</span>
+              <span>{t(lang, 'form.sending')}</span>
             </span>
             <svg class="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M3.5 8H12.5M12.5 8L8.5 4M12.5 8L8.5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -561,12 +559,14 @@ const { lang } = Astro.props;
   const form = document.getElementById('contact-form') as HTMLFormElement;
   if (form) {
     const lang = form.dataset.lang || 'es';
+    const successMsg = form.dataset.success || '';
+    const errorMsg = form.dataset.error || '';
+    const featuresLabel = form.dataset.featuresLabel || '';
 
     // Listen for estimator data
     window.addEventListener('estimator-complete', ((e: CustomEvent) => {
       const d = e.detail;
       const summary = document.getElementById('budget-summary')!;
-      const featuresLabel = lang === 'es' ? 'Funcionalidades: ' : 'Features: ';
 
       // Show summary banner
       document.getElementById('summary-range')!.textContent = d.budgetRange;
@@ -574,7 +574,7 @@ const { lang } = Astro.props;
       document.getElementById('summary-complexity')!.textContent = d.complexity;
       document.getElementById('summary-timeline')!.textContent = d.timeline;
       document.getElementById('summary-duration')!.textContent = d.duration;
-      document.getElementById('summary-features')!.textContent = featuresLabel + d.features;
+      document.getElementById('summary-features')!.textContent = featuresLabel + ': ' + d.features;
       summary.style.display = 'block';
 
       // Fill hidden fields
@@ -595,9 +595,9 @@ const { lang } = Astro.props;
       // Pre-select service based on project type
       const serviceMap: Record<string, string> = {
         'Web / App Web': 'web', 'Web / Web App': 'web',
-        'App Movil': 'mvp', 'Mobile App': 'mvp',
-        'Inteligencia Artificial': 'ai', 'Artificial Intelligence': 'ai',
-        'Consultoria': 'consulting', 'Consulting': 'consulting',
+        'App Movil': 'mvp', 'Mobile App': 'mvp', 'App Mòbil': 'mvp', 'App Mugikorra': 'mvp',
+        'Inteligencia Artificial': 'ai', 'Artificial Intelligence': 'ai', 'Intel·ligència Artificial': 'ai', 'Adimen Artifiziala': 'ai',
+        'Consultoria': 'consulting', 'Consulting': 'consulting', 'Consultoría': 'consulting', 'Aholkularitza': 'consulting',
       };
       const serviceVal = serviceMap[d.projectType];
       if (serviceVal) {
@@ -621,7 +621,7 @@ const { lang } = Astro.props;
         const timelineSelect = document.getElementById('contact-timeline') as HTMLSelectElement;
         if (tl.includes('urgent') || tl.includes('urgente')) timelineSelect.value = 'urgent';
         else if (tl.includes('normal')) timelineSelect.value = '1-3months';
-        else if (tl.includes('flexib')) timelineSelect.value = '3months+';
+        else if (tl.includes('flexib') || tl.includes('malgu')) timelineSelect.value = '3months+';
       }
     }) as EventListener);
 
@@ -660,9 +660,7 @@ const { lang } = Astro.props;
         });
 
         if (response.ok) {
-          status.textContent = lang === 'es'
-            ? 'Mensaje enviado con exito. Te responderemos en menos de 24h.'
-            : 'Message sent successfully. We\'ll respond within 24h.';
+          status.textContent = successMsg;
           status.className = 'form-status success';
           form.reset();
           document.getElementById('budget-summary')!.style.display = 'none';
@@ -671,9 +669,7 @@ const { lang } = Astro.props;
         }
       } catch {
         const email = form.dataset.email;
-        status.textContent = lang === 'es'
-          ? `Error al enviar. Intentalo de nuevo o escribenos a ${email}`
-          : `Error sending. Try again or email us at ${email}`;
+        status.textContent = `${errorMsg} ${email}`;
         status.className = 'form-status error';
       } finally {
         btnText.style.display = '';
