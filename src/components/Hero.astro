@@ -38,7 +38,7 @@ const { lang } = Astro.props;
     <div class="hero-actions">
       <a href="#estimator" class="btn-primary btn-hero">
         {t(lang, 'hero.cta')}
-        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path d="M3.5 8H12.5M12.5 8L8.5 4M12.5 8L8.5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
@@ -133,9 +133,8 @@ const { lang } = Astro.props;
   .hero-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
+    filter: blur(60px);
     animation: float 10s ease-in-out infinite;
-    will-change: transform;
   }
 
   .hero-orb-1 {
@@ -206,7 +205,7 @@ const { lang } = Astro.props;
   .hero-title {
     font-family: var(--font-display);
     font-size: clamp(2.8rem, 6.5vw, 5rem);
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.05;
     letter-spacing: -0.03em;
     margin-bottom: var(--space-xl);
@@ -270,7 +269,7 @@ const { lang } = Astro.props;
 
   .stat-number {
     font-size: 2.5rem;
-    font-weight: 800;
+    font-weight: 700;
     background: var(--color-accent-gradient);
     background-size: 200% 100%;
     -webkit-background-clip: text;
@@ -321,13 +320,13 @@ const { lang } = Astro.props;
   .trusted-logos span {
     font-size: 0.9rem;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.45);
     letter-spacing: 0.05em;
     transition: color var(--transition-base);
   }
 
   .trusted-logos span:hover {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.7);
   }
 
   .hero-scroll-indicator {
