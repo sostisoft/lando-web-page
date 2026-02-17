@@ -182,15 +182,26 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    # Gzip
+    # Gzip (optimized)
     gzip on;
-    gzip_types text/plain text/css application/json application/javascript text/xml application/xml text/javascript image/svg+xml;
+    gzip_vary on;
+    gzip_comp_level 6;
     gzip_min_length 256;
+    gzip_proxied any;
+    gzip_types text/plain text/css text/xml text/javascript application/json application/javascript application/xml image/svg+xml font/woff2;
 
-    # Cache static assets
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ {
+    # Cache hashed static assets
+    location ~* /_astro/.+\.(js|css|woff|woff2)$ {
         expires 1y;
         add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    # Cache other static assets
+    location ~* \.(png|jpg|jpeg|gif|ico|svg|woff|woff2|webp|avif)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
     }
 }
 NGINX
